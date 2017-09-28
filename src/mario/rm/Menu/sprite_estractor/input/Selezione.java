@@ -45,7 +45,7 @@ public class Selezione implements MouseListener {
 
     private Cursor cur1;
     private Cursor cur2;
-    
+
     private boolean isDefaultCursor;
 
     public Selezione(Griglia g, JFrame fr) {
@@ -192,7 +192,7 @@ public class Selezione implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         int colonna = (e.getX()) / g.getPixel() + g.getMovX();
         int riga = 0;
-        if(isDefaultCursor){
+        if (isDefaultCursor) {
             riga = (e.getY()) / g.getPixel() + g.getMovY();
         } else {
             riga = (e.getY() + 30) / g.getPixel() + g.getMovY();

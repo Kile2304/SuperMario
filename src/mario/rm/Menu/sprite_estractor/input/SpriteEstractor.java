@@ -24,7 +24,7 @@ public class SpriteEstractor extends JFrame implements Scrollable {
 
     private int WIDTH;
     private int HEIGHT;
-    private static final String TITLE = "Editor";
+    private static final String TITLE = "Sprite Estractor";
 
     private ScrollButton orizontal;
     private ScrollButton vertical;
