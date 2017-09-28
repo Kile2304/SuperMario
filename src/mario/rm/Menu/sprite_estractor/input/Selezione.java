@@ -24,8 +24,10 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import mario.rm.Animation.Test;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
+import mario.rm.Menu.sprite_estractor.output.Design;
 import mario.rm.input.Loader;
 
 /**
@@ -185,6 +187,22 @@ public class Selezione implements MouseListener {
                 JOptionPane.showMessageDialog(null, scrollPane, "Informazioni",
                         JOptionPane.YES_NO_OPTION);
             //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);                //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);
+            case "toAcFile":
+                new Thread() {
+                    @Override
+                    public void run() {
+                        new Design();
+                    }
+                }.start();
+                break;
+            case "testAnim": {
+                try {
+                    new Test();
+                } catch (FileNotFoundException | ClassNotFoundException ex) {
+                    Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            break;
         }
     }
 
@@ -202,12 +220,24 @@ public class Selezione implements MouseListener {
 
         switch (type) {
             case 1: {
-                Punto[] p = cl.nuovoPunto(colonna, riga);
-                if (p != null) {
-                    for (int i = 0; i < p.length; i++) {
-                        g.setItem(p[i].getX(), p[i].getY());
+                new Thread() {
+                    @Override
+                    public void run() {
+                        int colonna = (e.getX()) / g.getPixel() + g.getMovX();
+                        int riga = 0;
+                        if (isDefaultCursor) {
+                            riga = (e.getY()) / g.getPixel() + g.getMovY();
+                        } else {
+                            riga = (e.getY() + 30) / g.getPixel() + g.getMovY();
+                        }
+                        Punto[] p = cl.nuovoPunto(colonna, riga);
+                        if (p != null) {
+                            for (int i = 0; i < p.length; i++) {
+                                g.setItem(p[i].getX(), p[i].getY());
+                            }
+                        }
                     }
-                }
+                }.start();
                 break;
             }
 
