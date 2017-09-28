@@ -1,0 +1,79 @@
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
+!SOLID|
+§UPLEFT*
+◘solido.anim○
+<66><11> <131><75>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
+!UNLOCKABLE£COIN|
+§UPLEFT*
+!COIN|◘unlockableCoin.anim○
+<131><10> <196><75>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
+!MUSHROOMPLATFORM|
+§UPLEFT*
+◘mushroomPlatform-left.anim○
+<196><140> <261><205>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
+!MUSHROOMPLATFORM|
+§UPCENTER*
+◘mushroomPlatform-center.anim○
+<261><140> <326><205>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
+!MUSHROOMPLATFORM|
+§UPRIGHT*
+◘mushroomPlatform-right.anim○
+<326><140> <391><205>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
+!COIN|
+§UPLEFT*
+◘coin.anim○
+<462><16> <514><67>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
+!SPINE|
+§UPLEFT*
+◘spine.anim○
+<134><273> <193><332>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
+!PLAYER£LUIGI|
+{WALK}
+♣RIGHT♦
+☼normal♪
+◘luigi-walk_right_normal.anim○
+<12><266> <28><304>
+<53><266> <69><304>
+<93><266> <109><304>
+<133><266> <150><304>
+<173><266> <191><304>
+<212><265> <231><304>
+<252><265> <271><304>
+<291><265> <310><304>
+<10><305> <29><344>
+<51><306> <71><344>
+<91><306> <111><344>
+<131><307> <152><344>
+<171><307> <193><344>
+<210><307> <232><344>
+<252><307> <271><344>
+<292><307> <311><344>
+<13><346> <31><384>
+<52><346> <70><384>
+<89><346> <109><384>
+<129><346> <150><384>
+<169><347> <191><384>
+<210><345> <232><384>
+<249><346> <271><383>
+<290><347> <312><383>
+<11><387> <31><424>
+<52><387> <71><423>
+<92><387> <110><423>
+<131><387> <148><424>
+<171><387> <189><424>
+<211><387> <228><424>
+<252><387> <268><424>
