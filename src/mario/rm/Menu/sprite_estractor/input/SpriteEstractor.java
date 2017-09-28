@@ -80,19 +80,12 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         //center.setBackground(Color.red);
         add(center, BorderLayout.CENTER);
         
-        /*vertical = new ScrollButton(ScrollButton.VERTICALE, WIDTH, HEIGHT, c, 0);
-        center.add(vertical, BorderLayout.EAST);
-        orizontal = new ScrollButton(ScrollButton.ORIZZONTALE, WIDTH, HEIGHT, c, 550);
-        center.add(orizontal, BorderLayout.SOUTH);*/
-        
         center.add(gri);
         
         g.addMouseListener(s);
         g.setPanel(p);
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        /*this.setFocusCycleRoot(true);
-        this.setFocusable(true);*/
         
         setVisible(true);
         

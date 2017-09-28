@@ -46,36 +46,16 @@ public class Anim implements Serializable, Animated {
     }
 
     public void addAnimation(BufferedImage[] anim, Move move, Direction direction) {
-        switch (move) {
-            case WALK:
-                walk = animation(anim, direction, walk);
-                break;
-            case DIE:
-                die = animation(anim, direction, die);
-                break;
-            case JUMP:
-                jump = animation(anim, direction, jump);
-                break;
-            case RUN:
-                run = animation(anim, direction, run);
-                break;
-            case UP:
-                up = animation(anim, direction, up);
-                break;
-            case STAND:
-                stand = animation(anim, direction, stand);
-                break;
-            /*case RUNGROW:
-                stand = animation(anim, direction, stand);
-                break;
-            case WALKGROW:
-                stand = animation(anim, direction, stand);
-                break;
-            case STANDGROW:
-                stand = animation(anim, direction, stand);
-                break;*/
-            default:
-                break;
+        BufferedImage[] find = null;    //non funziona, da RIFARE
+        Field[] fields = getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getName().equals(move.name().toLowerCase())) {
+                try {
+                    field.set(this, animation(anim,direction, (BufferedImage[]) field.get(this)));
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(Anim.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         //Piu avanti da provare il metodo fatto in getImage();
     }
@@ -94,26 +74,6 @@ public class Anim implements Serializable, Animated {
     public BufferedImage getImage(Move move, Direction dir) {
         BufferedImage img = null;
 
-        /*switch (move) {
-            case COMBO:
-                img = getImage(Move.COMBO, dir, run);
-                break;
-            case HONDA:
-                img = getImage(Move.HONDA, dir, die);
-                break;
-            case OTHER:
-                img = getImage(Move.OTHER, dir, jump);
-                break;
-            case WALK:
-                img = getImage(Move.WALK, dir, run);
-                break;
-            case ENERGYBOMB:
-                img = getImage(Move.ENERGYBOMB, dir, up);
-                break;
-            case STAND:
-                img = getImage(Move.STAND, dir, stand);
-                break;
-        }*/
         BufferedImage[] find = null;    //non funziona, da RIFARE
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
