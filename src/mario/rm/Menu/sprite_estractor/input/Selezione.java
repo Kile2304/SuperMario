@@ -58,7 +58,7 @@ public class Selezione implements MouseListener {
     }
 
     private void load() {
-        
+
         JFileChooser c = new JFileChooser(new File("src/mario/res/Immagini/extract").getAbsolutePath());
 
         int valid = c.showOpenDialog(fr.getContentPane());
@@ -66,7 +66,8 @@ public class Selezione implements MouseListener {
         if (valid == JFileChooser.APPROVE_OPTION) {
             try {
                 action("New");
-            } catch (IOException ex) {}
+            } catch (IOException ex) {
+            }
             BufferedImage level = new Loader().LoadImageCompletePath(c.getSelectedFile().getAbsolutePath());
             g.loadImage(level);
         } else {
@@ -155,10 +156,10 @@ public class Selezione implements MouseListener {
                     Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 JEditorPane textArea = new JEditorPane();
-                URL resourceUrl = new URL("file:"+
-                        System.getProperty("user.dir")+
-                        System.getProperty("file.separator")+
-                        //"src"+
+                URL resourceUrl = new URL("file:"
+                        + System.getProperty("user.dir")
+                        + System.getProperty("file.separator")
+                        + //"src"+
                         //System.getProperty("file.separator")+
                         "src/dragon/ball/res/info/infoEstrattore.html");
                 textArea.setPage(resourceUrl);
@@ -171,7 +172,7 @@ public class Selezione implements MouseListener {
                 scrollPane.setPreferredSize(new Dimension(700, 500));
                 JOptionPane.showMessageDialog(null, scrollPane, "Informazioni",
                         JOptionPane.YES_NO_OPTION);
-                //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);                //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);
+            //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);                //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -190,8 +191,10 @@ public class Selezione implements MouseListener {
             }
             case 2: {
                 Punto[] p = cl.rimuoviCollegamento(colonna, riga);
-                for (int i = 0; i < p.length; i++) {
-                    g.setItem(p[i].getX(), p[i].getY());
+                if (p != null) {
+                    for (int i = 0; i < p.length; i++) {
+                        g.setItem(p[i].getX(), p[i].getY());
+                    }
                 }
                 break;
             }
@@ -207,7 +210,7 @@ public class Selezione implements MouseListener {
                 }
                 break;
             default:
-                break;
+                return;
         }
         fr.repaint();
         fr.revalidate();
