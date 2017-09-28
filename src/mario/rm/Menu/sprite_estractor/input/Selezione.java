@@ -45,6 +45,8 @@ public class Selezione implements MouseListener {
 
     private Cursor cur1;
     private Cursor cur2;
+    
+    private boolean isDefaultCursor;
 
     public Selezione(Griglia g, JFrame fr) {
         this.g = g;
@@ -55,6 +57,7 @@ public class Selezione implements MouseListener {
         cur1 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");
         image = toolkit.getImage("src/mario/res/Immagini/cursor/pencil.png");
         cur2 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");
+        isDefaultCursor = true;
     }
 
     private void load() {
@@ -81,6 +84,7 @@ public class Selezione implements MouseListener {
         switch (code) {
             case "+":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 type = 0;
                 g.increasePixel();
                 fr.repaint();
@@ -88,6 +92,7 @@ public class Selezione implements MouseListener {
                 break;
             case "-":
                 fr.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 g.decreasePixel();
                 type = 0;
                 fr.repaint();
@@ -95,6 +100,7 @@ public class Selezione implements MouseListener {
                 break;
             case "Load":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 load();
                 type = 0;
                 fr.repaint();
@@ -102,21 +108,25 @@ public class Selezione implements MouseListener {
                 break;
             case "Extract":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 type = 0;
                 cl.estrazione();
                 break;
             case "CREATE POINT":
                 g.setCursor(cur2);
+                isDefaultCursor = false;
                 type = 1;
                 break;
             case "DELETE POINT":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 type = 2;
                 break;
             case "New":
                 g.newPage(50, 50);
             case "Clean":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 type = 0;
                 cl.partialClean();
                 fr.repaint();
@@ -124,6 +134,7 @@ public class Selezione implements MouseListener {
                 break;
             case "Home":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                isDefaultCursor = true;
                 Pannelli.elenco.clear();
                 Pannelli.type.setText("");
                 Pannelli.move.setSelectedIndex(0);
@@ -134,6 +145,7 @@ public class Selezione implements MouseListener {
                 break;
             case "Selettore":
                 g.setCursor(cur1);
+                isDefaultCursor = false;
                 type = 3;
                 break;
             case "Manuale":
@@ -179,16 +191,26 @@ public class Selezione implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         int colonna = (e.getX()) / g.getPixel() + g.getMovX();
-        int riga = (e.getY() + 30) / g.getPixel() + g.getMovY();
+        int riga = 0;
+        if(isDefaultCursor){
+            riga = (e.getY()) / g.getPixel() + g.getMovY();
+        } else {
+            riga = (e.getY() + 30) / g.getPixel() + g.getMovY();
+        }
+
+        System.out.println("colonna: " + colonna + " riga: " + riga);
 
         switch (type) {
             case 1: {
                 Punto[] p = cl.nuovoPunto(colonna, riga);
-                for (int i = 0; i < p.length; i++) {
-                    g.setItem(p[i].getX(), p[i].getY());
+                if (p != null) {
+                    for (int i = 0; i < p.length; i++) {
+                        g.setItem(p[i].getX(), p[i].getY());
+                    }
                 }
                 break;
             }
+
             case 2: {
                 Punto[] p = cl.rimuoviCollegamento(colonna, riga);
                 if (p != null) {
@@ -205,6 +227,7 @@ public class Selezione implements MouseListener {
                     System.out.println("red: " + c.getRed() + " green: " + c.getGreen() + " blue: " + c.getBlue());
                     type = 0;
                     g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    isDefaultCursor = true;
                 } catch (AWTException ex) {
                     Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -218,19 +241,23 @@ public class Selezione implements MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e
+    ) {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e
+    ) {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e
+    ) {
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e
+    ) {
     }
 
     public void repaint() {

@@ -48,9 +48,15 @@ public class Collegamenti {
 
     public Punto[] nuovoPunto(int colonna, int riga) {
         temp.add(new Punto(colonna, riga));
+        
         ArrayList<Punto> nuovi = new ArrayList<>();
         Punto[] t = null;
         if (temp.size() == 2) {
+            if(temp.get(0).compare(temp.get(1))){
+                System.out.println("adasd");
+                temp.remove(1);
+                return null;
+            }
             Punto primo;
             Punto secondo;
 
@@ -81,6 +87,14 @@ public class Collegamenti {
                 nuovi.add(new Punto(primo.getX(), primo.getY() - i));
                 nuovi.add(new Punto(secondo.getX(), secondo.getY() + i));
             }
+            for (int i = 0; i < nuovi.size(); i++) {
+                for (int j = i + 1; j < nuovi.size(); j++) {
+                    if(nuovi.get(i).compare(nuovi.get(j))){
+                        nuovi.remove(j);
+                    }
+                    
+                }
+            }
             t = new Punto[nuovi.size() + 1];
             for (int i = 0; i < nuovi.size(); i++) {
                 t[i] = nuovi.get(i);
@@ -99,6 +113,14 @@ public class Collegamenti {
     public Punto[] rimuoviCollegamento(int colonna, int riga) {
         Punto del = new Punto(colonna, riga);
         Punto[] eliminare = null;
+        
+        if(temp.size() == 1 && temp.get(0).compare(del)){
+            System.out.println("temp: "+temp.get(0).toString()+" del: "+del.toString());
+            temp.remove(0);
+            zone.remove(zone.size() - 1);
+            return new Punto[]{del};
+        }
+        
         for (int i = 0; i < zone.size(); i++) {
             for (int j = 0; j < zone.get(i).length; j++) {
                 if (zone.get(i)[j].compare(del)) {

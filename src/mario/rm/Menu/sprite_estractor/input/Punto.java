@@ -30,10 +30,13 @@ public class Punto {
     }
     
     public boolean compare(Punto p){
-        if(x == p.x && y == p.y){
-            return true;
-        }
-        return false;
+        return x == p.x && y == p.y;
     }
+    
+    @Override
+    public String toString(){
+        return "X: "+x+" Y: "+y;
+    }
+    
     
 }
