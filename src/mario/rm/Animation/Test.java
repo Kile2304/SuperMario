@@ -31,7 +31,7 @@ public class Test extends Canvas implements Runnable {
     public Test() throws FileNotFoundException, IOException, ClassNotFoundException {
         JFrame frame = new JFrame("");
         frame.setSize(1920, 1080);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(this);
         Cut cut = null;
         JFileChooser c = new JFileChooser(new File("src/mario/res/Animazioni").getAbsolutePath());

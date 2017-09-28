@@ -55,10 +55,6 @@ public class Griglia extends JPanel {
     public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel) {
         super();
 
-        Dimension size = new Dimension(WIDTH, HEIGHT);
-
-        setPreferredSize(size);
-
         attach = new ArrayList<>();
 
         this.pixel = pixel;
@@ -67,6 +63,10 @@ public class Griglia extends JPanel {
 
         livello = new Preview(WIDTH / pixel, HEIGHT / pixel);
 
+        Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
+
+        setPreferredSize(size);
+        
         grid = true;
 
         background = true;
@@ -80,9 +80,6 @@ public class Griglia extends JPanel {
     public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel, boolean grid) {
         super();
 
-        Dimension size = new Dimension(WIDTH, HEIGHT);
-
-        setPreferredSize(size);
 
         this.pixel = pixel;
 
@@ -90,6 +87,10 @@ public class Griglia extends JPanel {
 
         livello = new Preview(WIDTH / pixel, HEIGHT / pixel);
 
+        Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
+
+        setPreferredSize(size);
+        
         grid = false;
 
         background = true;
@@ -103,10 +104,6 @@ public class Griglia extends JPanel {
     public Griglia(JFrame ed, String path, int pixel) {
         super();
 
-        Dimension size = new Dimension(WIDTH, HEIGHT);
-
-        setPreferredSize(size);
-
         this.ed = (Scrollable) ed;
 
         grid = false;
@@ -114,6 +111,10 @@ public class Griglia extends JPanel {
         livello = new Preview();
 
         load(path);
+        
+        Dimension size = new Dimension(livello.getMappa().length * pixel + 1, livello.getMappa()[0].length * pixel + 1);
+
+        setPreferredSize(size);
 
         this.pixel = pixel;
 
@@ -466,18 +467,22 @@ public class Griglia extends JPanel {
 
     public void increasePixel() {
         pixel += 5;
+        setPreferredSize(new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel));
+        revalidate();
     }
 
     public void decreasePixel() {
         if (pixel > 5) {
             pixel -= 5;
+            setPreferredSize(new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel));
         } else {
-            pixel = 1;
+            pixel = 5;
+            setPreferredSize(new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel));
         }
+        revalidate();
     }
 
     public void changeCollider() {
-        System.out.println("asdadas");
         col = Boolean.logicalXor(col, true);
     }
 
@@ -485,10 +490,6 @@ public class Griglia extends JPanel {
         return col;
     }
 
-    /*public void attach(File selectedFile, int colonna, int riga) {
-        String a = "" + colonna + "+" + riga + "-" + selectedFile.getAbsolutePath().substring(selectedFile.getAbsolutePath().lastIndexOf("\\")) + "\n";
-        attach.add(a);
-    }*/
     public void newPage(int x, int y) {
         livello = new Preview(y, x);
         if (attach != null) {

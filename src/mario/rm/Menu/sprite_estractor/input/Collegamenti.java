@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import mario.rm.Menu.Griglia;
 import mario.rm.identifier.Type;
-import mario.rm.utility.RGB;
 
 /**
  *
@@ -23,20 +23,20 @@ import mario.rm.utility.RGB;
  */
 public class Collegamenti {
 
-    private ArrayList<Punto> temp;
-    private ArrayList<Punto[]> zone;
+    private LinkedList<Punto> temp = new LinkedList<>();
+    private LinkedList<Punto[]> zone;
     private String file;
 
     public Collegamenti() {
-        temp = new ArrayList<>();
-        zone = new ArrayList<>();
+        temp = new LinkedList<>();
+        zone = new LinkedList<>();
         file = "";
         Griglia.clean();
     }
 
     public Collegamenti(String file) {
-        temp = new ArrayList<>();
-        zone = new ArrayList<>();
+        temp = new LinkedList<>();
+        zone = new LinkedList<>();
         this.file = file;
     }
 
@@ -53,35 +53,31 @@ public class Collegamenti {
         Punto[] t = null;
         if (temp.size() == 2) {
             if(temp.get(0).compare(temp.get(1))){
-                System.out.println("adasd");
                 temp.remove(1);
                 return null;
             }
             Punto primo;
             Punto secondo;
 
-            zone.remove(zone.size() - 1);
+            zone.removeLast();
 
-            if (temp.get(temp.size() - 1).getX() > temp.get(temp.size() - 2).getX()) {
-                primo = temp.get(temp.size() - 1);
-                secondo = temp.get(temp.size() - 2);
-            } else {
-                secondo = temp.get(temp.size() - 1);
-                primo = temp.get(temp.size() - 2);
-            }
-            nuovi.add(temp.get(0));
+            primo = temp.get(0).getX() > temp.get(1).getX() ? temp.pop() : temp.get(1);
+            
+            secondo = temp.pop();
+            
+            //nuovi.add(primo);
+            
             for (int i = 0; i < primo.getX() - secondo.getX(); i++) {
                 nuovi.add(new Punto(primo.getX() - i, primo.getY()));
                 nuovi.add(new Punto(secondo.getX() + i, secondo.getY()));
             }
-
-            if (temp.get(temp.size() - 1).getY() > temp.get(temp.size() - 2).getY()) {
-                primo = temp.get(temp.size() - 1);
-                secondo = temp.get(temp.size() - 2);
-            } else {
-                secondo = temp.get(temp.size() - 1);
-                primo = temp.get(temp.size() - 2);
-            }
+            temp.clear();
+            temp.push(primo);
+            temp.push(secondo);
+            
+            primo = temp.get(0).getY() > temp.get(1).getY() ? temp.pop() : temp.get(1);
+            
+            secondo = temp.pop();
 
             for (int i = 0; i <= primo.getY() - secondo.getY(); i++) {
                 nuovi.add(new Punto(primo.getX(), primo.getY() - i));
@@ -99,7 +95,7 @@ public class Collegamenti {
             for (int i = 0; i < nuovi.size(); i++) {
                 t[i] = nuovi.get(i);
             }
-            t[nuovi.size()] = temp.get(1);
+            //t[nuovi.size()] = temp.get(1);
             zone.add(t);
             temp.clear();
         } else {
@@ -116,8 +112,8 @@ public class Collegamenti {
         
         if(temp.size() == 1 && temp.get(0).compare(del)){
             System.out.println("temp: "+temp.get(0).toString()+" del: "+del.toString());
-            temp.remove(0);
-            zone.remove(zone.size() - 1);
+            temp.removeFirst();
+            zone.removeLast();
             return new Punto[]{del};
         }
         
@@ -215,9 +211,6 @@ public class Collegamenti {
                     }
                     word += temp.charAt(i);
                 }
-                /*if (!word.equals("")) {
-                    nuovoType.append(word);
-                }*/
                 nuovoType.append(word+"\n");
             }
             System.out.println("" + nuovoType.toString());
