@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Cut;
 import mario.rm.Animation.Tile;
@@ -21,7 +23,7 @@ import mario.rm.input.MemoriaAnim;
  */
 public class Union {
 
-    public Union() {
+    public Union(JFrame fr) {
         MemoriaAnim m = new MemoriaAnim();
         m.carica();
 
@@ -39,6 +41,7 @@ public class Union {
         ArrayList<Tile> tile = new ArrayList<>();
 
         p.stream().forEach((cut) -> {
+            //System.out.println(""+cut.getNormal().length);
             boolean nuovo = true;
             if (cut.getTile() != null && !cut.getTile().equals("")) {
                 boolean isJustAdded = false;
@@ -60,12 +63,12 @@ public class Union {
                     if (cut.getType() == a.getType()) {
                         nuovo = false;
                         if (cut.getTransformation().equals("normal")) {
-                            anim.get(anim.size() - 1).addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
+                            a.addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
                             if (cut.getDirection() == Direction.RIGHT) {
                                 anim.get(anim.size() - 1).addAnimation(cut.getMirror(), cut.getMove(), Direction.LEFT);
                             }
                         } else {
-                            anim.get(anim.size() - 1).getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
+                            a.getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
                             if (cut.getDirection() == Direction.RIGHT) {
                                 anim.get(anim.size() - 1).getSuper().addAnimation(cut.getMirror(), cut.getMove(), Direction.LEFT);
                             }
@@ -96,6 +99,11 @@ public class Union {
         tile.stream().forEach((tile1) -> {
             toObject(tile1, tile1.getPath(), tile1.getTile());
         });
+        
+        if(fr != null){
+            JOptionPane.showMessageDialog(fr, "Conversione dei file in AC e TI completata", "info", JOptionPane.DEFAULT_OPTION);
+        }
+        
     }
 
     private void toObject(Object anim1, String path, String tile) {
@@ -122,9 +130,9 @@ public class Union {
             }
 
             if (anim1 instanceof Anim) {
-                fos = new FileOutputStream("src\\mario\\res\\Animazioni\\" + path + "\\" + newFile + ".ac", true);
+                fos = new FileOutputStream("src\\mario\\res\\Animazioni\\" + path + "\\" + newFile + ".ac");
             } else {
-                fos = new FileOutputStream("src\\mario\\res\\Animazioni\\" + path + "\\" + newFile + "-" + tile + ".ti", true);
+                fos = new FileOutputStream("src\\mario\\res\\Animazioni\\" + path + "\\" + newFile + "-" + tile + ".ti");
             }
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(anim1);
@@ -143,7 +151,7 @@ public class Union {
     }
 
     public static void main(String[] args) {
-        new Union();
+        new Union(null);
     }
 
 }

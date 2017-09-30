@@ -51,7 +51,7 @@ public class Anim implements Serializable, Animated {
         for (Field field : fields) {
             if (field.getName().equals(move.name().toLowerCase())) {
                 try {
-                    field.set(this, animation(anim,direction, (BufferedImage[]) field.get(this)));
+                    field.set(this, animation(anim, direction, (BufferedImage[]) field.get(this)));
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
                     Logger.getLogger(Anim.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -63,7 +63,7 @@ public class Anim implements Serializable, Animated {
     private BufferedImage[] animation(BufferedImage[] anim, Direction direction, BufferedImage[] dest) {
         if (dest == null) {
             dest = new BufferedImage[anim.length * 4];
-            System.out.println("nuovo");
+            //System.out.println("nuovo");
         }
 
         System.arraycopy(anim, 0, dest, dest.length / 4 * direction.getMoltiplier(), anim.length);
@@ -102,7 +102,6 @@ public class Anim implements Serializable, Animated {
         } else {
             index = 0;
         }
-
         return anim[anim.length / 4 * dir.getMoltiplier() + index];
     }
 
@@ -187,11 +186,7 @@ public class Anim implements Serializable, Animated {
     }
 
     public boolean isEndDie() {
-        if (index < die.length) {
-            return false;
-        } else {
-            return true;
-        }
+        return index >= die.length;
     }
 
     @Override

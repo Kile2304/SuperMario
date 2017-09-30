@@ -128,7 +128,7 @@ public class Tile implements Serializable, Animated {
         } catch (IOException ex) {
             Logger.getLogger(Tile.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("finito");
+        //System.out.println("finito");
     }
 
     private void readObject(ObjectInputStream in) {

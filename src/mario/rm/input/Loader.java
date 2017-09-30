@@ -61,9 +61,9 @@ public class Loader {
                 img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
             }else{
                 File f = new File(path);
-                if(f.exists()){
+                /*if(f.exists()){
                     System.out.println("porco dio");
-                }
+                }*/
                 img = ImageIO.read(new File(path));
             }
         } catch (IOException ex) {

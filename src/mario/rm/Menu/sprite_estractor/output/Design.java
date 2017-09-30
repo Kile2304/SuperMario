@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import mario.rm.Menu.sprite_estractor.union.Union;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
@@ -21,7 +22,7 @@ import mario.rm.utility.Punto;
  */
 public class Design {
 
-    public Design() {
+    public Design(JFrame fr) {
         BufferedReader br = null;
         ArrayList<Estratta> lista = new ArrayList<>();
         try {
@@ -77,11 +78,9 @@ public class Design {
                             break;
                         case '♪':
                             lista.get(lista.size() - 1).setTransformation(val);
-                            //System.out.println(""+val);
                             break;
                         case '*':
                             lista.get(lista.size() - 1).setTile(val);
-                            //System.out.println(""+val);
                             break;
                         default:
                             val += temp.charAt(i);
@@ -92,16 +91,16 @@ public class Design {
         } catch (IOException ex) {
             Logger.getLogger(Design.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for (Estratta estratta : lista) {
+        lista.stream().forEach((estratta) -> {
             estratta.output();
-        }
+        });
 
-        new Union();
+        new Union(fr);
 
     }
 
     public static void main(String[] args) {
-        new Design();
+        new Design(null);
     }
 
 }

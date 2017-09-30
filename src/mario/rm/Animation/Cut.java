@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import mario.rm.identifier.Move;
 import mario.rm.utility.Punto;
@@ -87,7 +88,7 @@ public class Cut implements Serializable {
         }
     }
 
-    public Cut(String path, ArrayList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation) {
+    public Cut(String path, LinkedList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation) {
 
         errore = false;
 
@@ -108,25 +109,26 @@ public class Cut implements Serializable {
 
         ArrayList<BufferedImage> scena = new ArrayList<>();
 
-        System.out.println("" + (punti.size() / 2));
-
+        //System.out.println("" + (punti.size() / 2));
         numeroDiImmagini = punti.size();
 
-        Punto primo = null;
-        Punto secondo = null;
-
         for (int i = 0; i < numeroDiImmagini; i += 2) {
-            if (punti.get(i).getX() < punti.get(i + 1).getX() && punti.get(i).getY() < punti.get(i + 1).getY()) {
-                primo = punti.get(i);
-                secondo = punti.get(i + 1);
-            } else if(punti.get(i).getX() == punti.get(i+1).getX() && punti.get(i).getY() == punti.get(i+1).getY()){
-                continue;
-            }else {
-                secondo = punti.get(i);
-                primo = punti.get(i + 1);
+
+            Punto secondoX = punti.get(0).getX() > punti.get(1).getX() ? punti.pop() : punti.get(1);
+            Punto primoX = punti.size() % 2 == 0 ? punti.get(0) : punti.pop();
+            if (punti.size() % 2 != 0) {
+                punti.removeFirst();
+            } else if (punti.size() == numeroDiImmagini - i) {
+                punti.removeFirst();
+                punti.removeFirst();
             }
-            if (secondo.getX() - primo.getX() > 0 && secondo.getY() - primo.getY() > 0) {
-                scena.add(original.getSubimage(primo.getX(), primo.getY(), secondo.getX() - primo.getX(), secondo.getY() - primo.getY()));
+
+            Punto primoY = primoX.getY() > secondoX.getY() ? primoX : secondoX;
+            Punto secondoY = primoY.compare(primoX) ? secondoX : primoX;
+
+            if (secondoX.getX() - primoX.getX() > 0) {
+                scena.add(original.getSubimage(primoX.getX(), secondoY.getY(), secondoX.getX() - primoX.getX(), primoY.getY() - secondoY.getY()));
+                //System.out.println("x: "+primoX.getX() + " y: " + secondoY.getY() + " width: " + (secondoX.getX() - primoX.getX()) + " height: " + (primoY.getY() - secondoY.getY()));
             } else {
                 errore = true;
                 System.out.println("immagine " + path + " corrotta");
@@ -143,24 +145,24 @@ public class Cut implements Serializable {
 
         AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-
         for (BufferedImage bufferedImage : scena) {
             normal[i] = bufferedImage;
-            /*
+            if (dir == Direction.RIGHT) {
+                /*
             *
             * INVERTE LE IMMAGINI E LE MEMORIZZA NEL BUFFER SPECCHIO (IL CODICE SOTTO)
             *
-             */
-            tx = AffineTransform.getScaleInstance(-1, 1);
-            tx.translate(-bufferedImage.getWidth(null), 0);
-            op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-            bufferedImage = op.filter(bufferedImage, null);
+                 */
+                tx = AffineTransform.getScaleInstance(-1, 1);
+                tx.translate(-bufferedImage.getWidth(null), 0);
+                op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                bufferedImage = op.filter(bufferedImage, null);
 
-            mirror[i] = bufferedImage;
-
+                mirror[i] = bufferedImage;
+            }
             i++;
         }
-        System.out.println("" + normal.length);
+        //System.out.println("" + normal.length);
     }
 
     /*
@@ -298,7 +300,7 @@ public class Cut implements Serializable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Cut(String path, ArrayList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation, Type unlockable) {
+    public Cut(String path, LinkedList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation, Type unlockable) {
 
         errore = false;
 
@@ -320,8 +322,7 @@ public class Cut implements Serializable {
 
         ArrayList<BufferedImage> scena = new ArrayList<>();
 
-        System.out.println("" + (punti.size() / 2));
-
+        //System.out.println("" + (punti.size() / 2));
         numeroDiImmagini = punti.size();
 
         Punto primo = null;
@@ -350,21 +351,23 @@ public class Cut implements Serializable {
 
         for (BufferedImage bufferedImage : scena) {
             normal[i] = bufferedImage;
-            /*
+            if (Direction.RIGHT == dir) {
+                /*
             *
             * INVERTE LE IMMAGINI E LE MEMORIZZA NEL BUFFER SPECCHIO (IL CODICE SOTTO)
             *
-             */
-            tx = AffineTransform.getScaleInstance(-1, 1);
-            tx.translate(-bufferedImage.getWidth(null), 0);
-            op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-            bufferedImage = op.filter(bufferedImage, null);
+                 */
+                tx = AffineTransform.getScaleInstance(-1, 1);
+                tx.translate(-bufferedImage.getWidth(null), 0);
+                op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                bufferedImage = op.filter(bufferedImage, null);
 
-            mirror[i] = bufferedImage;
+                mirror[i] = bufferedImage;
+            }
 
             i++;
         }
-        System.out.println("" + normal.length);
+        //System.out.println("" + normal.length);
     }
 
     public Move getMove() {
@@ -413,10 +416,14 @@ public class Cut implements Serializable {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.writeInt(numeroDiImmagini); // how many images are serialized?
+        
+        out.writeInt(normal.length); // how many images are serialized?
+        
+        int rep = mirror[0] != null ? 2 : 1;    
+        out.writeInt(rep);  //has mirrored image?
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < numeroDiImmagini; j++) {
+        for (int i = 0; i < rep; i++) {
+            for (int j = 0; j < normal.length; j++) {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 try {
                     if (i == 0) {
@@ -438,11 +445,14 @@ public class Cut implements Serializable {
         in.defaultReadObject();
 
         int imageCount = in.readInt();
+        int mir = in.readInt();
+        
         normal = new BufferedImage[imageCount];
         mirror = new BufferedImage[imageCount];
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < mir; i++) {
             for (int j = 0; j < imageCount; j++) {
                 int size = in.readInt(); // Read byte count
+                
 
                 byte[] buffer = new byte[size];
                 in.readFully(buffer); // Make sure you read all bytes of the image

@@ -1,11 +1,13 @@
 package mario.rm.Menu.sprite_estractor.output;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mario.rm.Animation.Cut;
@@ -22,7 +24,7 @@ public class Estratta {
 
     private String path;
 
-    private ArrayList<Punto> coord;
+    private LinkedList<Punto> coord;
 
     private Type type;
     private Move move;
@@ -30,10 +32,10 @@ public class Estratta {
     private String nomeFile;
     private String transformation;
     private String tile;
-    Type unlock;
+    private Type unlock;
 
     public Estratta() {
-        coord = new ArrayList<>();
+        coord = new LinkedList<>();
     }
 
     public void setPath(String path) {
@@ -95,6 +97,7 @@ public class Estratta {
         }
 
         //System.out.println("estratta path: "+path);
+        System.out.println(""+p1);
         ObjectOutputStream out = null;
         FileOutputStream fos = null;
 
@@ -105,7 +108,6 @@ public class Estratta {
             cart = nomeFile.substring(0, nomeFile.lastIndexOf("."));
         }
         Cut cut = null;
-
         if (tile == null) {
             cut = new Cut(p1, coord, move, type, direction, path + "\\" + cart, transformation);
         } else if (unlock == null) {
@@ -128,8 +130,8 @@ public class Estratta {
         try {
             fos = new FileOutputStream(new File("src\\mario\\res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
             out = new ObjectOutputStream(fos);
-
             out.writeObject(cut);
+            
             out.close();
             fos.close();
         } catch (FileNotFoundException ex) {

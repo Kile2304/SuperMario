@@ -65,9 +65,7 @@ public class Test extends Canvas implements Runnable {
             new Test();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -84,7 +82,7 @@ public class Test extends Canvas implements Runnable {
 
         //g.drawImage(an.nextNormal(), 100, 100, 100, 100, null);
         if(anim != null){
-            g.drawImage(anim.getImage(Move.WALK, Direction.RIGHT), 0, 0, 64, 64, this);
+            g.drawImage(anim.getImage(Move.JUMP, Direction.RIGHT), 0, 0, 64, 64, this);
         }else if(tile != null){
             //g.drawImage(tile.getImage(TilePart.UPLEFT)[0], 0, 0, 64, 64, this);
                 BufferedImage[] img = tile.getImage(TilePart.UPLEFT);
