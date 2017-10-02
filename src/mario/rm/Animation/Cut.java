@@ -147,7 +147,7 @@ public class Cut implements Serializable {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         for (BufferedImage bufferedImage : scena) {
             normal[i] = bufferedImage;
-            if (dir == Direction.RIGHT) {
+            if (dir == Direction.RIGHT || dir == Direction.LEFT) {
                 /*
             *
             * INVERTE LE IMMAGINI E LE MEMORIZZA NEL BUFFER SPECCHIO (IL CODICE SOTTO)
@@ -351,7 +351,7 @@ public class Cut implements Serializable {
 
         for (BufferedImage bufferedImage : scena) {
             normal[i] = bufferedImage;
-            if (Direction.RIGHT == dir) {
+            if (Direction.RIGHT == dir || Direction.LEFT == dir) {
                 /*
             *
             * INVERTE LE IMMAGINI E LE MEMORIZZA NEL BUFFER SPECCHIO (IL CODICE SOTTO)
@@ -461,6 +461,7 @@ public class Cut implements Serializable {
                     normal[j] = (ImageIO.read(new ByteArrayInputStream(buffer)));
                 } else {
                     mirror[j] = (ImageIO.read(new ByteArrayInputStream(buffer)));
+                    
                 }
             }
 

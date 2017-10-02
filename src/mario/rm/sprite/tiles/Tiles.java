@@ -41,7 +41,7 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
     protected Type type;    //TIPO DI SPRITE
 
     protected BufferedImage[] temp;
-    
+
     protected int delay;
 
     private long before;
@@ -57,8 +57,12 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
     protected boolean breakable;
 
     protected boolean collide;
-    
-    public Tiles(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Tile> anim, boolean collide, String part) {
+
+    protected String partTile;
+
+    protected boolean damage;
+
+    public Tiles(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Tile> anim, boolean collide, String part, boolean damage) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -67,15 +71,18 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
         this.type = type;
         stop = type.getTempo();
         isDelay = type.getDelay();
-        //numImma = type.getNumeroImma();
-        numImma = temp.length;
-        /*anim.stream().filter((animazione) -> (animazione.getType() == type && animazione.getMove() == Move.WALK)).forEach((animazione) -> {
-            this.anim = new Animazione(animazione);
-        });*/
-        for (Tile tile : anim) {
-            if(tile.getType() == type)
+        this.partTile = part;
+
+        this.damage = damage;
+        System.out.println(""+type.name());
+        if (type != Type.VOID) {
+            anim.stream().filter((tile) -> (tile.getType() == type)).forEach((tile) -> {
                 this.temp = tile.getImage(TilePart.valueOf(part));
+            });
         }
+
+        numImma = temp != null ? temp.length : 0;
+
         this.numSerieX = 1;
         this.collide = collide;
     }
@@ -90,9 +97,10 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
         stop = type.getTempo();
         isDelay = type.getDelay();
         //numImma = type.getNumeroImma();
-        numImma = temp.length;
+        numImma = temp != null ? temp.length : 0;
         this.numSerieX = 1;
         this.collide = collide;
+        this.partTile = part;
     }
 
     public void die() {
@@ -101,6 +109,10 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
 
     public void moreSerie() {
         numSerieX++;
+    }
+
+    public boolean canDamage() {
+        return damage;
     }
 
     public abstract void unlockable();
@@ -186,6 +198,10 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
 
     public boolean getCollide() {
         return collide;
+    }
+
+    public String getTile() {
+        return partTile;
     }
 
 }

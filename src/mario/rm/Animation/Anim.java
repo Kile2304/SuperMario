@@ -25,7 +25,6 @@ public class Anim implements Serializable, Animated {
     transient private BufferedImage[] die;
     transient private BufferedImage[] jump;
     transient private BufferedImage[] walk;
-    transient private BufferedImage[] up;
     transient private BufferedImage[] stand;
     private Anim transformation;
 
@@ -38,10 +37,12 @@ public class Anim implements Serializable, Animated {
 
     transient private int index;
 
+    transient private long delay;
+    
     public Anim(Type type, String path) {
         this.type = type;
         lastMove = Move.STAND;
-        lastDirection = Direction.DOWN;
+        lastDirection = Direction.LEFT;
         this.path = path;
     }
 
@@ -57,6 +58,9 @@ public class Anim implements Serializable, Animated {
                 }
             }
         }
+        /*if(Move.WALK == move && direction == Direction.RIGHT){
+            System.out.println("destra");
+        }*/
         //Piu avanti da provare il metodo fatto in getImage();
     }
 
@@ -93,14 +97,19 @@ public class Anim implements Serializable, Animated {
 
     private BufferedImage getImage(Move move, Direction dir, BufferedImage[] anim) {
         if (lastMove != move || dir != lastDirection) {
-            index = -1;
+            index = 0;
             lastMove = move;
             lastDirection = dir;
         }
-        if (index < anim.length / 4 - 1) {
-            index++;
+        if (delay + anim.length / 4 < System.currentTimeMillis()) {  //delay da fixare
+            delay = System.currentTimeMillis();
+            if (index < anim.length / 4 - 1) {
+                index++;
+            } else {
+                index = 0;
+            }
         } else {
-            index = 0;
+            delay++;
         }
         return anim[anim.length / 4 * dir.getMoltiplier() + index];
     }
@@ -116,12 +125,11 @@ public class Anim implements Serializable, Animated {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        
+
         write(walk, out);
         write(die, out);
         write(jump, out);
         write(run, out);
-        write(up, out);
         write(stand, out);
         //out.writeObject(transformation);
 
@@ -153,7 +161,6 @@ public class Anim implements Serializable, Animated {
         die = read(in);
         jump = read(in);
         run = read(in);
-        up = read(in);
         stand = read(in);
 
         //transformation = (Anim) in.readObject();

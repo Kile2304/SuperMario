@@ -17,7 +17,7 @@ import mario.rm.identifier.Type;
 public class Checkpoint extends Tiles {
 
     public Checkpoint(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Tile> anim, boolean collide, String part) {
-        super(x, y, width, height, handler, type, anim, collide, part);
+        super(x, y, width, height, handler, type, anim, collide, part, false);
         width = 200;
         height = 200;
         breakable = false;

@@ -36,6 +36,9 @@ public class Union {
         temp.stream().forEach((cut) -> {
             p.add(cut);
         });
+        m.getEnemy().stream().forEach((enemy) -> {
+            p.add(enemy);
+        });
 
         ArrayList<Anim> anim = new ArrayList<>();
         ArrayList<Tile> tile = new ArrayList<>();
@@ -64,46 +67,44 @@ public class Union {
                         nuovo = false;
                         if (cut.getTransformation().equals("normal")) {
                             a.addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
-                            if (cut.getDirection() == Direction.RIGHT) {
-                                anim.get(anim.size() - 1).addAnimation(cut.getMirror(), cut.getMove(), Direction.LEFT);
-                            }
-                        } else {
-                            a.getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
-                            if (cut.getDirection() == Direction.RIGHT) {
-                                anim.get(anim.size() - 1).getSuper().addAnimation(cut.getMirror(), cut.getMove(), Direction.LEFT);
-                            }
+                            a.addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                         }
+                    } else {
+                        a.getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
+                        a.getSuper().addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                     }
                 }
                 if (nuovo) {
                     System.out.println("" + cut.getPath());
                     anim.add(new Anim(cut.getType(), cut.getPath()));
-                    if (cut.getTransformation().equals("normal")) {
+                    if (cut.getTransformation() != null && cut.getTransformation().equals("normal")) {
                         anim.get(anim.size() - 1).addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
-                        if (cut.getDirection() == Direction.RIGHT) {
-                            anim.get(anim.size() - 1).addAnimation(cut.getMirror(), cut.getMove(), Direction.LEFT);
-                        }
+                        anim.get(anim.size() - 1).addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                     } else {
                         anim.get(anim.size() - 1).getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
-                        if (cut.getDirection() == Direction.RIGHT) {
-                            anim.get(anim.size() - 1).getSuper().addAnimation(cut.getMirror(), cut.getMove(), Direction.LEFT);
-                        }
+                        anim.get(anim.size() - 1).getSuper().addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                     }
                 }
             }
         });
         m.clean();
-        anim.stream().forEach((anim1) -> {
-            toObject(anim1, anim1.getPath(), "");
-        });
-        tile.stream().forEach((tile1) -> {
-            toObject(tile1, tile1.getPath(), tile1.getTile());
-        });
-        
-        if(fr != null){
+
+        anim.stream()
+                .forEach((anim1) -> {
+                    toObject(anim1, anim1.getPath(), "");
+                }
+                );
+        tile.stream()
+                .forEach((tile1) -> {
+                    toObject(tile1, tile1.getPath(), tile1.getTile());
+                }
+                );
+
+        if (fr
+                != null) {
             JOptionPane.showMessageDialog(fr, "Conversione dei file in AC e TI completata", "info", JOptionPane.DEFAULT_OPTION);
         }
-        
+
     }
 
     private void toObject(Object anim1, String path, String tile) {
@@ -138,14 +139,19 @@ public class Union {
             os.writeObject(anim1);
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Union.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (IOException ex) {
-            Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Union.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 fos.close();
+
             } catch (IOException ex) {
-                Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Union.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

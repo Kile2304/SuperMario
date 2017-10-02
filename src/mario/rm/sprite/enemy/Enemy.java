@@ -3,6 +3,8 @@ package mario.rm.sprite.enemy;
 import java.util.LinkedList;
 import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.handler.Handler;
+import mario.rm.identifier.Direction;
+import mario.rm.identifier.Move;
 import mario.rm.sprite.Sprite;
 import mario.rm.identifier.Type;
 import mario.rm.sprite.tiles.Tiles;
@@ -49,10 +51,8 @@ public class Enemy extends Sprite {
         isDie = false;  //IMPOSTO A NON MORTO
 
         this.canDie = canDie;
-        direzione = -1;
-
-        direzioneY = 1;
-
+        lastMove = Move.WALK;
+        lastDirection = Direction.LEFT;
     }
 
     /**

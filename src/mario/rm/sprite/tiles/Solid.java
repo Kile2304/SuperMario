@@ -16,8 +16,8 @@ import mario.rm.identifier.Type;
  */
 public class Solid extends Tiles {   //NORMALE TILES
 
-    public Solid(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Tile> anim, boolean collide, String part) {
-        super(x, y, width, height, handler, type, anim, collide, part);
+    public Solid(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Tile> anim, boolean collide, String part, boolean damage) {
+        super(x, y, width, height, handler, type, anim, collide, part, damage);
     }
     
     public Solid(int x, int y, int width, int height, Handler handler, Type type, boolean collide, String part) {

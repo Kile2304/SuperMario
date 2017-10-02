@@ -3,6 +3,8 @@ package mario.rm.sprite.enemy;
 import java.util.ArrayList;
 import mario.rm.Animation.Cut;
 import mario.rm.handler.Handler;
+import mario.rm.identifier.Direction;
+import mario.rm.identifier.Move;
 import mario.rm.sprite.Player;
 import mario.rm.identifier.Type;
 
@@ -25,6 +27,8 @@ public class Boo extends Enemy {
 
     public Boo(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
         super(x, y, width, height, handler, type, canDie);
+        velY = Type.BOO.getVelY();
+        velX = Type.BOO.getVelX();
     }
 
     public static void setPlayer(Player p) {
@@ -39,41 +43,20 @@ public class Boo extends Enemy {
     public void tick() {
 
         direzioneY = p.getY() - y; //IMPOSTO LA DIREZIONE IN CUI MUOVERSI (Y)
-        if (direzioneY != 0) {
-            direzioneY = direzioneY / Math.abs(direzioneY);   //MI CALCOLO LA DIREZIONE
-        } else {
-            direzioneY = 20;
-        }   //FINE DIREZIONE (Y)
+        direzioneY = direzioneY != 0 ? (direzioneY > 0 ? 1 : -1) : 0;   //CALCOLO DIREZIONE Y
 
-        if (p.getX() > x && direzione < 0 || p.getX() < x && direzione > 0) { //SE LO SALTO E LUI E' FERMO GLI DICO DI RINCORRERMI
-            direzione = -direzione;
-        }
+        int direzioneX = p.getX() - x;  //CALCOLO VERSO DOVE DEVE MUOVERSI IL BOO
+        direzioneX = direzioneX != 0 ? (direzioneX > 0 ? 1 : -1) : 0;   //CALCOLO DIREZIONE X
 
-        int f = -p.getDirezione() / Math.abs(p.getDirezione());
-        if (f == direzione / Math.abs(direzione)) {
-            direzione = 100 * f;
-            velX = 0;
-            velY = 0;
-        } else {
-            int dirX = p.getX() - x;
+        lastDirection = direzioneX != 0 ? (direzioneX > 0 ? Direction.RIGHT : Direction.LEFT) : lastDirection;  //CALCOLO LA DIREZIONE ATTUALE DEL BOO
 
-            if (dirX != 0) {
-                dirX = dirX / Math.abs(dirX);
-            } else {
-                dirX = 20;
-            }
+        if (p.getLastDirection() != lastDirection && direzioneX < 0 || p.getLastDirection() != lastDirection && direzioneX > 0) {   //SE IL PLAYER E' RIVOLTO VERSO IL BOO GLI DICO DI FERMARSI
+            lastMove = Move.STAND;
+        } else {    //ALTRIMENTI SI MUOVE
+            lastMove = Move.WALK;
 
-            direzione = dirX;
-
-            velX = Type.BOO.getVelX();
-            velY = Type.BOO.getVelY();
-        }
-
-        if (direzione != 20) {
-            x += velX * (direzione / Math.abs(direzione));
-        }
-        if (direzioneY != 20) {
-            y += velY * (direzioneY / Math.abs(direzioneY));
+            x += velX * direzioneX;
+            y += velY * direzioneY;
         }
 
     }

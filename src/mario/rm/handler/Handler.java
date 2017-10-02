@@ -26,7 +26,7 @@ import mario.rm.sprite.tiles.Tiles;
  * @author LENOVO
  *
  * gestisce la creazione di livelli ed il suo aggiornamento e rendering
- * 
+ *
  */
 public class Handler implements Reader {
 
@@ -190,6 +190,14 @@ public class Handler implements Reader {
             return false;
         } //CREA IL LIVELLO
 
+        int temp = tiles.size();    //SEMPLICE VARIABILE PER OTTENERE INFORMAZIONI SUL RENDERING DEL LIVELLO
+        System.out.println("" + temp);
+        miglioraLivello();  //CERCO DI RIDURRE IL NUMERO DI SPRITE, IN MODO DA VELOCIZZARE AGGIORNAMENTO E RENDERING
+
+        System.out.println("" + tiles.size());
+        System.out.println("" + (temp - tiles.size()));
+        System.out.println("Migliorato del: " + ((double) 100 / temp * (temp - tiles.size()))); //CALCOLO DI QUANTO E' MIGLIORATO IL LIVELLO (%)
+
         memoria.nextSound();
         while (sound) {
             /*try {
@@ -209,10 +217,11 @@ public class Handler implements Reader {
     public void removePlayer(Player sp) {    //RIMUOVE UN PLAYER DALL'ELENCO
         player.remove(sp);
     }
-/**
- * 
- * @param sp: il tile da rimuovere
- */
+
+    /**
+     *
+     * @param sp: il tile da rimuovere
+     */
     public void removeTile(Tiles sp) {   //RIMUOVE UN TILES DALL'ELENCO
         tiles.remove(sp);
     }
@@ -233,38 +242,49 @@ public class Handler implements Reader {
         tiles.push(til);
     }
 
-    
     /**
      *
      * @param x0: coordinate x dove deve essere disegnato
      * @param y0: coordinate y dove deve essere disegnato
-     * @param type: che tipo e' lo sprite da disegnare (player, koopa, boo, tartosso, solid...)
-     * @param unlockable: nel caso il type sia unlockable questo specifica, che cosa sblocca il contatto col tile
-     * @param tile: nel caso dei tile questo specifica che parte del tile bisogna disegnare
+     * @param type: che tipo e' lo sprite da disegnare (player, koopa, boo,
+     * tartosso, solid...)
+     * @param unlockable: nel caso il type sia unlockable questo specifica, che
+     * cosa sblocca il contatto col tile
+     * @param tile: nel caso dei tile questo specifica che parte del tile
+     * bisogna disegnare
      */
     @Override
     public void creaLivello(int x0, int y0, Type type, Type unlockable, String tile) {
+        x0 *= SuperMario.standardWidth;
+        y0 *= SuperMario.standardHeight;
         if (null != type) //IN BASE AD UNA IMMAGINE, SCANSIONA PIXEL PER PIXEL IL SUO CONTENUTO, E NE CREA UNA, CON LE INDICAZIONI DATOGLI DALL'IMMAGINE
         //int x0 = x * SuperMario.standardWidth;
         //int y0 = y * SuperMario.standardHeight;
         {
             switch (type) {
                 case SOLID:
-                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), true, tile));   //SE E NERO E' NORMALE SOLIDO
+                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), true, tile, false));   //SE E NERO E' NORMALE SOLIDO
                     break;
                 case PLAYER:
                     player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, unlockable));   //SE PIXEL BLU è UN PLAYER
                     break;
                 case COIN:
-                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getUnlockable(), false, tile)); //SE E GIALLO E' UNA MONETA
+                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getUnlockable(), false, tile, false)); //SE E GIALLO E' UNA MONETA
                     break;
                 case MUSHROOM:
-                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getUnlockable(), false, tile)); //SE E ROSSO E' UN FUNGO
+                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getUnlockable(), false, tile, false)); //SE E ROSSO E' UN FUNGO
+                    break;
+                case MUSHROOMPLATFORM:
+                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, true, tile)); //SE E ROSSO E' UN FUNGO
                     break;
                 case UNLOCKABLE:
                     String unlock = unlockable.name();
-                    Type getUnlock = Type.valueOf(unlock.substring(unlock.lastIndexOf("£"+1), unlock.length()));
+
+                    Type getUnlock = Type.valueOf(unlock.substring(unlock.lastIndexOf("£") + 1, unlock.length()));
                     tiles.add(new CoinBlock(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), getUnlock, true, tile));
+                    break;
+                case SPINE:
+                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), true, tile, true));
                     break;
                 case TARTOSSO:
                     enemy.add(new Tartosso(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, true));
@@ -273,10 +293,10 @@ public class Handler implements Reader {
                     enemy.add(new Enemy(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, true));
                     break;
                 case TUBO_RED:
-                    tiles.add(new Solid(x0, y0 - SuperMario.standardHeight, SuperMario.standardWidth * 2, SuperMario.standardHeight * 2, this, type, memoria.getTiles(), true, tile));
+                    tiles.add(new Solid(x0, y0 - SuperMario.standardHeight, SuperMario.standardWidth * 2, SuperMario.standardHeight * 2, this, type, memoria.getTiles(), true, tile, false));
                     break;
                 case TUBO_RED_DOWN:
-                    tiles.add(new Solid(x0, y0 - SuperMario.standardHeight, SuperMario.standardWidth * 2, SuperMario.standardHeight * 2, this, type, memoria.getTiles(), true, tile));
+                    tiles.add(new Solid(x0, y0 - SuperMario.standardHeight, SuperMario.standardWidth * 2, SuperMario.standardHeight * 2, this, type, memoria.getTiles(), true, tile, false));
                     break;
                 case PIRANHAPLANT:
                     enemy.add(new Plant(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, false));
@@ -325,7 +345,7 @@ public class Handler implements Reader {
                     tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, true, tile));   //SE E NERO E' NORMALE SOLIDO
                     break;
                 case UP1:
-                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), false, tile));   //SE E NERO E' NORMALE SOLIDO
+                    tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), false, tile, false));   //SE E NERO E' NORMALE SOLIDO
                     break;
                 default:
                     break;
@@ -336,14 +356,6 @@ public class Handler implements Reader {
         } else {
             System.err.println("Questa animazione non e' valida: manca il Type di appartenenza");
         }
-
-        int temp = tiles.size();    //SEMPLICE VARIABILE PER OTTENERE INFORMAZIONI SUL RENDERING DEL LIVELLO
-        System.out.println("" + temp);
-        miglioraLivello();  //CERCO DI RIDURRE IL NUMERO DI SPRITE, IN MODO DA VELOCIZZARE AGGIORNAMENTO E RENDERING
-
-        System.out.println("" + tiles.size());
-        System.out.println("" + (temp - tiles.size()));
-        System.out.println("Migliorato del: " + ((double) 100 / temp * (temp - tiles.size()))); //CALCOLO DI QUANTO E' MIGLIORATO IL LIVELLO (%)
 
     }
 

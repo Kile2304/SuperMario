@@ -217,7 +217,6 @@ public class Selezione implements MouseListener {
         }
 
         //System.out.println("colonna: " + colonna + " riga: " + riga);
-
         switch (type) {
             case 1: {
                 new Thread() {
@@ -231,9 +230,11 @@ public class Selezione implements MouseListener {
                             riga = (e.getY() + 30) / g.getPixel() + g.getMovY();
                         }
                         Punto[] p = cl.nuovoPunto(colonna, riga);
-                        for (int i = 0; i < p.length; i++) {
-                            if (p[i] != null) {
-                                g.setItem(p[i].getX(), p[i].getY());
+                        if (p != null) {
+                            for (int i = 0; i < p.length; i++) {
+                                if (p[i] != null) {
+                                    g.setItem(p[i].getX(), p[i].getY());
+                                }
                             }
                         }
                     }
@@ -243,9 +244,11 @@ public class Selezione implements MouseListener {
 
             case 2: {
                 Punto[] p = cl.rimuoviCollegamento(colonna, riga);
-                for (int i = 0; i < p.length; i++) {
-                    if (p[i] != null) {
-                        g.setItem(p[i].getX(), p[i].getY());
+                if (p != null) {
+                    for (int i = 0; i < p.length; i++) {
+                        if (p[i] != null) {
+                            g.setItem(p[i].getX(), p[i].getY());
+                        }
                     }
                 }
                 break;

@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
+import mario.rm.identifier.Direction;
+import mario.rm.identifier.Move;
 import mario.rm.sprite.Sprite;
 
 /**
@@ -40,9 +42,11 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:  //SE VIENE PREMUTO IL TATO SINISTRO
                     if (!sp.isFalling()) {   //SE STA TOCCANDO IL TEERRENO
-                        sp.setDirezione(-1);    //IMPOSTO A STA CORRENDO SPECCHIATO
+                        //sp.setDirezione(-1);    //IMPOSTO A STA CORRENDO SPECCHIATO
+                        sp.setLastMovement(Direction.LEFT, Move.WALK);
                     } else {
-                        sp.setDirezione(-30);   //SALTO SPECCHIATO
+                        //sp.setDirezione(-30);   //SALTO SPECCHIATO
+                        sp.setLastMovement(Direction.LEFT, Move.JUMP);
                     }
                     sp.setVelX(-velX);   //LA VELOCITA X  = -5
                     move[0] = true;
@@ -50,9 +54,11 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     break;
                 case KeyEvent.VK_RIGHT: //SE VIENE PREMUTO IL TASTO DESTRO
                     if (!sp.isFalling()) {   //SE STA TOCCANDO IL PAVIMENTO
-                        sp.setDirezione(1); //IMPOSTO A STA' CORRENDO
+                        //sp.setDirezione(1); //IMPOSTO A STA' CORRENDO
+                        sp.setLastMovement(Direction.RIGHT, Move.WALK);
                     } else {
-                        sp.setDirezione(30);    //IMPOSTO A SALTO NORMALE
+                        //sp.setDirezione(30);    //IMPOSTO A SALTO NORMALE
+                        sp.setLastMovement(Direction.RIGHT, Move.JUMP);
                     }
                     sp.setVelX(velX);    //VELOCITA X = 5
                     move[1] = true;
@@ -67,7 +73,8 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         sp.setJumping(true);  //ORA STA SALTANDO
                         sp.setFalling(false);   //IMPOSTO A NON STA' SALTANDO
                         sp.setGravity(jump); //LA GRAVITA E' UGUALE A 7
-                        sp.setDirezione((sp.getDirezione() / Math.abs(sp.getDirezione())) * 30);    //IMPOSTO IL SALTO NELLA DIREZIONE IN CUI ERA PRIMA
+                        //sp.setDirezione((sp.getDirezione() / Math.abs(sp.getDirezione())) * 30);    //IMPOSTO IL SALTO NELLA DIREZIONE IN CUI ERA PRIMA
+                        sp.setLastMovement(sp.getLastDirection(), Move.JUMP);
                     }
                     break;
                 case KeyEvent.VK_DOWN:

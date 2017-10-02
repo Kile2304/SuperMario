@@ -10,6 +10,8 @@ import static mario.rm.SuperMario.HEIGHT;
 import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.camera.Camera;
 import mario.rm.handler.Handler;
+import mario.rm.identifier.Move;
+import mario.rm.identifier.TilePart;
 import mario.rm.input.Sound;
 import mario.rm.sprite.enemy.Boo;
 import mario.rm.sprite.enemy.Boss;
@@ -52,8 +54,6 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
         respawnX = x;   //COORDINATE PER IL RESPAWN
         respawnY = y;
-
-        
 
         Boo.setPlayer(this);
         Boss.setPlayer(this);
@@ -103,6 +103,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                     if (tileX <= x + width * 3 && tileX >= x - width * 2 && tile.get(i).getY() >= y - height * 2 && tile.get(i).getY() <= y + height * 3) {
                         Type tileType = tile.get(i).getType();
                         Rectangle bounds = tile.get(i).getBounds();
+
                         if (getBounds().intersects(bounds)) {
                             if (tileType == Type.ROD || tile.get(i).getType() == Type.FLAGCOMPLETE) {
                                 handler.next(); //SE COLPISCE LA BANDIERA DI FINE LIVELLO LO CAMBIA
@@ -151,7 +152,21 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                                 life++;
                                 tile.get(i).die();
                             } else if (tile.get(i).getCollide()) {
-
+                                if(tile.get(i).canDamage()){
+                                    if(grow){
+                                        grow = false;
+                                        width -= crescita;
+                                        height -= crescita;
+                                        x -= crescita;
+                                        y -= crescita;
+                                    }else{
+                                        life--;
+                                        x = respawnX;
+                                        y = respawnY;
+                                        die();
+                                    }
+                                    continue;
+                                }
                                 if (getBoundsTop().intersects(bounds)) {    //INTERSEZIONE PARTE ALTA
                                     gravity = 0.0;    //AZZERO LA GRAVITA'
                                     y = tile.get(i).getY() + tile.get(i).getHeight();   //LA SUA COORDINATA Y DIVIENE PARI AD LA POSIZIONE DEL TILE (Y) PIU HEIGHT del tile
@@ -198,9 +213,9 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
                                     if (!jumping) { //SE NON STA' SALTANDO
                                         if (velX != 0) {    //SE LA VELOCITA' E' DIVERSA DA 0
-                                            direzione = (direzione / Math.abs(direzione)) * 1;  //STA CAMMINANDO
+                                            lastMove = Move.WALK;
                                         } else {
-                                            direzione = (direzione / Math.abs(direzione)) * 100;    //E' FERMO
+                                            lastMove = Move.STAND;
                                         }
                                     }
 
@@ -228,42 +243,40 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
             @Override
             public void run() {
                 LinkedList<Enemy> enemy = handler.getEnemy();
-                for (Enemy enem : enemy) {
-                    if (!enem.isDie()) {
-                        if (getBoundsBottom().intersects(enem.getBoundsTop())) { //INTERSEZIONE PARTE BASSA
-                            if (enem.isCanDie()) {
-                                enem.die(); //IL NEMICO VIENE SCONFITTO
-                                y = enem.getY() - height - 1;
-                                gravity = -7.2;   //SALTA IN ALTO
-                                jumping = true; //DICE CHE SALTANDO
-                                falling = false;    //DICE CHE NON STA CADENDO
-                                PUNTEGGIO += 1000;  //AGGIORNO IL PUNTEGGIO
-                            }
-                        } else if (getBounds().intersects(enem.getBounds())) {  //SE COLPISCE IL NEMICO CON QUALSIASI ALTRA PARTE
-                            if (!immortal) {    //NEL CASO NON SIA IMMORTALE
-                                if (!grow) {    //NEL CASO NON SIA GRANDE
-                                    life--; //GLI VIENE TOLTA UNA VITA
-                                    if (life == 0) {    //SE HA 0 VITE
-                                        System.out.println("Perso");    //GLI DICE DI AVERE PERSO
-                                        System.exit(0); //TERMINA BRUSCAMENTE IL GIOCO
-                                    } else {  //SE HA ANCORA VITE LO FA SPAWNARE AL CHECKPOINT PRECEDENTE
-                                        x = respawnX;   //IMPOSTA LE COORDINATE X A QUELLE DEL CHECKPOINT PRECEDENTE
-                                        y = respawnY;   //IMPOSTA LE COORDINATE Y A QUELLE DEL CHECKPOINT PRECEDENTE
-                                        Camera.setUpY(-y + HEIGHT - SuperMario.standardHeight * 4);
-                                    }
-                                    die();
-                                } else {    //SE ERA GRANDE
-                                    grow = false;   //LO FA DIVENTARE PICCOLO
-                                    width -= crescita;  //DECREMENTA LA LARGHEZZA
-                                    height -= crescita; //DECREMENTA LA ALTEZZA
-                                    y += crescita;  //RIPOSIZIONA SULL'ASSE Y
+                enemy.stream().filter((enem) -> (!enem.isDie())).forEach((enem) -> {
+                    if (getBoundsBottom().intersects(enem.getBoundsTop())) { //INTERSEZIONE PARTE BASSA
+                        if (enem.isCanDie()) {
+                            enem.die(); //IL NEMICO VIENE SCONFITTO
+                            y = enem.getY() - height - 1;
+                            gravity = -7.2;   //SALTA IN ALTO
+                            jumping = true; //DICE CHE SALTANDO
+                            falling = false;    //DICE CHE NON STA CADENDO
+                            PUNTEGGIO += 1000;  //AGGIORNO IL PUNTEGGIO
+                        }
+                    } else if (getBounds().intersects(enem.getBounds())) {  //SE COLPISCE IL NEMICO CON QUALSIASI ALTRA PARTE
+                        if (!immortal) {    //NEL CASO NON SIA IMMORTALE
+                            if (!grow) {    //NEL CASO NON SIA GRANDE
+                                life--; //GLI VIENE TOLTA UNA VITA
+                                if (life == 0) {    //SE HA 0 VITE
+                                    System.out.println("Perso");    //GLI DICE DI AVERE PERSO
+                                    System.exit(0); //TERMINA BRUSCAMENTE IL GIOCO
+                                } else {  //SE HA ANCORA VITE LO FA SPAWNARE AL CHECKPOINT PRECEDENTE
+                                    x = respawnX;   //IMPOSTA LE COORDINATE X A QUELLE DEL CHECKPOINT PRECEDENTE
+                                    y = respawnY;   //IMPOSTA LE COORDINATE Y A QUELLE DEL CHECKPOINT PRECEDENTE
+                                    Camera.setUpY(-y + HEIGHT - SuperMario.standardHeight * 4);
                                 }
-                                time = System.currentTimeMillis();  //MEMORIZZA IN CHE MOMENTO E' STATO COLPITO
-                                immortal = true;    //LO RENDE TEMPORANEAMENTE IMMORTALE
+                                die();
+                            } else {    //SE ERA GRANDE
+                                grow = false;   //LO FA DIVENTARE PICCOLO
+                                width -= crescita;  //DECREMENTA LA LARGHEZZA
+                                height -= crescita; //DECREMENTA LA ALTEZZA
+                                y += crescita;  //RIPOSIZIONA SULL'ASSE Y
                             }
+                            time = System.currentTimeMillis();  //MEMORIZZA IN CHE MOMENTO E' STATO COLPITO
+                            immortal = true;    //LO RENDE TEMPORANEAMENTE IMMORTALE
                         }
                     }
-                }
+                });
             }
         };
         t[1].start();

@@ -83,7 +83,7 @@ public class Estratta {
 
         //System.out.println(""+path);
         String p1 = path;
-        
+
         try {
             path = this.path.substring(this.path.lastIndexOf("\\player\\"), this.path.lastIndexOf("\\"));
         } catch (StringIndexOutOfBoundsException e) {
@@ -91,13 +91,22 @@ public class Estratta {
                 path = this.path.substring(this.path.lastIndexOf("\\tile\\", this.path.lastIndexOf("\\")));
                 path = path.substring(0, path.lastIndexOf("\\"));
             } catch (StringIndexOutOfBoundsException ex) {
-                path = this.path.substring(this.path.lastIndexOf("\\terrain\\", this.path.lastIndexOf("\\")));
-                path = path.substring(0, path.lastIndexOf("\\"));
+                try {
+                    path = this.path.substring(this.path.lastIndexOf("\\terrain\\", this.path.lastIndexOf("\\")));
+                    path = path.substring(0, path.lastIndexOf("\\"));
+                } catch (StringIndexOutOfBoundsException exe) {
+                    try {
+                        path = this.path.substring(this.path.lastIndexOf("\\enemy\\", this.path.lastIndexOf("\\")));
+                        path = path.substring(0, path.lastIndexOf("\\"));
+                    } catch (StringIndexOutOfBoundsException exec) {
+                        return;
+                    }
+                }
             }
         }
 
         //System.out.println("estratta path: "+path);
-        System.out.println(""+p1);
+        System.out.println("" + p1);
         ObjectOutputStream out = null;
         FileOutputStream fos = null;
 
@@ -116,10 +125,10 @@ public class Estratta {
             cut = new Cut(p1, coord, null, type, null, path + "\\" + cart, tile, unlock);
         }
 
-        if(cut.getErrore()){
+        if (cut.getErrore()) {
             return;
         }
-        
+
         File f = new File("src\\mario\\res\\Animazioni" + path + "\\" + cart);
         if (!f.exists()) {
             f.mkdir();
@@ -131,7 +140,7 @@ public class Estratta {
             fos = new FileOutputStream(new File("src\\mario\\res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
             out = new ObjectOutputStream(fos);
             out.writeObject(cut);
-            
+
             out.close();
             fos.close();
         } catch (FileNotFoundException ex) {

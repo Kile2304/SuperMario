@@ -56,7 +56,8 @@ public enum Type implements Serializable {
     SPINE(0, 0, 0, 0, 0),
     BULLET (0, 0, 0, 0, 0),
     BRIDGE (0, 0, 0, 0, 0),
-    PLAYER£LUIGI (0, 0, 0, 0, 0);
+    PLAYER£LUIGI (0, 0, 0, 0, 0),
+    KI (0, 0, 0, 0, 0);
      private int tempo;
     private int delay;
     private int numeroImma; //NUMERO DI IMMAGINI CONTENUTE NELL'ARRAY ANIMAZIONI

@@ -12,9 +12,9 @@ public class SelectLevel {
 
     private int index;
 
-    private static final String[] history = {"bg.bmp","provaLV2.bmp", "bg.bmp", "prov.bmp"};    //livelli da cambiare con .level
+    private static final String[] history = {"provetta.level","provaLV2.bmp", "bg.bmp", "prov.bmp"};    //livelli da cambiare con .level
 
-    private static final String path = "mario/res/Immagini/livelli/";
+    private static final String path = "src/mario/res/Immagini/livelli/";
 
     private static boolean custom = false;
 
@@ -34,6 +34,9 @@ public class SelectLevel {
         custom = true;
         next = new String[]{path};
         index = -1;
+        if(MainComponent.jar.isFile()){
+            path = path.replaceFirst("src/", "");
+        }
     }
 
     public String getNext() {

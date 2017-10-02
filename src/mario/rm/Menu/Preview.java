@@ -3,6 +3,7 @@ package mario.rm.Menu;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import mario.MainComponent;
@@ -114,9 +115,11 @@ public class Preview {
                 Punto p1 = coord.get(i);
                 mappa[p1.getX()][p1.getY()] = cl.get(i);
             }
-        }else{
+        } else {
             for (int i = 0; i < coord.size(); i++) {
-                mappa[coord.get(i).getX()][coord.get(i).getY()].changeCollider();
+                if (mappa[coord.get(i).getX()][coord.get(i).getY()] != null) {
+                    mappa[coord.get(i).getX()][coord.get(i).getY()].changeCollider();
+                }
             }
         }
 
@@ -167,15 +170,17 @@ public class Preview {
             ArrayList<Tile> unlock = memoria.getUnlockable();
             ArrayList<Tile> terreni = memoria.getTerreni();
 
-            for (Anim a : player) {
-                if (a.getType() == type) {
+            for (Iterator<Anim> it = player.iterator(); it.hasNext();) {
+                Anim a = it.next();
+                if (a.getType() == unlockable) {
                     ob = a;
                     stop = true;
                     break;
                 }
             }
             if (!stop) {
-                for (Anim a : enemy) {
+                for (Iterator<Anim> it = enemy.iterator(); it.hasNext();) {
+                    Anim a = it.next();
                     if (a.getType() == type) {
                         ob = a;
                         stop = true;
@@ -184,7 +189,8 @@ public class Preview {
                 }
             }
             if (!stop) {
-                for (Tile a : tiles) {
+                for (Iterator<Tile> it = tiles.iterator(); it.hasNext();) {
+                    Tile a = it.next();
                     if (a.getType() == type || a.getType() == unlockable) {
                         ob = a;
                         stop = true;
@@ -193,7 +199,8 @@ public class Preview {
                 }
             }
             if (!stop) {
-                for (Tile a : unlock) {
+                for (Iterator<Tile> it = unlock.iterator(); it.hasNext();) {
+                    Tile a = it.next();
                     if (a.getType() == type || a.getType() == unlockable) {
                         ob = a;
                         stop = true;
@@ -202,7 +209,8 @@ public class Preview {
                 }
             }
             if (!stop) {
-                for (Tile a : terreni) {
+                for (Iterator<Tile> it = terreni.iterator(); it.hasNext();) {
+                    Tile a = it.next();
                     if (a.getType() == type || a.getType() == unlockable) {
                         ob = a;
                         stop = true;
@@ -222,7 +230,11 @@ public class Preview {
                 cl.add(new Cell(type, img, ""));
             } else {
                 Anim an = (Anim) ob;
-                cl.add(new Cell(type, an.getImage(Move.WALK, Direction.RIGHT), ""));
+                if (an != null) {
+                    cl.add(new Cell(type, an.getImage(Move.WALK, Direction.RIGHT), ""));
+                } else {
+                    System.out.println("Anim = null");
+                }
             }
         }
 

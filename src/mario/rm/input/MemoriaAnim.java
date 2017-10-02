@@ -55,7 +55,6 @@ public class MemoriaAnim {
             jarFile = MainComponent.jar;
         }
 
-        Thread[] t = new Thread[1];
 
         indirizzo = "mario/res/Animazioni/";
 
@@ -72,7 +71,7 @@ public class MemoriaAnim {
     }
 
     public void carica() {
-        Thread[] t = new Thread[3];
+        Thread[] t = new Thread[4];
         System.out.println("5)CARICO LE ANIMAZIONI IN MEMORIA");
 
         //String indirizzo = "C:\\Users\\LENOVO\\Christian\\Scuola\\supermario\\SuperMario_1\\src\\Animazioni";
@@ -98,6 +97,11 @@ public class MemoriaAnim {
             getAnim(path, terreni);
         });
         t[2].start();
+        t[3] = new Thread(() -> {
+            String path = indirizzo + "enemy/";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
+            getAnim(path, enemy);
+        });
+        t[3].start();
 
 
         for (int i = 0; i < t.length; i++) {

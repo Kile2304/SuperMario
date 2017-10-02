@@ -130,8 +130,8 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
             return;
         }
         next = handler.getLevel();
-        next = next.substring(0, next.length() - 4) + ".png";
-        System.out.println("" + next);
+        next = next.substring(0, next.lastIndexOf(".")) + ".png";
+        System.out.println("Bg image: " + next);
         bg = new Loader().LoadImage(next); //CARICO IN MEMORIA LO SFONDO
 
         cam = new Camera(handler.getPlayer().get(0));    //SERVE PER ACCENTRARE SUL PLAYER LA TELECAMERA
@@ -229,7 +229,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         frame.remove(option);
 
         handler.getSound().loop();
-        
+
         frame.setVisible(true);
         option.setVisible(false);
 

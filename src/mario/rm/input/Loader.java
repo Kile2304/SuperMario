@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import mario.MainComponent;
+import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Type;
 
@@ -94,6 +95,7 @@ public class Loader {
             ArrayList<Integer> punto = new ArrayList<>();
             Type type = null;
             Type unlockable = null;
+            
             while ((line = br.readLine()) != null) {  //da modificare, in modo che rimanga solo int x, int y e Type, dopo diche fare for che scorre tutti gli anim...
                 String word = "";
                 type = null;

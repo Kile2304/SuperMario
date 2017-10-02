@@ -56,14 +56,6 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             ed.getSelezione().action(gomma.getActionCommand());
         });
         add(gomma);
-        /*JButton save = new JButton("SALVA");
-        save.setMaximumSize(new Dimension(100, 100));
-        save.addActionListener(this);
-        add(save);
-
-        JButton load = new JButton("LOAD");
-        load.addActionListener(this);
-        add(load);*/
 
         JButton coll = new JButton("COLLIDER TILE");
         coll.addActionListener(new ActionListener() {
@@ -84,6 +76,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
         base();
         memoria = new MemoriaAC();
+        memoria.carica();
     }
 
     public void collider() {

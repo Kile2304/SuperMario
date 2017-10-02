@@ -27,6 +27,7 @@ public class Test extends Canvas implements Runnable {
     //private Animazione an;
     private Anim anim;
     private Tile tile;
+    int index;
 
     public Test() throws FileNotFoundException, IOException, ClassNotFoundException {
         JFrame frame = new JFrame("");
@@ -82,12 +83,17 @@ public class Test extends Canvas implements Runnable {
 
         //g.drawImage(an.nextNormal(), 100, 100, 100, 100, null);
         if(anim != null){
-            g.drawImage(anim.getImage(Move.JUMP, Direction.RIGHT), 0, 0, 64, 64, this);
+            g.drawImage(anim.getImage(Move.WALK, Direction.RIGHT), 0, 0, 64, 64, this);
         }else if(tile != null){
             //g.drawImage(tile.getImage(TilePart.UPLEFT)[0], 0, 0, 64, 64, this);
                 BufferedImage[] img = tile.getImage(TilePart.UPLEFT);
                 if(img != null){
-                    g.drawImage(img[0], 0, 0, 64, 64, null);
+                    g.drawImage(img[index], 0, 0, 64, 64, null);
+                    if(index < img.length - 1){
+                        index++;
+                    } else {
+                        index = 0;
+                    }
                 }else{
                     //System.out.println("WHY?");
                 }

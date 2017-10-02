@@ -10,8 +10,10 @@ import mario.rm.Size;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.Animation.Anim;
+import mario.rm.Animation.Tile;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
+import mario.rm.identifier.TilePart;
 
 /**
  *
@@ -48,11 +50,13 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
 
     protected Anim animazione;
 
-    protected int delay;    //VARIABILE PER RENDERE PIU' FLUIDO O PER IMPOSTARE UN TIMEOUT
-    
     protected Move lastMove;
     protected Direction lastDirection;
 
+    /*protected BufferedImage[] ti;
+    int ind;
+    int delay2;*/
+    
     public Sprite(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Anim> elenco) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         this.x = x; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE X
         this.y = y; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE Y
@@ -66,12 +70,17 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         this.type = type;   //CHE TIPO DI SPRITE E'
         lastMove = Move.STAND;
         lastDirection = Direction.RIGHT;
-        
+
         for (Iterator<Anim> it = elenco.iterator(); it.hasNext();) {
             Anim animazione = it.next();
-            if(animazione.getType() == type)
+            if (animazione.getType() == type) {
                 this.animazione = animazione;   //DA CAMBIARE (PROBABILMENTE COSTRUTTORE CHE CREA COPIA)
+            }
         }
+
+        /*handler.getMemoria().getTiles().stream().filter((t) -> (t.getType() == Type.KI)).forEach((t) -> {
+            ti = t.getImage(TilePart.UPLEFT);
+        });*/
     }
 
     /**
@@ -108,41 +117,29 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      * ES: STAZIONAMENTO, CAMMINA, CORRE...
      */
     public void render(Graphics g) {//DA MODIFICARE, SOPRATTUTTO IL VALORE COSTANTE
-        delay++;
-        if (delay > 2) {
-            /*switch (direzione) {
-                case 1:
-                    temp = walk.nextNormal();
-                    break;
-                case -1:
-                    temp = walk.nextMirror();
-                    break;
-                case 10:
-                    temp = run.nextNormal();
-                    break;
-                case -10:
-                    temp = run.nextMirror();
-                    break;
-                case 100:
-                    temp = stand.nextNormal();
-                    break;
-                case -100:
-                    temp = stand.nextMirror();
-                    break;
-                case 30:
-                    temp = jump.nextNormal();
-                    break;
-                case -30:
-                    temp = jump.nextMirror();
-                    break;
-                default:
-                    return;
-
-            }*/
-            temp = animazione.getImage(lastMove, lastDirection);
-            delay = 0;
-        }
+        temp = animazione.getImage(lastMove, lastDirection);
+        
+        //g.drawImage(ti[ind], x - width / 2, y - height, width * 2, height * 2, null);   //DISEGNO L'IMMAGINE
         g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
+        /*if (delay2 > ti.length * 2) {
+            if (ind < ti.length - 1) {
+                ind++;
+            } else {
+                ind = 0;
+            }
+            delay2 = 0;
+        } else {
+            delay2++;
+        }*/
+    }
+
+    public void setLastMovement(Direction dir, Move move) {
+        lastDirection = dir;
+        lastMove = move;
+    }
+
+    public Direction getLastDirection() {
+        return lastDirection;
     }
 
     /**
