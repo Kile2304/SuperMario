@@ -47,7 +47,6 @@ public class Anim implements Serializable, Animated {
     }
 
     public void addAnimation(BufferedImage[] anim, Move move, Direction direction) {
-        BufferedImage[] find = null;    //non funziona, da RIFARE
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getName().equals(move.name().toLowerCase())) {
@@ -58,10 +57,6 @@ public class Anim implements Serializable, Animated {
                 }
             }
         }
-        /*if(Move.WALK == move && direction == Direction.RIGHT){
-            System.out.println("destra");
-        }*/
-        //Piu avanti da provare il metodo fatto in getImage();
     }
 
     private BufferedImage[] animation(BufferedImage[] anim, Direction direction, BufferedImage[] dest) {
@@ -76,9 +71,8 @@ public class Anim implements Serializable, Animated {
     }
 
     public BufferedImage getImage(Move move, Direction dir) {
-        BufferedImage img = null;
-
         BufferedImage[] find = null;    //non funziona, da RIFARE
+        
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getName().equals(move.name().toLowerCase())) {
@@ -89,10 +83,8 @@ public class Anim implements Serializable, Animated {
                 }
             }
         }
-        if (find != null) {
-            img = getImage(move, dir, find);
-        }
-        return img;
+        
+        return find != null ? getImage(move, dir, find) : null;
     }
 
     private BufferedImage getImage(Move move, Direction dir, BufferedImage[] anim) {
@@ -100,6 +92,7 @@ public class Anim implements Serializable, Animated {
             index = 0;
             lastMove = move;
             lastDirection = dir;
+            delay = 0;
         }
         if (delay + anim.length / 4 < System.currentTimeMillis()) {  //delay da fixare
             delay = System.currentTimeMillis();
@@ -108,9 +101,8 @@ public class Anim implements Serializable, Animated {
             } else {
                 index = 0;
             }
-        } else {
-            delay++;
         }
+        
         return anim[anim.length / 4 * dir.getMoltiplier() + index];
     }
 
@@ -193,7 +185,19 @@ public class Anim implements Serializable, Animated {
     }
 
     public boolean isEndDie() {
-        return index >= die.length;
+        BufferedImage[] find = null;    //non funziona, da RIFARE
+        
+        Field[] fields = getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getName().equals(lastMove.name().toLowerCase())) {
+                try {
+                    find = (BufferedImage[]) field.get(this);
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(Anim.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return index >= find.length / 4 - 1;
     }
 
     @Override

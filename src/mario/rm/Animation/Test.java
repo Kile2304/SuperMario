@@ -80,10 +80,12 @@ public class Test extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
 
         g.clearRect(0, 0, 1920, 1080);
+        
+        g.fillRect(0, 0, getWidth(), getHeight());
 
         //g.drawImage(an.nextNormal(), 100, 100, 100, 100, null);
         if(anim != null){
-            g.drawImage(anim.getImage(Move.WALK, Direction.RIGHT), 0, 0, 64, 64, this);
+            g.drawImage(anim.getImage(Move.STAND, Direction.LEFT), 0, 0, 64, 64, this);
         }else if(tile != null){
             //g.drawImage(tile.getImage(TilePart.UPLEFT)[0], 0, 0, 64, 64, this);
                 BufferedImage[] img = tile.getImage(TilePart.UPLEFT);
@@ -109,7 +111,7 @@ public class Test extends Canvas implements Runnable {
         while (true) {
             render();
             try {
-                sleep(50);
+                sleep(150);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
             }

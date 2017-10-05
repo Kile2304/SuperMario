@@ -53,44 +53,9 @@ public class Enemy extends Sprite {
         this.canDie = canDie;
         lastMove = Move.WALK;
         lastDirection = Direction.LEFT;
+        
+        direzione = -1;
     }
-
-    /**
-     *
-     * @param g
-     * @return DISEGNA IL NEMICO
-     */
-   /* @Override
-    public void render(Graphics g) {
-        delay++;   //VARIABILE PER RALLENTARE LO SCORRIMENTO DELL'IMMAGINE
-        if (delay >= 8) { //SE STA CAMMINANDO E IL FRAME E' ALMENO A 8
-
-            switch (direzione) {
-                case 1:
-                    temp = walk.nextMirror();
-                    break;
-                case -1:
-                    temp = walk.nextNormal();
-                    break;
-                case -10:
-                    temp = die.nextNormal();
-                    break;
-                case 10:
-                    temp = die.nextMirror();
-                    break;
-                case -100:
-                    temp = up.nextNormal();
-                    break;
-                case 100:
-                    temp = up.nextMirror();
-                    break;
-                default:
-                    break;
-            }
-            delay = 0; //RESETTA LA VARIABILE CONT
-        }
-        g.drawImage(temp, x, y, width, height, null);
-    }*/
 
     /**
      *
@@ -100,7 +65,7 @@ public class Enemy extends Sprite {
     @Override
     public void die() {
         if (!isDie) {
-            direzione = (direzione / Math.abs(direzione)) * 10;
+            lastMove = Move.DIE;
             isDie = true;
             velX = 0;
         } else {
@@ -137,10 +102,12 @@ public class Enemy extends Sprite {
                         if (getBoundsRight().intersects(tile.get(i).getBounds())) {  //INTERSEZIONE PARTE DESTRA
                             x = tile.get(i).getX() - width; //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA
                             direzione *= -1;
+                            lastDirection = Direction.LEFT;
                         }
                         if (getBoundsLeft().intersects(tile.get(i).getBounds())) {   //INTERSEZIONE PARTE SINISTRA (DOVREBBE ESSERE PERFETTO)
                             x = tile.get(i).getX() + tile.get(i).getWidth() - 20; //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA del tile
                             direzione *= -1;
+                            lastDirection = Direction.RIGHT;
                         }
                     }
                 }

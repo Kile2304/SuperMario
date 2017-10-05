@@ -95,6 +95,18 @@ public class Handler implements Reader {
         };
         t[0].start();
 
+        t[1] = new Thread() {
+            @Override
+            public void run() {
+                tiles.stream().forEach((tiles) -> {    //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL RENDER DEGLI TILES
+                    if (tiles.getX() <= d && tiles.getX() >= c && p >= tiles.getY() && z <= tiles.getY()) {
+                        tiles.render(g);
+                    }
+                });
+            }
+        };
+        t[1].start();
+
         t[2] = new Thread() {
             @Override
             public void run() {
@@ -111,19 +123,7 @@ public class Handler implements Reader {
             }
         };
         t[2].start();
-
-        t[1] = new Thread() {
-            @Override
-            public void run() {
-                tiles.stream().forEach((tiles) -> {    //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL RENDER DEGLI TILES
-                    if (tiles.getX() <= d && tiles.getX() >= c && p >= tiles.getY() && z <= tiles.getY()) {
-                        tiles.render(g);
-                    }
-                });
-            }
-        };
-        t[1].start();
-
+        
         for (int i = 0; i < t.length; i++) {
             try {
                 t[i].join();
