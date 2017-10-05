@@ -64,6 +64,10 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     private static JFrame frame;
 
     private static SuperMario mario;
+    
+    private static boolean video = false;
+    
+    private static Movement movement = null;
 
     //
     public SuperMario() {
@@ -96,14 +100,14 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         WIDTH = device.getFullScreenWindow().getWidth();    //OTTENGO LA LARGHEZZA MASSIMA DELLA FINESTRA
         HEIGHT = device.getFullScreenWindow().getHeight();  //OTTENGO LA ALTEZZA MASSIMA DELLA FINESTRA
 
-        addKeyListener(new Movement(adaptWidth((int) 5.0), adaptHeight(10.0), handler)); //AGGIUNGE UN KEY LISTENER DALLA CLASSE MOVEMENT
+        addKeyListener((movement = new Movement(adaptWidth((int) 5.0), adaptHeight(10.0), handler))); //AGGIUNGE UN KEY LISTENER DALLA CLASSE MOVEMENT
 
         frame.setSize(WIDTH, HEIGHT);   //IMPOSTA L'AMPIEZZA DELLA FINESTRA
         frame.setResizable(false);  //NON E' POSSIBILE RIDIMENSIONARE LA FINESTRA
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //QUANDO SI PREME SULLA X TERMINA IL PROCESSO
 
         frame.setIconImage(new Loader().LoadImage("mario/res/Immagini/Luma-Yellow-icon.png"));
-        //frame.setUndecorated(true);
+        
         frame.add(mario = this);
 
         frame.setVisible(true); //IMPOSTA CHE LA FINESTRA SIA VISIBILE
@@ -140,7 +144,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public void render() {
-        long time = System.currentTimeMillis();
+        //long time = System.currentTimeMillis();
         if (!menu) {
             BufferStrategy strategy = mario.getBufferStrategy(); //MI INDICA QUANTI BUFFER CI SONO
             if (strategy == null) {   //SE NON CI SONO BUFFER
@@ -238,6 +242,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         menu = false;
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
     }
+    
+    /*public static void video(){
+        video = true;
+        mario.removeKeyListener(movement);
+    }*/
 
     public static int adaptWidth(int val) { //RIADATTO LA LARGHEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
         return (int) ((double) val / 1200 * WIDTH);

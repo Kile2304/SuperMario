@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
-import mario.rm.Size;
+import mario.rm.utility.Size;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.Animation.Anim;
@@ -119,18 +119,8 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
     public void render(Graphics g) {//DA MODIFICARE, SOPRATTUTTO IL VALORE COSTANTE
         temp = animazione.getImage(lastMove, lastDirection);
         
-        //g.drawImage(ti[ind], x - width / 2, y - height, width * 2, height * 2, null);   //DISEGNO L'IMMAGINE
         g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
-        /*if (delay2 > ti.length * 2) {
-            if (ind < ti.length - 1) {
-                ind++;
-            } else {
-                ind = 0;
-            }
-            delay2 = 0;
-        } else {
-            delay2++;
-        }*/
+
     }
 
     public void setLastMovement(Direction dir, Move move) {
@@ -165,6 +155,10 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      * @return RITORNA L'AREA OCCUPANTE TOTALE DALLO SPRITE
      */
     public Rectangle getBounds() {   //RITORNA L'AREA OCCUPANTE TOTALE DALLO SPRITE
+        return new Rectangle(x, y, width, height);  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
+    }
+    
+    public Rectangle getBounds(int x, int y) {   //RITORNA L'AREA OCCUPANTE TOTALE DALLO SPRITE
         return new Rectangle(x, y, width, height);  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
     }
 

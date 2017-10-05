@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import mario.rm.Animation.Tile;
-import mario.rm.Size;
+import mario.rm.utility.Size;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.TilePart;

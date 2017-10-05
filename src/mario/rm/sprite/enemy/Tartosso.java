@@ -1,6 +1,7 @@
 package mario.rm.sprite.enemy;
 
 import mario.rm.handler.Handler;
+import mario.rm.identifier.Move;
 import mario.rm.identifier.Type;
 
 /**
@@ -28,18 +29,18 @@ public class Tartosso extends Enemy {
      */
     @Override
     public boolean isEndDie() {//NECCESSARIO RIFARE LA CLASSE ANIM COME LA CLASSE TILE (HASHMAP<>)
-        /*if (isDie) {    //CONTINUA L'ANIMAZIONE DI MORTE
+        if (isDie) {    //CONTINUA L'ANIMAZIONE DI MORTE
             if (animazione.isEndDie() && !test) {
-                direzione = (direzione / Math.abs(direzione)) * 100;
+                lastMove = Move.RUN;
                 test = true;
-                animazione.getImage(lastMove, lastDirection);
-            } else if (up.getEnd() && test) {   //CONTINUA L'ANIMAZIONE DI RESSURREZZIONE
+                //animazione.getImage(lastMove, lastDirection);
+            } else if (animazione.isEndDie() && test) {   //CONTINUA L'ANIMAZIONE DI RESSURREZZIONE
+                System.out.println("asadasdassadas");
                 velX = type.getVelX();
-                direzione = (direzione / Math.abs(direzione)) * 1;
+                lastMove = Move.WALK;
                 isDie = false;
-                up.nextNormal();
             }
-        }*/
+        }
         return false;
     }
 
@@ -51,7 +52,7 @@ public class Tartosso extends Enemy {
     public void die() {
         if (!isDie) {
             test = false;
-            direzione = (direzione / Math.abs(direzione)) * 10;
+            lastMove = Move.DIE;
             isDie = true;
             velX = 0;
         }
