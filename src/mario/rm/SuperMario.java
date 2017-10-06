@@ -1,7 +1,6 @@
 package mario.rm;
 
 import java.awt.Canvas;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -9,9 +8,8 @@ import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.lang.management.ManagementFactory;
-import javax.swing.JFrame;
 import mario.MainComponent;
-import mario.rm.Menu.opzioni.Option;
+import mario.rm.Menu.opzioni.Menu;
 import mario.rm.camera.Camera;
 import mario.rm.handler.Handler;
 import mario.rm.input.Loader;
@@ -50,24 +48,13 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     private String next;
 
-
-    /*
-     *   PROVA FRAME RATE
-     *
-     */
-    private double interpolation = 0;
-
     private boolean isLoad = false;  //INDICA SE MANDARE IN OUTPUT LA GIF DI LOADING
 
-    private static Option option;
+    private static Frame frame;
 
-    private static JFrame frame;
-
-    private static SuperMario mario;
-    
     private static boolean video = false;
-    
-    private static Movement movement = null;
+
+    private Movement movement;
 
     //
     public SuperMario() {
@@ -85,48 +72,41 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
             Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
         }*/
 
+        coin = new Loader().LoadImage("mario/res/Immagini/tiles.png");
+        coin = coin.getSubimage(64 * 7 + 8, 10, 64, 64);
+
         standardWidth = adaptWidth(50); //CALCOLO LA LARGHEZZA STANDARD DEGLI SPRITE
         standardHeight = adaptHeight(50);   //CALCOLO LA ALTEZZA STANDARD DEGLI SPRITE
 
         menu = false;
+
+        new Thread(this).start();
+
+        createLV();
+
     }
 
     private void finestra() {  //INIZIALIZZA LA FINESTRA
         System.out.println("2)CREO LA FINESTRA");
 
-        frame = new JFrame(TITOLO);  // NUOVA FINESRTRA
-
+        frame = new Frame(TITOLO);  // NUOVA FINESRTRA
         device.setFullScreenWindow(frame);
         WIDTH = device.getFullScreenWindow().getWidth();    //OTTENGO LA LARGHEZZA MASSIMA DELLA FINESTRA
         HEIGHT = device.getFullScreenWindow().getHeight();  //OTTENGO LA ALTEZZA MASSIMA DELLA FINESTRA
 
-        addKeyListener((movement = new Movement(adaptWidth((int) 5.0), adaptHeight(10.0), handler))); //AGGIUNGE UN KEY LISTENER DALLA CLASSE MOVEMENT
+        frame.inizializza(WIDTH, HEIGHT);
 
-        frame.setSize(WIDTH, HEIGHT);   //IMPOSTA L'AMPIEZZA DELLA FINESTRA
-        frame.setResizable(false);  //NON E' POSSIBILE RIDIMENSIONARE LA FINESTRA
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //QUANDO SI PREME SULLA X TERMINA IL PROCESSO
+        addKeyListener((movement = new Movement(adaptWidth((int) 5.0), adaptHeight(10.0), handler, this))); //AGGIUNGE UN KEY LISTENER DALLA CLASSE MOVEMENT
 
-        frame.setIconImage(new Loader().LoadImage("mario/res/Immagini/Luma-Yellow-icon.png"));
-        
-        frame.add(mario = this);
-
-        frame.setVisible(true); //IMPOSTA CHE LA FINESTRA SIA VISIBILE
+        frame.add(this);
 
         System.out.println("WIDTH: " + WIDTH + " HEIGHT: " + HEIGHT);
     }
 
-    public void iniziaGioco() {
-
-        System.out.println("3)ISTANZIO PLAYER, BACKGROUND E LIVELLO");
-
-        coin = new Loader().LoadImage("mario/res/Immagini/tiles.png");
-        coin = coin.getSubimage(64 * 7 + 8, 10, 64, 64);
-
-        createLV(); //CREO IL LIVELLO
-    }
-
     public void createLV() {
         isLoad = false; //SETTO A IN LOADING
+
+        System.out.println("3)ISTANZIO PLAYER, BACKGROUND E LIVELLO");
 
         if (!handler.newLevel()) {
             System.out.println("asddas");
@@ -145,10 +125,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     public void render() {
         //long time = System.currentTimeMillis();
+        try{
         if (!menu) {
-            BufferStrategy strategy = mario.getBufferStrategy(); //MI INDICA QUANTI BUFFER CI SONO
+            BufferStrategy strategy = getBufferStrategy(); //MI INDICA QUANTI BUFFER CI SONO
             if (strategy == null) {   //SE NON CI SONO BUFFER
-                mario.createBufferStrategy(3);    //CREA 3 BUFFER
+                createBufferStrategy(3);    //CREA 3 BUFFER
                 System.out.println("9)HO CREATO I BUFFER");
                 return;
             }
@@ -171,9 +152,10 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                 g.translate(0, 0);  //AZZERO LE COORDINATE I DISEGNO DEL FRAME
                 //g.drawImage(load, 0, 0, WIDTH, HEIGHT, null); //DISEGNO LA GIF CHE INDICA IL CARICAMENTO
             }
-            g.dispose();
+            //g.dispose();
             strategy.show();
         }
+        }catch(NullPointerException e){System.out.println("errore");}
         //System.out.println("time: "+(System.currentTimeMillis()-time));
     }
 
@@ -197,40 +179,51 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         long timer = System.currentTimeMillis();
 
         while (gameLoop) {
-            long now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-            if (delta >= 1) {
-                tick();
-                ticks++;
-                delta--;
-            }
-            render();
-            frames++;
+            if (!menu) {
+                long now = System.nanoTime();
+                delta += (now - lastTime) / ns;
+                lastTime = now;
+                if (delta >= 1) {
+                    tick();
+                    ticks++;
+                    delta--;
+                }
+                render();
+                frames++;
 
-            if (System.currentTimeMillis() - timer > 1000) {
-                timer += 1000;
-                //System.out.println("FPS : " + frames + " Ticks : " + ticks);
-                FPS = frames;
-                frames = 0;
-                ticks = 0;
+                if (System.currentTimeMillis() - timer > 1000) {
+                    timer += 1000;
+                    //System.out.println("FPS : " + frames + " Ticks : " + ticks);
+                    FPS = frames;
+                    frames = 0;
+                    ticks = 0;
+                }
             }
         }
     }
 
-    public static void addOption() {
-        if (!menu) {
-            handler.getSound().stop();
-            option = new Option(mario);
-            option.setVisible(true);
-            menu = true;
-
-            frame.setVisible(false);
+    public void addOption() {
+        BufferStrategy bs = this.getBufferStrategy();
+        if(bs != null){
+            bs.dispose();
         }
+        
+        menu = true;
+
+        handler.getSound().stop();
+        
+        frame.remove(this);
+        frame.removeKeyListener(movement);
+
+        frame.add(new Menu(this));
+
+        frame.revalidate();
+        frame.repaint();
+        System.out.println("asdasdas");
     }
 
-    public void remOption() {
-        frame.remove(option);
+    public void removeOption() {
+        /*    frame.remove(option);
 
         handler.getSound().loop();
 
@@ -240,14 +233,27 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         option.dispose();
 
         menu = false;
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);*/
+
+        frame.removeAll();
+        
+        handler.getSound().loop();
+        frame.addKeyListener(movement);
+        frame.add(this);
+        
+        menu = false;
+        
+        frame.revalidate();
+        frame.repaint();
+        revalidate();
+        repaint();
+        new Thread(this).start();
     }
-    
+
     /*public static void video(){
         video = true;
         mario.removeKeyListener(movement);
     }*/
-
     public static int adaptWidth(int val) { //RIADATTO LA LARGHEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
         return (int) ((double) val / 1200 * WIDTH);
     }

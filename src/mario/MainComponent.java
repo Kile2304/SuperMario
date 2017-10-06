@@ -50,9 +50,7 @@ public class MainComponent {
     }
 
     public void start() {
-        SuperMario mario = new SuperMario();
-        new Thread(mario).start();
-        mario.iniziaGioco();
+        new SuperMario();
     }
 
 }

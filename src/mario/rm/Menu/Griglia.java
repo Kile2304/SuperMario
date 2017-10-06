@@ -109,7 +109,7 @@ public class Griglia extends JPanel {
         grid = false;
 
         livello = new Preview();
-
+        
         load(path);
         
         Dimension size = new Dimension(livello.getMappa().length * pixel + 1, livello.getMappa()[0].length * pixel + 1);

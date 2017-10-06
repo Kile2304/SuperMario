@@ -22,12 +22,15 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     private final boolean move[];
 
     private Handler handler;
+    
+    private SuperMario mario;
 
-    public Movement(int velX, double jump, Handler handler) {
+    public Movement(int velX, double jump, Handler handler, SuperMario mario) {
         this.velX = velX;
         this.jump = jump;
         move = new boolean[]{false, false};
         this.handler = handler;
+        this.mario = mario;
         System.out.println("JUMP: " + jump);
     }
 
@@ -116,7 +119,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     }
                     break;
                 case KeyEvent.VK_ESCAPE:
-                    SuperMario.addOption();
+                    mario.addOption();
                     break;
                 default:
                     break;

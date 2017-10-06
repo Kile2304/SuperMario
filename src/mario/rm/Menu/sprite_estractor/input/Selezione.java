@@ -158,7 +158,7 @@ public class Selezione implements MouseListener {
             case "Info":
                 StringBuilder build = new StringBuilder();
                 try {
-                    FileReader fr = new FileReader("src/dragon/ball/res/info/infoEstrattore.html");
+                    FileReader fr = new FileReader("src/mario/res/info/infoEstrattore.html");
                     BufferedReader br = new BufferedReader(fr);
 
                     String temp = "";
@@ -175,7 +175,7 @@ public class Selezione implements MouseListener {
                         + System.getProperty("file.separator")
                         + //"src"+
                         //System.getProperty("file.separator")+
-                        "src/dragon/ball/res/info/infoEstrattore.html");
+                        "src/mario/res/info/infoEstrattore.html");
                 textArea.setPage(resourceUrl);
                 //textArea.setText(build.toString());
                 textArea.setOpaque(false);
@@ -184,9 +184,9 @@ public class Selezione implements MouseListener {
                 //textArea.setWrapStyleWord(true);
                 textArea.setEditable(false);
                 scrollPane.setPreferredSize(new Dimension(700, 500));
-                JOptionPane.showMessageDialog(null, scrollPane, "Informazioni",
-                        JOptionPane.YES_NO_OPTION);
-            //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);                //JOptionPane.showMessageDialog(null, build.toString(), "Informazioni", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(fr, scrollPane, "Sprite Estractor",
+                        JOptionPane.INFORMATION_MESSAGE);
+            break;
             case "toAcFile":
                 new Thread() {
                     @Override
