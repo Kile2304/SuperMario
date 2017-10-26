@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>Sprite Estractor</title>
+</head>
+<body>
+
+<ul>
+
+<h1><center>Sprite Estractor ITA</center></h1>
+
+<hr color=red>
+
+	<li> <b>Guida per l'estrazione del player:</b>
+		<ol>
+			<li>Premere sulla Menu Bar su file, load e selezionare l'immagine esclusivamente dalla cartella player</li>
+			<li>Controllare che la <Font color=blue>checkbox Player</font> <font color = red>sia</font> spuntata.</li>
+			<li>Premere su <Font color=blue>Create Point</font> e selezionare le zone da ritagliare.</li>
+			<li>Immettere il <Font color=blue>Type</font> del personaggio la sintassi &egrave;:"PLAYER£..." i puntini devono essere sostituiti col tipo per esempio: PLAYER£LUIGI</li>
+			<li>Immetere un <Font color=blue>nome al file</font> in output di nome: Type(minuscolo)-tipo di movimento.anim esempio:luigi-walk.anim</li>
+			<li>Slezionare il <Font color=blue>tipo di movimento:</font> walk=cammina, jump = salta, die=muore...</li>
+			<li>Selezionare <Font color=blue>la direzione</font> in cui &egrave; rivolto il player</li>
+			<li>Il campo rimasto lasciarlo cosi com'&egrave;</li>
+		</ol>
+	</li>
+	
+	<hr color=red>
+	
+	<li> <b>Guida per l'estrazione dei nemici</b>
+		<ol>
+			<li>Premere sulla Menu Bar su file, load e selezionare l'immagine esclusivamente dalla cartella enemy</li>
+			<li>Tutti i punti dal 2 in poi della guida dei player sono come quelli dei nemici</li>
+	</ol>
+	
+	<hr color = red>
+	
+	</li>
+	<li><b>Guida per l'estrazione dei tiles(other)</b>
+		<ol>
+			<li>Premere sulla Menu Bar su file, load e selezionare l'immagine esclusivamente dalla cartella Tiles e selezionare terreni, unlockable o other in base alle proprie esigenze</li>
+			<li>Controllare che la <Font color=blue>checkbox Player</font> <font color = red>non</font> sia spuntata.</li>
+			<li>I <Font color = blue>tiles other</font> sono normalissime immagini che non hanno nulla di speciale, come ad esempio: blocchi, immagini per abbellire...</li>
+			<li>Controllare che la <Font color=blue>checkbox unlockable</font> <Font color = red>non</font> sia spuntata.</li>
+			<li>Premere su <Font color=blue>Create Point</font> e selezionare le zone da ritagliare.</li>
+			<li>Insere il <Font color = blue>type</font> immettendo semplicemente un nome a volontà (in maiuscolo)</li>
+			<li>Insere il <Font color = blue>nome del file</font> con la sintassi: type-parte.anim ES: solid-upleft.anim</li>
+			<li>L'ultimo campo bisogna lasciarlo così com'&egrave; su <Font color = blue>UPLEFT</font> (eccezione viene fatta solo sui terreni)</li>
+		</ol>
+	</li>
+	
+	<hr color = red>
+	
+	</li>
+	<li><b>Guida per l'estrazione dei unlockable(other) NON CORRETTA</b>
+		<ol>
+			<li>Premere sulla Menu Bar su file, load e selezionare l'immagine esclusivamente dalla cartella Tiles e selezionare terreni, unlockable o other in base alle proprie esigenze</li>
+			<li>Controllare che la <Font color=blue>checkbox Player</font> <font color = red>non</font> sia spuntata.</li>
+			<li>I <Font color = blue>tiles unlockable</font> sono normalissime, si differenziano dalle altre, per il fatto che possono spawnare durante il gioco: moenete, funghi...</li>
+			<li>Controllare che la <Font color=blue>checkbox unlockable</font> <Font color = red>sia</font> sia spuntata.</li>
+			<li>Premere su <Font color=blue>Create Point</font> e selezionare le zone da ritagliare.</li>
+			<li>Insere il <Font color = blue>type</font> immettendo la seguente sintassi: UNLOCKABLE£..., al posto dei puntini bisognera inserire il type dell'oggetto da spawnare</li>
+			<li>Insere il <Font color = blue>nome del file</font> con la sintassi: type-parte.anim ES: unlockable£coin-upleft.anim</li>
+			<li>L'ultimo campo bisogna lasciarlo così com'&egrave; su <Font color = blue>UPLEFT</font> (eccezione viene fatta solo sui terreni)</li>
+		</ol>
+	</li>
+	
+	<hr color = red>
+	
+		</li>
+	<li><b>Guida per l'estrazione dei terreni</b>
+		<ol>
+			<li>Premere sulla Menu Bar su file, load e selezionare l'immagine esclusivamente dalla cartella Tiles e selezionare terreni, unlockable o other in base alle proprie esigenze</li>
+			<li>Controllare che la <Font color=blue>checkbox Player</font> <font color = red>non</font> sia spuntata.</li>
+			<li>I <Font color = blue>tiles unlockable</font> &egrave; il terreno in cui il player ed i nemici si appoggeranno</li>
+			<li>Controllare che la <Font color=blue>checkbox unlockable</font> <Font color = red>non</font> sia spuntata.</li>
+			<li>Premere su <Font color=blue>Create Point</font> e selezionare le zone da ritagliare.</li>
+			<li>Insere il <Font color = blue>type</font> immettendo un semplice nome a scelta (maiuscolo)</li>
+			<li>Insere il <Font color = blue>nome del file</font> con la sintassi: type-parte.anim ES: unlockable£coin-upleft.anim</li>
+			<li>L'ultimo campo bisongera fare attenzione, in quanto questa volta non bisognera' lasciare sempre UPLEFT, ma bisognera' dividere
+			il terreno estratto, in piu' sezione, una in alto-sinistra (UPLEFT), poi estrarre e pulire, selezianere quello in alto-centro (UP-MIDDLE) ... 
+			in questo modo il terreno verra' suddiviso in molte immagini, migliorando molto la qualita' grafica </li>
+		</ol>
+	</li>
+	
+	<hr color = red>
+
+	
+</ul>
+
+</body>
+</html>
