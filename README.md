@@ -1,5 +1,5 @@
 ```
-# SuperMario
+# Super Mario
 ```
 ```
 Replica of the famous game ### Super Mario
