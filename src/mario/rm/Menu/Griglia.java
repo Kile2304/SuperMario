@@ -181,20 +181,14 @@ public class Griglia extends JPanel {
 
     public void setItem(int colonna, int riga) {
         Specifiche s = pannello.getChecked();
-
-        if (isEraser) {
-
-        }
-
         if (!col) {
             if (s == null && !isEraser) {
                 return;
             }
             livello.addElement(colonna, riga, s);
         } else {
-            try {
+            if(livello.getMappa()[colonna][riga] != null){
                 livello.getMappa()[colonna][riga].changeCollider();
-            } catch (NullPointerException e) {
             }
         }
     }

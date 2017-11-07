@@ -42,11 +42,12 @@ public class SpriteEstractor extends JFrame implements Scrollable {
     public SpriteEstractor() {
         super(TITLE);
 
-        setAlwaysOnTop(true);
+        setAlwaysOnTop(false);
 
         device.setFullScreenWindow(this);
-        WIDTH = device.getFullScreenWindow().getWidth();
-        HEIGHT = device.getFullScreenWindow().getHeight();
+        WIDTH = device.getFullScreenWindow().getWidth() / 16 * 13;
+        HEIGHT = device.getFullScreenWindow().getHeight() / 16 * 13;
+        device.setFullScreenWindow(null);
 
         setSize(new Dimension(WIDTH, HEIGHT));
 

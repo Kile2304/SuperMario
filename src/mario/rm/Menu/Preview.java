@@ -161,6 +161,7 @@ public class Preview {
         public void creaLivello(int x0, int y0, Type type, Type unlockable, String tile) {
 
             boolean stop = false;
+            boolean terreno = false;
 
             Object ob = null;
 
@@ -213,6 +214,7 @@ public class Preview {
                     Tile a = it.next();
                     if (a.getType() == type || a.getType() == unlockable) {
                         ob = a;
+                        terreno = true;
                         stop = true;
                         break;
                     }
@@ -225,6 +227,9 @@ public class Preview {
                 BufferedImage[] bg = ti.getImage(part);
                 if (bg != null) {
                     cl.add(new Cell(type, bg[0], tile));
+                    if(terreno){
+                        cl.get(cl.size() - 1).setTerrain(true);
+                    }
                 }
             } else if (type == Type.VOID) {
                 cl.add(new Cell(type, img, ""));

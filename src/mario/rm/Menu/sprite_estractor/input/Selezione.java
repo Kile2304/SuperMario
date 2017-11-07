@@ -64,9 +64,10 @@ public class Selezione implements MouseListener {
 
     private void load() {
 
+        
         JFileChooser c = new JFileChooser(new File("src/mario/res/Immagini/extract").getAbsolutePath());
 
-        int valid = c.showOpenDialog(fr.getContentPane());
+        int valid = c.showOpenDialog(fr);
 
         if (valid == JFileChooser.APPROVE_OPTION) {
             try {

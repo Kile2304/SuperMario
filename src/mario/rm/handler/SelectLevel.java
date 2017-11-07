@@ -102,7 +102,7 @@ public class SelectLevel {
         next = new String[file.size()];
         for (int i = 0; i < next.length; i++) {
             next[i] = file.get(i);
-            //System.out.println(""+next[i]);
+            System.out.println(""+next[i]);
         }
     }
     
