@@ -55,6 +55,8 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     private static boolean video = false;
 
     private Movement movement;
+    
+    private Menu option;
 
     //
     public SuperMario() {
@@ -203,10 +205,8 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public void addOption() {
-        BufferStrategy bs = this.getBufferStrategy();
-        if(bs != null){
-            bs.dispose();
-        }
+
+        this.setVisible(false);
         
         menu = true;
 
@@ -215,27 +215,17 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         frame.remove(this);
         frame.removeKeyListener(movement);
 
-        frame.add(new Menu(this));
+        frame.add((option = new Menu(this)));
 
         frame.revalidate();
         frame.repaint();
-        System.out.println("asdasdas");
     }
 
     public void removeOption() {
-        /*    frame.remove(option);
 
-        handler.getSound().loop();
-
-        frame.setVisible(true);
-        option.setVisible(false);
-
-        option.dispose();
-
-        menu = false;
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);*/
-
-        frame.removeAll();
+        frame.remove(option);
+        
+        this.setVisible(true);
         
         handler.getSound().loop();
         frame.addKeyListener(movement);

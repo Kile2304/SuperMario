@@ -6,12 +6,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import mario.MainComponent;
-import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Type;
 
@@ -82,14 +82,21 @@ public class Loader {
     public boolean convertTextInMap(String path, Reader read) {
         System.out.println("4)CREO IL LIVELLO");
 
-        System.out.println("" + path);
 
         if (path.equals("")) {
             return false;
         }
         try {
-            FileReader fr = new FileReader(path);
-            BufferedReader br = new BufferedReader(fr);
+            Object fr = null;
+            if(MainComponent.jar.isFile()){
+                path = path.replace("src/", "");
+                System.out.println(""+path);
+                fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
+            }else{
+                fr = new FileReader(path);
+            }
+            System.out.println("" + path);
+            BufferedReader br = new BufferedReader((java.io.Reader) fr);
 
             String line = "";
             ArrayList<Integer> punto = new ArrayList<>();
@@ -118,6 +125,7 @@ public class Loader {
                         case ']':
                             //System.out.println(""+word);
                             if (type == null) {
+                                System.out.println("refactor: "+word);
                                 type = Type.valueOf(word);
                             } else {
                                 unlockable = type;

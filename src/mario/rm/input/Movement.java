@@ -127,6 +127,13 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         }
     }
     
+    public void setVelX(int velX){
+        this.velX = velX;
+    }
+    public void setJump(int jump){
+        this.jump = jump;
+    }
+    
     public int getVelX(){
         return velX;
     }
