@@ -16,6 +16,8 @@ import mario.rm.identifier.Type;
 import mario.rm.input.Loader;
 import mario.rm.input.MemoriaAC;
 import mario.rm.input.Reader;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 
 /**
@@ -238,7 +240,7 @@ public class Preview {
                 if (an != null) {
                     cl.add(new Cell(type, an.getImage(Move.WALK, Direction.RIGHT), ""));
                 } else {
-                    System.out.println("Anim = null");
+                    Log.append("Anim = null", DefaultFont.INFORMATION);
                 }
             }
         }

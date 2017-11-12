@@ -17,6 +17,8 @@ import mario.rm.Menu.Componenti.ScrollButton;
 import mario.rm.Menu.Componenti.Scrollable;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -62,7 +64,7 @@ public class Editor extends JFrame implements Scrollable {
         
         final int adaptedWidth = adaptWidth(250);
         final int adaptedHeight = adaptHeight(250);
-        System.out.println(""+adaptedWidth+ " "+adaptedHeight);
+        Log.append(adaptedWidth+ " "+adaptedHeight, DefaultFont.ERROR);
         Griglia g = new Griglia(WIDTH + adaptedWidth, HEIGHT + adaptedHeight, this, PIXEL);
         
         gri = new JScrollPane(g);

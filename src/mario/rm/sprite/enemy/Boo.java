@@ -1,7 +1,5 @@
 package mario.rm.sprite.enemy;
 
-import java.util.ArrayList;
-import mario.rm.Animation.Cut;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;

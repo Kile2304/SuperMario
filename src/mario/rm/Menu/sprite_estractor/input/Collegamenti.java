@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import mario.rm.Menu.Griglia;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -129,7 +131,7 @@ public class Collegamenti {
         Punto[] eliminare = null;
 
         if (temp.size() == 1 && temp.get(0).compare(del)) {
-            System.out.println("temp: " + temp.get(0).toString() + " del: " + del.toString());
+            Log.append("temp: " + temp.get(0).toString() + " del: " + del.toString(), DefaultFont.INFORMATION);
             temp.removeFirst();
             zone.removeLast();
             return new Punto[]{del};
@@ -191,7 +193,7 @@ public class Collegamenti {
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(Collegamenti.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
 
         } else {    //non e' stata caricata in memoria nessuna immagine
@@ -222,7 +224,7 @@ public class Collegamenti {
                 }
                 nuovoType.append(word + "\n");
             }
-            System.out.println("" + nuovoType.toString());
+            Log.append(nuovoType.toString(), DefaultFont.INFORMATION);
 
             br.close();
             isr.close();
@@ -235,7 +237,7 @@ public class Collegamenti {
 
             printout.close();
         } catch (IOException ex) {
-            Logger.getLogger(Collegamenti.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return true;
     }

@@ -17,6 +17,8 @@ import mario.rm.utility.Punto;
 import mario.rm.input.Loader;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -131,7 +133,7 @@ public class Cut implements Serializable {
                 //System.out.println("x: "+primoX.getX() + " y: " + secondoY.getY() + " width: " + (secondoX.getX() - primoX.getX()) + " height: " + (primoY.getY() - secondoY.getY()));
             } else {
                 errore = true;
-                System.out.println("immagine " + path + " corrotta");
+                Log.append("immagine " + path + " corrotta", DefaultFont.INFORMATION);
                 return;
             }
         }
@@ -434,7 +436,7 @@ public class Cut implements Serializable {
                     out.writeInt(buffer.size()); // Prepend image with byte count
                     buffer.writeTo(out);         // Write image
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("" + e);
+                    Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
                 }
             }
 

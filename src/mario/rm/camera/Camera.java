@@ -2,6 +2,8 @@ package mario.rm.camera;
 
 import mario.rm.SuperMario;
 import mario.rm.sprite.Sprite;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -14,7 +16,7 @@ public class Camera {   //QUESTA CLASSE SERVE PER L'INQUADRATURA
     private static int upY;
 
     public Camera(Sprite p) {
-        System.out.println("7)INIZIALIZZO LA TELECAMERA");
+        Log.append("7)INIZIALIZZO LA TELECAMERA", DefaultFont.INFORMATION);
         x = -p.getX() + SuperMario.WIDTH / 2;  //MI CENTRA LE COORDINATE X RISPETTO AL PLAYER
         y = -p.getY() + SuperMario.HEIGHT - SuperMario.standardHeight * 3 - p.getHeight(); //MI CENTRA LE COORDINATE Y RISPETTO AL PLAYER
         upY = y;

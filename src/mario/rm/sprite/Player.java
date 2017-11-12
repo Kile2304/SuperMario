@@ -11,12 +11,14 @@ import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.camera.Camera;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Move;
-import mario.rm.identifier.TilePart;
+import mario.rm.input.Movement;
 import mario.rm.input.Sound;
 import mario.rm.sprite.enemy.Boo;
 import mario.rm.sprite.enemy.Boss;
 import mario.rm.sprite.enemy.Enemy;
 import mario.rm.sprite.tiles.Tiles;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -43,9 +45,16 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     private static final Sound[] sound = new Sound[]{new Sound("mario/res/Sound/nsmb_death.wav"), new Sound("mario/res/Sound/nsmb_power-up.wav"), new Sound("mario/res/Sound/nsmb_coin.wav")};   //SUONE DELLA MORTEM DEL POWER UP E DEL COIN
 
+    
+    //cheat
+    private boolean godMode = false;
+    private int movXIncrease;
+    private double jumpIncrease;
+    private boolean infiniteJump = false;
+    
     public Player(int x, int y, int width, int height, Handler handler, Type type) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         super(x, y, width, height, handler, type, handler.getMemoria().getPlayer());
-        System.out.println("6)INIZIALIZZO IL PLAYER");
+        Log.append("6)INIZIALIZZO IL PLAYER", DefaultFont.INFORMATION);
         grow = false;   //INDICA SE E' GRANDE O PICCOLO
 
         immortal = false;   //QUANDO VIENE COLPITO HA UN TOT DI TEMPO PER SCAPPARE DAL NEMICO
@@ -152,17 +161,14 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                                 life++;
                                 tile.get(i).die();
                             } else if (tile.get(i).getCollide()) {
-                                if(tile.get(i).canDamage()){
-                                    if(grow){
+                                if (tile.get(i).canDamage() && !godMode) {
+                                    if (grow) {
                                         grow = false;
                                         width -= crescita;
                                         height -= crescita;
                                         x -= crescita;
                                         y -= crescita;
-                                    }else{
-                                        life--;
-                                        x = respawnX;
-                                        y = respawnY;
+                                    } else {
                                         die();
                                     }
                                     continue;
@@ -185,15 +191,11 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                                 if (getBoundsBottom().intersects(bounds)) { //INTERSEZIONE PARTE BASSA
                                     falling = false;   //IMPOSTO A STA' TOCCANDO IL PAVIMENTO
                                     if (tileType == Type.VOID) {   //SE TOCCA UNA ZONA DA NON TOCCARE
-                                        x = respawnX;   //IMPOSTA LE COORDINATE X A QUELLE DEL CHECKPOINT PRECEDENTE
-                                        y = respawnY;   //IMPOSTA LE COORDINATE Y A QUELLE DEL CHECKPOINT PRECEDENTE
                                         if (grow) { //SE ERA GRANDE
                                             grow = false;   //TORNA PICCOLO
                                             width -= crescita;
                                             height -= crescita;
                                         }
-                                        Camera.setUpY(-y + HEIGHT - SuperMario.standardHeight * 3 - height); //REIMPOSTO LA TELECAMETA
-                                        life--; //DIMINUISCO LE VITE
                                         die();
                                         return;
                                     }
@@ -254,17 +256,8 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                             PUNTEGGIO += 1000;  //AGGIORNO IL PUNTEGGIO
                         }
                     } else if (getBounds().intersects(enem.getBounds())) {  //SE COLPISCE IL NEMICO CON QUALSIASI ALTRA PARTE
-                        if (!immortal) {    //NEL CASO NON SIA IMMORTALE
+                        if (!immortal && godMode) {    //NEL CASO NON SIA IMMORTALE
                             if (!grow) {    //NEL CASO NON SIA GRANDE
-                                life--; //GLI VIENE TOLTA UNA VITA
-                                if (life == 0) {    //SE HA 0 VITE
-                                    System.out.println("Perso");    //GLI DICE DI AVERE PERSO
-                                    System.exit(0); //TERMINA BRUSCAMENTE IL GIOCO
-                                } else {  //SE HA ANCORA VITE LO FA SPAWNARE AL CHECKPOINT PRECEDENTE
-                                    x = respawnX;   //IMPOSTA LE COORDINATE X A QUELLE DEL CHECKPOINT PRECEDENTE
-                                    y = respawnY;   //IMPOSTA LE COORDINATE Y A QUELLE DEL CHECKPOINT PRECEDENTE
-                                    Camera.setUpY(-y + HEIGHT - SuperMario.standardHeight * 4);
-                                }
                                 die();
                             } else {    //SE ERA GRANDE
                                 grow = false;   //LO FA DIVENTARE PICCOLO
@@ -324,11 +317,64 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
      */
     @Override
     public void die() {
+
+        life--; //GLI VIENE TOLTA UNA VITA
+        //System.out.println("" + life);
+        if (life == 0) {    //SE HA 0 VITE
+            System.out.println("Perso");    //GLI DICE DI AVERE PERSO
+            System.exit(0); //TERMINA BRUSCAMENTE IL GIOCO
+        } else {  //SE HA ANCORA VITE LO FA SPAWNARE AL CHECKPOINT PRECEDENTE
+            x = respawnX;   //IMPOSTA LE COORDINATE X A QUELLE DEL CHECKPOINT PRECEDENTE
+            y = respawnY;   //IMPOSTA LE COORDINATE Y A QUELLE DEL CHECKPOINT PRECEDENTE
+            Camera.setUpY(-y + HEIGHT - SuperMario.standardHeight * 4);
+        }
+
         handler.getSound().stop();
         sound[0].start();
         sound[0].isRunning();
         sound[0].stop();
         handler.getSound().loop();
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+    
+    public int getLife(){
+        return life;
+    }
+    
+    public void changeGodMode(){
+        godMode = !godMode;
+    }
+    
+    public boolean getGodMode(){
+        return godMode;
+    }
+    
+    public int getMoveXIncrease(){
+        return movXIncrease + Movement.velX;
+    }
+    
+    public void setMoveXIncrease(int movXIncrease){
+        this.movXIncrease = movXIncrease - Movement.velX;
+    }
+    
+    public double getJumpIncrease(){
+        return jumpIncrease + Movement.jump;
+    }
+    
+    public void setJumpIncrease(double jumpIncrease){
+        
+        this.jumpIncrease = jumpIncrease - Movement.jump;
+    }
+    
+    public boolean getInfiniteJump(){
+        return infiniteJump;
+    }
+    
+    public void changeInfiniteJump(){
+        infiniteJump = !infiniteJump;
     }
 
 }

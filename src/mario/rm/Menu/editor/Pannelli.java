@@ -18,6 +18,8 @@ import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Type;
 import mario.rm.input.MemoriaAC;
 import mario.rm.input.MemoriaAnim;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -172,11 +174,9 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         temp = memoria.getAnim("mario/res/Animazioni" + path, temp);
         addButton(temp);
         if (terr) {
-            for (Specifiche spec : elenco) {
-                if (spec.getButton().getText().equals("")) {
-                    spec.setTerrain(true);
-                }
-            }
+            elenco.stream().filter((spec) -> (spec.getButton().getText().equals(""))).forEach((spec) -> {
+                spec.setTerrain(true);
+            });
         }
     }
 
@@ -240,7 +240,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             resize(1 + elenco.size() / 2);
             setLayout(new GridLayout(3 + elenco.size(), 2, 25, 25));
         } else {
-            System.out.println("Nessuno sprite trovato");
+            Log.append("Nessuno sprite trovato\n"+(Pannelli.class).getName()+"\n", DefaultFont.ERROR);
         }
         ed.repaint();
         ed.revalidate();

@@ -15,6 +15,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import mario.rm.SuperMario;
 import mario.rm.input.Sound;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -51,6 +53,10 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
         JButton resume = new JButton("RESUME");
         resume.addActionListener(this);
         center.add(resume);
+        
+        JButton restart = new JButton("RESTART");
+        restart.addActionListener(this);
+        center.add(restart);
 
         JButton option = new JButton("OPTION");
         option.addActionListener(this);
@@ -111,7 +117,7 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
         float value = slider.getValue();
         float range = Math.abs(Sound.getVolume().getMinimum()) + Math.abs(Sound.getVolume().getMaximum());
         float temp = (float) (((value / 100.0) * range) - Math.abs(Sound.getVolume().getMinimum()));
-        System.out.println("Convertito in db: "+temp);
+        Log.append("Convertito in db: "+temp, DefaultFont.INFORMATION);
         Sound.setVolume(temp);
         
     }
@@ -120,6 +126,8 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
     public void actionPerformed(ActionEvent e) {
 
         switch (e.getActionCommand()) {
+            case "RESTART":
+                mario.createLV(true);
             case "RESUME":
                 mario.removeOption();
                 break;

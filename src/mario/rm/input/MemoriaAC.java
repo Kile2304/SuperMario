@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Tile;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -67,7 +69,7 @@ public class MemoriaAC {
 
     public void carica() {
         Thread[] t = new Thread[5];
-        System.out.println("5)CARICO LE ANIMAZIONI IN MEMORIA");
+        Log.append("5)CARICO LE ANIMAZIONI IN MEMORIA", DefaultFont.INFORMATION);
 
         /**
          *
@@ -104,7 +106,7 @@ public class MemoriaAC {
             try {
                 t[i].join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         }
     }
@@ -147,7 +149,7 @@ public class MemoriaAC {
                 }
                 jar.close();
             } catch (IOException ex) {
-                Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         } else {
             LinkedList<String> Dir = new LinkedList<>();
@@ -205,7 +207,7 @@ public class MemoriaAC {
                 }
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return list;
     }

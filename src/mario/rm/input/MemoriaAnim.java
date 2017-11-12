@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.Animation.Cut;
 import mario.rm.input.Sound;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -72,7 +74,7 @@ public class MemoriaAnim {
 
     public void carica() {
         Thread[] t = new Thread[4];
-        System.out.println("5)CARICO LE ANIMAZIONI IN MEMORIA");
+        Log.append("5)CARICO LE ANIMAZIONI IN MEMORIA", DefaultFont.INFORMATION);
 
         //String indirizzo = "C:\\Users\\LENOVO\\Christian\\Scuola\\supermario\\SuperMario_1\\src\\Animazioni";
         /**
@@ -108,7 +110,7 @@ public class MemoriaAnim {
             try {
                 t[i].join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(MemoriaAnim.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         }
     }
@@ -151,7 +153,7 @@ public class MemoriaAnim {
                 }
                 jar.close();
             } catch (IOException ex) {
-                Logger.getLogger(MemoriaAnim.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         } else {
             LinkedList<String> Dir = new LinkedList<>();
@@ -206,7 +208,7 @@ public class MemoriaAnim {
                 }
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(MemoriaAnim.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return list;
     }

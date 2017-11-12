@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRootPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import mario.MainComponent;
 import mario.rm.Menu.Componenti.Visualizzatore;
@@ -27,18 +28,20 @@ import mario.rm.Menu.editor.Editor;
 import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.handler.SelectLevel;
 import mario.rm.multigiocatore.TypeMulti;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
  * @author LENOVO
  */
-public class Home extends JFrame implements ActionListener{
-    
+public class Home extends JFrame implements ActionListener {
+
     private static final String TITLE = "HOME";
-    
-    private static final String[] bottonList = new String[]{"INIZIA GIOCO","MULTIGIOCATORE","SELEZIONA LIVELLO","CREA LIVELLO",
-        "SPRITE ESTRACTOR","RINGRAZIAMENTI","ESCI"};
-    
+
+    private static final String[] bottonList = new String[]{"INIZIA GIOCO", "MULTIGIOCATORE", "SELEZIONA LIVELLO", "CREA LIVELLO",
+        "SPRITE ESTRACTOR", "RINGRAZIAMENTI", "ESCI"};
+
     private static MainComponent main;
 
     private JPasswordField passwordField;
@@ -53,7 +56,7 @@ public class Home extends JFrame implements ActionListener{
     public Home() {
         super(TITLE);
         setLayout(new BorderLayout());
-        
+
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(600, 600);
         setResizable(false);
@@ -64,40 +67,44 @@ public class Home extends JFrame implements ActionListener{
         panel.add(bottoni());
         add(panel, BorderLayout.CENTER);
         //add(bottoni(), BorderLayout.NORTH);
-        
+
+        setUndecorated(true);
+        getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+
         setVisible(true);
 
     }
-    
-    public void setMainComponent(MainComponent main){
+
+    public void setMainComponent(MainComponent main) {
         this.main = main;
     }
 
     public void inizia(String path) {
         new SelectLevel(path);
-        System.out.println("" + path);
+        Log.append(path, DefaultFont.INFORMATION);
         dispose();
         main.start();
-    }                       
+    }
 
-    private void start() {                                               
+    private void start() {
         dispose();
         new SelectLevel(false).reset();
         main.start();
-    }                                              
+    }
 
-    private void esci() {                                               
+    private void esci() {
         System.exit(0);
-    }                                              
+    }
 
-    private void ringraziamenti() {                                               
+    private void ringraziamenti() {
         FileInputStream fis = null;
         //System.out.println(""+(this.getClass().getResource("../")));
         try {
-            System.out.println("Path:" + (new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath()));
+            Log.append("Path:" + (new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath()), DefaultFont.INFORMATION);
             fis = new FileInputStream(new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath());
         } catch (FileNotFoundException ex) {
-            System.out.println("Errore in caricare in memoria il file: " + new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath());
+            //System.out.println("Errore in caricare in memoria il file: " + new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath());
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         InputStreamReader isr = new InputStreamReader(fis);
         BufferedReader br = new BufferedReader(isr);
@@ -116,18 +123,18 @@ public class Home extends JFrame implements ActionListener{
         setVisible(false);
         JOptionPane.showMessageDialog(rootPane, text, "Riconoscimenti", 0);
         setVisible(true);
-    }                                              
+    }
 
-    private void visualizza() {                                               
+    private void visualizza() {
         dispose();
         new Visualizzatore(dim.width, dim.height, this);
         setVisible(false);
-    }                                              
+    }
 
-    private void creaLivello() {                                               
+    private void creaLivello() {
         dispose();
         new Editor(this);
-    }                                              
+    }
 
     private boolean isCorrect(char[] input) {
         String password = "pamplona";
@@ -149,7 +156,7 @@ public class Home extends JFrame implements ActionListener{
         return correct;
     }
 
-    private void spriteEstractor() {                                               
+    private void spriteEstractor() {
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Enter a password:");
         JPasswordField pass = new JPasswordField(10);
@@ -164,24 +171,24 @@ public class Home extends JFrame implements ActionListener{
             char[] password = pass.getPassword();
             //System.out.println("Your password is: " + new String(password));
             if (isCorrect(password)) {
-                System.out.println("WELCOME ADMIN");
+                Log.append("WELCOME ADMIN", DefaultFont.INFORMATION);
                 dispose();
                 JOptionPane.showMessageDialog(rootPane, "Attenzione mentre si usa questa modalita\nsi potrebbe rompere l'intero progetto", "titolo", JOptionPane.ERROR_MESSAGE);
                 new SpriteEstractor();
-                
+
             }
         }
-    }                                              
+    }
 
-    private void mutltigiocatore() {                                               
+    private void mutltigiocatore() {
         new TypeMulti().setVisible(true);
         dispose();
-    }                    
+    }
 
     private JPanel bottoni() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        
+
         for (int i = 0; i < bottonList.length; i++) {
             JButton b = new JButton(bottonList[i]);
             b.addActionListener(this);
@@ -192,7 +199,7 @@ public class Home extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch(e.getActionCommand()){
+        switch (e.getActionCommand()) {
             case "INIZIA GIOCO":
                 start();
                 break;
@@ -216,5 +223,5 @@ public class Home extends JFrame implements ActionListener{
                 break;
         }
     }
-    
+
 }

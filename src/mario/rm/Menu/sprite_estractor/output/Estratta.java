@@ -1,11 +1,9 @@
 package mario.rm.Menu.sprite_estractor.output;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -14,6 +12,8 @@ import mario.rm.Animation.Cut;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 
 /**
@@ -106,7 +106,7 @@ public class Estratta {
         }
 
         //System.out.println("estratta path: "+path);
-        System.out.println("" + p1);
+        Log.append(p1, DefaultFont.INFORMATION);
         ObjectOutputStream out = null;
         FileOutputStream fos = null;
 
@@ -144,9 +144,9 @@ public class Estratta {
             out.close();
             fos.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Estratta.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         } catch (IOException ex) {
-            Logger.getLogger(Estratta.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
     }
 

@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -123,11 +125,11 @@ public class Tile implements Serializable, Animated {
                 out.writeUTF(key);
                 out.flush();
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("" + e);
-        } catch (IOException ex) {
-            Logger.getLogger(Tile.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ArrayIndexOutOfBoundsException | IOException e) {
+            Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
         }
+        //System.out.println("finito");
+        
         //System.out.println("finito");
     }
 
@@ -155,7 +157,7 @@ public class Tile implements Serializable, Animated {
                 image.put(img, key);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Tile.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
     }
 

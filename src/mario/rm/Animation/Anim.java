@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -53,7 +55,7 @@ public class Anim implements Serializable, Animated {
                 try {
                     field.set(this, animation(anim, direction, (BufferedImage[]) field.get(this)));
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
-                    Logger.getLogger(Anim.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
             }
         }
@@ -79,7 +81,7 @@ public class Anim implements Serializable, Animated {
                 try {
                     find = (BufferedImage[]) field.get(this);
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
-                    Logger.getLogger(Anim.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
             }
         }
@@ -193,7 +195,7 @@ public class Anim implements Serializable, Animated {
                 try {
                     find = (BufferedImage[]) field.get(this);
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
-                    Logger.getLogger(Anim.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
             }
         }

@@ -6,7 +6,10 @@ import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
+import mario.rm.sprite.Player;
 import mario.rm.sprite.Sprite;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -14,8 +17,8 @@ import mario.rm.sprite.Sprite;
  */
 public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
 
-    private int velX;  //COSTANTE PER LA VELOCITA' SULL'ASSE X
-    private double jump; //COSTANTE PER LA DISTANZA DI SALTO
+    public static int velX;  //COSTANTE PER LA VELOCITA' SULL'ASSE X
+    public static double jump; //COSTANTE PER LA DISTANZA DI SALTO
 
     private static final Sound salto = new Sound("mario/res/Sound/nsmb_jump.wav");
 
@@ -24,6 +27,8 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     private Handler handler;
     
     private SuperMario mario;
+    
+    //public static boolean cheatJump = false;
 
     public Movement(int velX, double jump, Handler handler, SuperMario mario) {
         this.velX = velX;
@@ -31,7 +36,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         move = new boolean[]{false, false};
         this.handler = handler;
         this.mario = mario;
-        System.out.println("JUMP: " + jump);
+        Log.append("JUMP: " + jump, DefaultFont.INFORMATION);
     }
 
     @Override
@@ -41,7 +46,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();   //NON STRETTAMENTE NECCESSARIO
-        for (Sprite sp : handler.getPlayer()) {
+        for (Player sp : handler.getPlayer()) {
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:  //SE VIENE PREMUTO IL TATO SINISTRO
                     if (!sp.isFalling()) {   //SE STA TOCCANDO IL TEERRENO
@@ -51,7 +56,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         //sp.setDirezione(-30);   //SALTO SPECCHIATO
                         sp.setLastMovement(Direction.LEFT, Move.JUMP);
                     }
-                    sp.setVelX(-velX);   //LA VELOCITA X  = -5
+                    sp.setVelX(-sp.getMoveXIncrease());   //LA VELOCITA X  = -5
                     move[0] = true;
                     sp.setWalking(true);  //STA CAMMINANDO
                     break;
@@ -63,19 +68,19 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         //sp.setDirezione(30);    //IMPOSTO A SALTO NORMALE
                         sp.setLastMovement(Direction.RIGHT, Move.JUMP);
                     }
-                    sp.setVelX(velX);    //VELOCITA X = 5
+                    sp.setVelX(sp.getMoveXIncrease());    //VELOCITA X = 5
                     move[1] = true;
                     sp.setWalking(true);  //STA CAMMINANDO
                     break;
                 case KeyEvent.VK_UP:
-                    if (!sp.isJumping() && !sp.isFalling()) {    //SE NON STAVA GIA SALTANDO PRIMA
+                    if (!sp.isJumping() && !sp.isFalling() || sp.getInfiniteJump()) {    //SE NON STAVA GIA SALTANDO PRIMA
                         if (salto.getCurrentFrame() != 0) {
                             salto.stop();
                         }
                         salto.start();
                         sp.setJumping(true);  //ORA STA SALTANDO
                         sp.setFalling(false);   //IMPOSTO A NON STA' SALTANDO
-                        sp.setGravity(jump); //LA GRAVITA E' UGUALE A 7
+                        sp.setGravity(sp.getJumpIncrease()); //LA GRAVITA E' UGUALE A 7
                         //sp.setDirezione((sp.getDirezione() / Math.abs(sp.getDirezione())) * 30);    //IMPOSTO IL SALTO NELLA DIREZIONE IN CUI ERA PRIMA
                         sp.setLastMovement(sp.getLastDirection(), Move.JUMP);
                     }

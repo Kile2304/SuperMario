@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import mario.MainComponent;
 import mario.rm.Menu.Componenti.Checkable;
 import mario.rm.Menu.Componenti.Scrollable;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -133,7 +135,7 @@ public class Griglia extends JPanel {
         Cell[][] elenco = livello.getMappa();
 
         if (elenco == null) {
-            System.out.println("errore nessun livello caricato");
+            Log.append("errore nessun livello caricato", DefaultFont.INFORMATION);
             return;
         }
 
@@ -296,7 +298,7 @@ public class Griglia extends JPanel {
                 }
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(Griglia.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         }
     }
@@ -406,10 +408,10 @@ public class Griglia extends JPanel {
             try {
                 ImageIO.write(image, "bmp", new File(original));
             } catch (IOException ex) {
-                Logger.getLogger(Griglia.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
 
-            System.out.println("Immagine creata");
+            Log.append("Immagine creata", DefaultFont.INFORMATION);
         }
     }
 

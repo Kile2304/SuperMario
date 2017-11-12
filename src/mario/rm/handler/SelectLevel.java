@@ -3,6 +3,8 @@ package mario.rm.handler;
 import java.util.ArrayList;
 import mario.MainComponent;
 import mario.rm.Animation.Memoria;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -102,7 +104,7 @@ public class SelectLevel {
         next = new String[file.size()];
         for (int i = 0; i < next.length; i++) {
             next[i] = file.get(i);
-            System.out.println(""+next[i]);
+            Log.append(next[i], DefaultFont.INFORMATION);
         }
     }
     

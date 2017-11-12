@@ -14,6 +14,8 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import mario.MainComponent;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -42,14 +44,14 @@ public class Sound {
             }
             FloatControl gainControl
                     = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            System.out.println("gainControl: "+gainControl);
+            Log.append("gainControl: "+gainControl, DefaultFont.INFORMATION);
             float value = 50.0f;
             float range = Math.abs(gainControl.getMinimum()) + Math.abs(gainControl.getMaximum());
             float temp = (float) (((value / 100.0) * range) - Math.abs(gainControl.getMinimum()));
             gainControl.setValue(temp);
             control.add(gainControl);
         } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
-            System.out.println("" + e);
+            Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
         }
     }
 
@@ -85,6 +87,7 @@ public class Sound {
                     sleep(10);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
                 time += (System.currentTimeMillis() - temp);
             }

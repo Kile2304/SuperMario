@@ -20,6 +20,8 @@ import mario.rm.sprite.tiles.Checkpoint;
 import mario.rm.sprite.tiles.CoinBlock;
 import mario.rm.sprite.tiles.Solid;
 import mario.rm.sprite.tiles.Tiles;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -30,9 +32,9 @@ import mario.rm.sprite.tiles.Tiles;
  */
 public class Handler implements Reader {
 
-    private final LinkedList<Player> player;    //ELENCO PLAYER
-    private final LinkedList<Tiles> tiles; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
-    private final LinkedList<Enemy> enemy; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
+    private static LinkedList<Player> player;    //ELENCO PLAYER
+    private static LinkedList<Tiles> tiles; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
+    private static LinkedList<Enemy> enemy; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
 
     /**
      *
@@ -128,7 +130,7 @@ public class Handler implements Reader {
             try {
                 t[i].join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(Handler.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
 
         }
@@ -162,7 +164,7 @@ public class Handler implements Reader {
                 @Override
                 public void run() {
                     memoria.getSound().stop();
-                    mario.createLV();   //CREA IL PROSSIMO LIVELLO (DA FIXARE PER IL CARICAMENTO)
+                    mario.createLV(false);   //CREA IL PROSSIMO LIVELLO (DA FIXARE PER IL CARICAMENTO)
                 }
             }.start();
             nextL.start();
@@ -177,7 +179,7 @@ public class Handler implements Reader {
      *
      * @return se ritorna falso, c'è stato un errore nel caricamento del livello
      */
-    public boolean newLevel() {
+    public boolean newLevel(boolean current) {
         next = false;   //INDICA CHE DOPO QUESTO NON DOVRA' PIU' CARICARE UN NUOVO LIVELLO
 
         player.clear(); //PULISCE IL BUFFER DEI PLAYER
@@ -186,17 +188,17 @@ public class Handler implements Reader {
 
         memoria.carica();
 
-        if (!new Loader().convertTextInMap(level.getNext(), this)) {
+        if (!new Loader().convertTextInMap(current ? level.getCurrent() : level.getNext(), this)) {
             return false;
         } //CREA IL LIVELLO
 
         int temp = tiles.size();    //SEMPLICE VARIABILE PER OTTENERE INFORMAZIONI SUL RENDERING DEL LIVELLO
-        System.out.println("" + temp);
+        Log.append("" + temp, DefaultFont.INFORMATION);
         miglioraLivello();  //CERCO DI RIDURRE IL NUMERO DI SPRITE, IN MODO DA VELOCIZZARE AGGIORNAMENTO E RENDERING
 
-        System.out.println("" + tiles.size());
-        System.out.println("" + (temp - tiles.size()));
-        System.out.println("Migliorato del: " + ((double) 100 / temp * (temp - tiles.size()))); //CALCOLO DI QUANTO E' MIGLIORATO IL LIVELLO (%)
+        Log.append("" + tiles.size(), DefaultFont.INFORMATION);
+        Log.append("" + (temp - tiles.size()), DefaultFont.INFORMATION);
+        Log.append("Migliorato del: " + ((double) 100 / temp * (temp - tiles.size())), DefaultFont.INFORMATION); //CALCOLO DI QUANTO E' MIGLIORATO IL LIVELLO (%)
 
         memoria.nextSound();
         while (sound) {
@@ -354,7 +356,7 @@ public class Handler implements Reader {
                     enemy.add(new Boss(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, Type.KOOPA, true));
                 }*/
         } else {
-            System.err.println("Questa animazione non e' valida: manca il Type di appartenenza");
+            Log.append(Handler.class.getName()+" "+"Questa animazione non e' valida: manca il Type di appartenenza", DefaultFont.ERROR);
         }
 
     }
@@ -371,7 +373,7 @@ public class Handler implements Reader {
      *
      * @return RITORNA L'ELENCO DEI PLAYER
      */
-    public LinkedList<Player> getPlayer() {
+    public static LinkedList<Player> getPlayer() {
         return player;
     }
 

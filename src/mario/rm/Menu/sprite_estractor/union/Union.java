@@ -16,6 +16,8 @@ import mario.rm.Animation.Tile;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.TilePart;
 import mario.rm.input.MemoriaAnim;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -117,12 +119,12 @@ public class Union {
             }
 
             File directory = new File("src\\mario\\res\\Animazioni\\" + path);
-            System.out.println("checker: " + directory.getAbsolutePath());
+            Log.append("checker: " + directory.getAbsolutePath(), DefaultFont.INFORMATION);
 
             File[] files = directory.listFiles();
 
             for (File f : files) {
-                System.out.println("" + f.getAbsolutePath());
+                Log.append("" + f.getAbsolutePath(), DefaultFont.INFORMATION);
                 String s = f.getAbsolutePath();
                 s = s.substring(s.lastIndexOf("."));
                 if (s.equals(".anim")) {
@@ -139,19 +141,14 @@ public class Union {
             os.writeObject(anim1);
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Union.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         } catch (IOException ex) {
-            Logger.getLogger(Union.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         } finally {
             try {
                 fos.close();
-
             } catch (IOException ex) {
-                Logger.getLogger(Union.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         }
     }

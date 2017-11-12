@@ -14,6 +14,8 @@ import javax.imageio.ImageIO;
 import mario.MainComponent;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -26,7 +28,7 @@ public class Loader {
      * @param path: path parziale dell'immagine da caricare in memoria
      * @return l'immagine caricata in memoria
      */
-    public BufferedImage LoadImage(String path) {    //MEMORIZZA NEL BUFFERIMAGE L'IMMAGINE
+    public static final BufferedImage LoadImage(String path) {    //MEMORIZZA NEL BUFFERIMAGE L'IMMAGINE
         BufferedImage img = null;
         try {
             if (MainComponent.jar != null && MainComponent.jar.isFile()) {
@@ -40,10 +42,11 @@ public class Loader {
                     f = new File(path);
                     img = ImageIO.read(f);
                 }
-                System.out.println(""+f.getAbsolutePath());
+                Log.append(f.getAbsolutePath(), DefaultFont.INFORMATION);
             }
         } catch (IOException ex) {
-            System.out.println("Immagine alla posizione: " + (path) + " non caricata correttamente!");
+            //System.out.println("Immagine alla posizione: " + (path) + " non caricata correttamente!");
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return img;
     }
@@ -53,12 +56,12 @@ public class Loader {
      * @param path: path completa ell'immagine da caricare in memoria
      * @return immagine caricata in memoria
      */
-    public BufferedImage LoadImageCompletePath(String path) {
+    public static final BufferedImage LoadImageCompletePath(String path) {
         BufferedImage img = null;
         try {
             if (MainComponent.jar != null && MainComponent.jar.isFile()) {
                 path = path.substring(path.indexOf("mario/"));
-                System.out.println(""+path);
+                Log.append(path,DefaultFont.INFORMATION);
                 img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
             }else{
                 File f = new File(path);
@@ -68,7 +71,8 @@ public class Loader {
                 img = ImageIO.read(new File(path));
             }
         } catch (IOException ex) {
-            System.out.println("Immagine alla posizione: " + new File(path).getAbsoluteFile() + " non caricata correttamente!");
+            //System.out.println("Immagine alla posizione: " + new File(path).getAbsoluteFile() + " non caricata correttamente!");
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return img;
     }
@@ -79,8 +83,8 @@ public class Loader {
      * @param read: metodo creaLivello
      * @return se ritorna falso, vuol dire che il percorso non e' valido
      */
-    public boolean convertTextInMap(String path, Reader read) {
-        System.out.println("4)CREO IL LIVELLO");
+    public static final boolean  convertTextInMap(String path, Reader read) {
+        Log.append("4)CREO IL LIVELLO",DefaultFont.INFORMATION);
 
 
         if (path.equals("")) {
@@ -90,12 +94,12 @@ public class Loader {
             Object fr = null;
             if(MainComponent.jar.isFile()){
                 path = path.replace("src/", "");
-                System.out.println(""+path);
+                Log.append(path);
                 fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
             }else{
                 fr = new FileReader(path);
             }
-            System.out.println("" + path);
+            Log.append(path);
             BufferedReader br = new BufferedReader((java.io.Reader) fr);
 
             String line = "";
@@ -125,7 +129,7 @@ public class Loader {
                         case ']':
                             //System.out.println(""+word);
                             if (type == null) {
-                                System.out.println("refactor: "+word);
+                                Log.append("refactor: "+word, DefaultFont.INFORMATION);
                                 type = Type.valueOf(word);
                             } else {
                                 unlockable = type;
@@ -150,9 +154,9 @@ public class Loader {
             }
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Handler.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         } catch (IOException ex) {
-            Logger.getLogger(Handler.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
 
         return true;

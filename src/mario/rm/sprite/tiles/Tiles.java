@@ -74,7 +74,7 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
         this.partTile = part;
 
         this.damage = damage;
-        System.out.println(""+type.name());
+        //System.out.println(""+type.name());
         if (type != Type.VOID) {
             anim.stream().filter((tile) -> (tile.getType() == type)).forEach((tile) -> {
                 this.temp = tile.getImage(TilePart.valueOf(part));

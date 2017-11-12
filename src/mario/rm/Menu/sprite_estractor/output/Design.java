@@ -14,6 +14,8 @@ import mario.rm.Menu.sprite_estractor.union.Union;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.Type;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 
 /**
@@ -89,7 +91,7 @@ public class Design {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(Design.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         lista.stream().forEach((estratta) -> {
             estratta.output();

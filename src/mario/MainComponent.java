@@ -3,10 +3,13 @@ package mario;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Logger;
 import mario.rm.Animation.Memoria;
 import mario.rm.Menu.home.Home;
 
 import mario.rm.SuperMario;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -21,7 +24,15 @@ public class MainComponent {
 
     public static File jar;
 
+    private SuperMario su;
+
+    private static Log log;
+
     public MainComponent() {
+        if (log == null) {
+            log = new Log(this);
+        }
+
         jar = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
         try {
             jarPath = new File(MainComponent.class.getResource("./MainComponent.class").getFile());
@@ -30,14 +41,14 @@ public class MainComponent {
         }
         Memoria memoria = new Memoria(true);
         //System.out.println(jarPath.getAbsolutePath());
-        
+
         Home home = new Home();
         home.setMainComponent(this);
         home.setVisible(true);
 
         File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 
-        System.out.println("" + jarFile.getAbsolutePath());
+        Log.append(jarFile.getAbsolutePath(), DefaultFont.INFORMATION);
     }
 
     public static void main(String[] args) throws IOException {
@@ -50,7 +61,11 @@ public class MainComponent {
     }
 
     public void start() {
-        new SuperMario();
+        su = new SuperMario();
+    }
+
+    public SuperMario getSuperMaio() {
+        return su;
     }
 
 }

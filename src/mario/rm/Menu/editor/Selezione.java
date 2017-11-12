@@ -21,6 +21,8 @@ import javax.swing.JScrollPane;
 import mario.rm.Menu.Componenti.Checkable;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 
 /**
@@ -122,10 +124,10 @@ public class Selezione implements MouseListener, MouseMotionListener {
                         p = new Punto(Integer.parseInt(insert[0]), Integer.parseInt(insert[1]));
                         g.newPage(p.getX(), p.getY());
                     }catch(NumberFormatException e){
-                        System.out.println("Valore inserito non valido");
+                        Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
                     }
                 }catch(StringIndexOutOfBoundsException e){
-                    System.out.println("Valore inserito non valido");
+                    Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
                 }
             case "Clean":
                 //g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

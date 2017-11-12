@@ -10,13 +10,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import static java.lang.Thread.sleep;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.TilePart;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -65,9 +65,9 @@ public class Test extends Canvas implements Runnable {
         try {
             new Test();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
     }
 
@@ -100,7 +100,7 @@ public class Test extends Canvas implements Runnable {
                     //System.out.println("WHY?");
                 }
         }else{
-            System.out.println("Errore");
+            Log.append("Errore", DefaultFont.ERROR);
         }
 
         bs.show();
@@ -113,7 +113,7 @@ public class Test extends Canvas implements Runnable {
             try {
                 sleep(150);
             } catch (InterruptedException ex) {
-                Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
         }
     }

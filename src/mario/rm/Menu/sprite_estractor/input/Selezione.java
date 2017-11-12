@@ -29,6 +29,8 @@ import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
 import mario.rm.Menu.sprite_estractor.output.Design;
 import mario.rm.input.Loader;
+import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Log;
 
 /**
  *
@@ -168,7 +170,7 @@ public class Selezione implements MouseListener {
                         build.append(temp + "\n");
                     }
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
                 JEditorPane textArea = new JEditorPane();
                 URL resourceUrl = new URL("file:"
@@ -200,7 +202,7 @@ public class Selezione implements MouseListener {
                 try {
                     new Test();
                 } catch (FileNotFoundException | ClassNotFoundException ex) {
-                    Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
             }
             break;
@@ -263,7 +265,7 @@ public class Selezione implements MouseListener {
                     g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     isDefaultCursor = true;
                 } catch (AWTException ex) {
-                    Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
                 break;
             default:
