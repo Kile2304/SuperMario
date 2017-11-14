@@ -14,7 +14,7 @@ public class SelectLevel {
 
     private int index;
 
-    private static final String[] history = {"provetta.level","provaLV2.bmp", "bg.bmp", "prov.bmp"};    //livelli da cambiare con .level
+    private static final String[] history = {"provetta.level"};    //livelli da cambiare con .level
 
     private static final String path = "src/mario/res/Immagini/livelli/";
 

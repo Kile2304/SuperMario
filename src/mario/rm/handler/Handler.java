@@ -36,6 +36,9 @@ public class Handler implements Reader {
     private static LinkedList<Tiles> tiles; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
     private static LinkedList<Enemy> enemy; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
 
+    private static LinkedList<Enemy> enemyClone;
+    private static LinkedList<Tiles> tilesClone;
+
     /**
      *
      * @return ELENCO DI LIVELLI DA CARICARE, IN ORDINE DAL PRIMO ALL'ULTIMO
@@ -58,6 +61,9 @@ public class Handler implements Reader {
         player = new LinkedList<>();    //ELENCO PLAYER IN CAMPO
         tiles = new LinkedList<>(); //ELENCO TILES IN CAMPO
         enemy = new LinkedList<>(); //ELENCO NEMICI IN CAMPO
+        
+        tilesClone = new LinkedList<>(); //ELENCO TILES IN CAMPO
+        enemyClone = new LinkedList<>(); //ELENCO NEMICI IN CAMPO
 
         level = new SelectLevel(false);
 
@@ -125,7 +131,7 @@ public class Handler implements Reader {
             }
         };
         t[2].start();
-        
+
         for (int i = 0; i < t.length; i++) {
             try {
                 t[i].join();
@@ -152,11 +158,11 @@ public class Handler implements Reader {
         int t = (int) (player.get(0).getX() + SuperMario.WIDTH / 1.5);
         int c = (int) (player.get(0).getX() - SuperMario.WIDTH / 1.5);
         if (enemy.size() > 0) { //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL TICK DEGLI ENEMY
-            enemy.stream().forEach((enemy) -> {
-                if (enemy.getX() <= t && enemy.getX() >= c) {
-                    enemy.tick();
+            for (int i = 0; i < enemy.size(); i++) {
+                if (enemy.get(i).getX() <= t && enemy.get(i).getX() >= c) {
+                    enemy.get(i).tick();
                 }
-            });
+            }
         }
         if (next) {   //SE IL PLAYER HA FATTO DIVENTARE TRUE NEXT
             sound = true;
@@ -199,6 +205,8 @@ public class Handler implements Reader {
         Log.append("" + tiles.size(), DefaultFont.INFORMATION);
         Log.append("" + (temp - tiles.size()), DefaultFont.INFORMATION);
         Log.append("Migliorato del: " + ((double) 100 / temp * (temp - tiles.size())), DefaultFont.INFORMATION); //CALCOLO DI QUANTO E' MIGLIORATO IL LIVELLO (%)
+
+        //cloneCurrentStatus();
 
         memoria.nextSound();
         while (sound) {
@@ -356,7 +364,7 @@ public class Handler implements Reader {
                     enemy.add(new Boss(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, Type.KOOPA, true));
                 }*/
         } else {
-            Log.append(Handler.class.getName()+" "+"Questa animazione non e' valida: manca il Type di appartenenza", DefaultFont.ERROR);
+            Log.append(Handler.class.getName() + " " + "Questa animazione non e' valida: manca il Type di appartenenza", DefaultFont.ERROR);
         }
 
     }
@@ -443,5 +451,34 @@ public class Handler implements Reader {
      */
     public String getLevel() {
         return level.getCurrent();
+    }
+
+    public void cloneCurrentStatus() {
+        for (int i = 0; i < enemy.size(); i++) {
+            Enemy e = enemy.get(i).clone();
+            if (e != null) {
+                enemyClone.add(e);
+            } else{
+                Log.append("Null pointer", DefaultFont.ERROR);
+            }
+        }
+        for (int i = 0; i < tiles.size(); i++) {
+            tilesClone.push(tiles.get(i).clone());
+        }
+    }
+
+    public void restoreStatus() {
+        enemy.clear();
+        tiles.clear();
+        long before = System.currentTimeMillis();
+        //Log.append("Numero di nemici: "+ enemyClone.size(), DefaultFont.DEBUG);
+        for (int i = 0; i < enemyClone.size(); i++) {
+            enemy.add(enemyClone.get(i).clone());
+        }
+        //System.out.println(""+enemy.size());
+        for (int i = 0; i < tilesClone.size(); i++) {
+            tiles.add(tilesClone.get(i).clone());
+        }
+        Log.append("Tempo di copia: "+(System.currentTimeMillis() - before), DefaultFont.DEBUG);
     }
 }

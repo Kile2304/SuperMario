@@ -45,7 +45,7 @@ public class Sound {
             FloatControl gainControl
                     = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             Log.append("gainControl: "+gainControl, DefaultFont.INFORMATION);
-            float value = 50.0f;
+            float value = 80.0f;
             float range = Math.abs(gainControl.getMinimum()) + Math.abs(gainControl.getMaximum());
             float temp = (float) (((value / 100.0) * range) - Math.abs(gainControl.getMinimum()));
             gainControl.setValue(temp);

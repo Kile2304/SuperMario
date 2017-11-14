@@ -40,7 +40,7 @@ public class Home extends JFrame implements ActionListener {
     private static final String TITLE = "HOME";
 
     private static final String[] bottonList = new String[]{"INIZIA GIOCO", "MULTIGIOCATORE", "SELEZIONA LIVELLO", "CREA LIVELLO",
-        "SPRITE ESTRACTOR", "RINGRAZIAMENTI", "ESCI"};
+        "SPRITE ESTRACTOR", "OPZIONI", "RINGRAZIAMENTI", "ESCI"};
 
     private static MainComponent main;
 
@@ -214,6 +214,9 @@ public class Home extends JFrame implements ActionListener {
                 break;
             case "SPRITE ESTRACTOR":
                 spriteEstractor();
+                break;
+            case "OPZIONI":
+                
                 break;
             case "RIGRAZIAMENTI":
                 ringraziamenti();

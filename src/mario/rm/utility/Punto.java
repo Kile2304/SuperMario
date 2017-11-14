@@ -22,8 +22,21 @@ public class Punto {
         return y;
     }
     
+    public void increaseXBy(int increase){
+        x += increase;
+    }
+    public void increaseYBy(int increase){
+        y += increase;
+    }
+    
     public boolean compare(Punto p){
         return x == p.x && y == p.y;
     }
+    
+    @Override
+    public String toString(){
+        return "X: "+x+" Y: "+y;
+    }
+    
     
 }

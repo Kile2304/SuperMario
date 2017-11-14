@@ -1,5 +1,6 @@
 package mario.rm.Menu.sprite_estractor.input;
 
+import mario.rm.utility.Punto;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

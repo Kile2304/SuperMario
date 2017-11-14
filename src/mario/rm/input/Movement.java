@@ -2,6 +2,8 @@ package mario.rm.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.LinkedList;
+import mario.MainComponent;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
@@ -10,6 +12,8 @@ import mario.rm.sprite.Player;
 import mario.rm.sprite.Sprite;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
+import mario.rm.utility.joystick.PlaystationController;
+import net.java.games.input.Controller;
 
 /**
  *
@@ -25,14 +29,13 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     private final boolean move[];
 
     private Handler handler;
-    
-    private SuperMario mario;
-    
-    //public static boolean cheatJump = false;
 
+    protected SuperMario mario;
+
+    //public static boolean cheatJump = false;
     public Movement(int velX, double jump, Handler handler, SuperMario mario) {
-        this.velX = velX;
-        this.jump = jump;
+        Movement.velX = velX;
+        Movement.jump = jump;
         move = new boolean[]{false, false};
         this.handler = handler;
         this.mario = mario;
@@ -45,6 +48,9 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e == null) {
+            return;
+        }
         int keyCode = e.getKeyCode();   //NON STRETTAMENTE NECCESSARIO
         for (Player sp : handler.getPlayer()) {
             switch (keyCode) {
@@ -90,6 +96,19 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         sp.setTeleport();
                     }
                     break;
+                case KeyEvent.VK_TAB:
+                    if (mario.getFrame().isFocused()) {
+                        MainComponent.log.toFront();
+                        if (!mario.getMenu()) {
+                            mario.addOption();
+                        }
+                    } else {
+                        mario.getFrame().toFront();
+                        if (mario.getMenu()) {
+                            mario.removeOption();
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -98,6 +117,9 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if (e == null) {
+            return;
+        }
         int keyCode = e.getKeyCode();   //PALESE
         for (Sprite sp : handler.getPlayer()) {
             switch (keyCode) {
@@ -124,26 +146,29 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     }
                     break;
                 case KeyEvent.VK_ESCAPE:
-                    mario.addOption();
+                    if (mario.getFrame().isFocused()) {
+                        mario.addOption();
+                    }
                     break;
                 default:
                     break;
             }
         }
     }
-    
-    public void setVelX(int velX){
-        this.velX = velX;
+
+    public void setVelX(int velX) {
+        Movement.velX = velX;
     }
-    public void setJump(int jump){
-        this.jump = jump;
+
+    public void setJump(int jump) {
+        Movement.jump = jump;
     }
-    
-    public int getVelX(){
+
+    public int getVelX() {
         return velX;
     }
-    
-    public double getJump(){
+
+    public double getJump() {
         return jump;
     }
 

@@ -2,6 +2,7 @@ package mario.rm.sprite;
 
 import mario.rm.identifier.Type;
 import java.awt.Rectangle;
+import static java.lang.Thread.sleep;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,13 +46,12 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     private static final Sound[] sound = new Sound[]{new Sound("mario/res/Sound/nsmb_death.wav"), new Sound("mario/res/Sound/nsmb_power-up.wav"), new Sound("mario/res/Sound/nsmb_coin.wav")};   //SUONE DELLA MORTEM DEL POWER UP E DEL COIN
 
-    
     //cheat
     private boolean godMode = false;
     private int movXIncrease;
     private double jumpIncrease;
     private boolean infiniteJump = false;
-    
+
     public Player(int x, int y, int width, int height, Handler handler, Type type) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         super(x, y, width, height, handler, type, handler.getMemoria().getPlayer());
         Log.append("6)INIZIALIZZO IL PLAYER", DefaultFont.INFORMATION);
@@ -245,31 +245,33 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
             @Override
             public void run() {
                 LinkedList<Enemy> enemy = handler.getEnemy();
-                enemy.stream().filter((enem) -> (!enem.isDie())).forEach((enem) -> {
-                    if (getBoundsBottom().intersects(enem.getBoundsTop())) { //INTERSEZIONE PARTE BASSA
-                        if (enem.isCanDie()) {
-                            enem.die(); //IL NEMICO VIENE SCONFITTO
-                            y = enem.getY() - height - 1;
-                            gravity = -7.2;   //SALTA IN ALTO
-                            jumping = true; //DICE CHE SALTANDO
-                            falling = false;    //DICE CHE NON STA CADENDO
-                            PUNTEGGIO += 1000;  //AGGIORNO IL PUNTEGGIO
-                        }
-                    } else if (getBounds().intersects(enem.getBounds())) {  //SE COLPISCE IL NEMICO CON QUALSIASI ALTRA PARTE
-                        if (!immortal && godMode) {    //NEL CASO NON SIA IMMORTALE
-                            if (!grow) {    //NEL CASO NON SIA GRANDE
-                                die();
-                            } else {    //SE ERA GRANDE
-                                grow = false;   //LO FA DIVENTARE PICCOLO
-                                width -= crescita;  //DECREMENTA LA LARGHEZZA
-                                height -= crescita; //DECREMENTA LA ALTEZZA
-                                y += crescita;  //RIPOSIZIONA SULL'ASSE Y
+                for (int i = 0; i < enemy.size(); i++) {
+                    if (!enemy.get(i).isDie()) {
+                        if (getBoundsBottom().intersects(enemy.get(i).getBoundsTop())) { //INTERSEZIONE PARTE BASSA
+                            if (enemy.get(i).isCanDie()) {
+                                enemy.get(i).die(); //IL NEMICO VIENE SCONFITTO
+                                y = enemy.get(i).getY() - height - 1;
+                                gravity = -7.2;   //SALTA IN ALTO
+                                jumping = true; //DICE CHE SALTANDO
+                                falling = false;    //DICE CHE NON STA CADENDO
+                                PUNTEGGIO += 1000;  //AGGIORNO IL PUNTEGGIO
                             }
-                            time = System.currentTimeMillis();  //MEMORIZZA IN CHE MOMENTO E' STATO COLPITO
-                            immortal = true;    //LO RENDE TEMPORANEAMENTE IMMORTALE
+                        } else if (getBounds().intersects(enemy.get(i).getBounds())) {  //SE COLPISCE IL NEMICO CON QUALSIASI ALTRA PARTE
+                            if (!immortal && !godMode) {    //NEL CASO NON SIA IMMORTALE
+                                if (!grow) {    //NEL CASO NON SIA GRANDE
+                                    die();
+                                } else {    //SE ERA GRANDE
+                                    grow = false;   //LO FA DIVENTARE PICCOLO
+                                    width -= crescita;  //DECREMENTA LA LARGHEZZA
+                                    height -= crescita; //DECREMENTA LA ALTEZZA
+                                    y += crescita;  //RIPOSIZIONA SULL'ASSE Y
+                                }
+                                time = System.currentTimeMillis();  //MEMORIZZA IN CHE MOMENTO E' STATO COLPITO
+                                immortal = true;    //LO RENDE TEMPORANEAMENTE IMMORTALE
+                            }
                         }
                     }
-                });
+                }
             }
         };
         t[1].start();
@@ -318,6 +320,8 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
     @Override
     public void die() {
 
+        handler.getSound().stop();
+
         life--; //GLI VIENE TOLTA UNA VITA
         //System.out.println("" + life);
         if (life == 0) {    //SE HA 0 VITE
@@ -327,53 +331,52 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
             x = respawnX;   //IMPOSTA LE COORDINATE X A QUELLE DEL CHECKPOINT PRECEDENTE
             y = respawnY;   //IMPOSTA LE COORDINATE Y A QUELLE DEL CHECKPOINT PRECEDENTE
             Camera.setUpY(-y + HEIGHT - SuperMario.standardHeight * 4);
+            sound[0].start();
+            sound[0].isRunning();
+            //handler.restoreStatus();
         }
-
-        handler.getSound().stop();
-        sound[0].start();
-        sound[0].isRunning();
-        sound[0].stop();
         handler.getSound().loop();
+
     }
 
     public void setLife(int life) {
         this.life = life;
     }
-    
-    public int getLife(){
+
+    public int getLife() {
         return life;
     }
-    
-    public void changeGodMode(){
+
+    public void changeGodMode() {
         godMode = !godMode;
     }
-    
-    public boolean getGodMode(){
+
+    public boolean getGodMode() {
         return godMode;
     }
-    
-    public int getMoveXIncrease(){
+
+    public int getMoveXIncrease() {
         return movXIncrease + Movement.velX;
     }
-    
-    public void setMoveXIncrease(int movXIncrease){
+
+    public void setMoveXIncrease(int movXIncrease) {
         this.movXIncrease = movXIncrease - Movement.velX;
     }
-    
-    public double getJumpIncrease(){
+
+    public double getJumpIncrease() {
         return jumpIncrease + Movement.jump;
     }
-    
-    public void setJumpIncrease(double jumpIncrease){
-        
+
+    public void setJumpIncrease(double jumpIncrease) {
+
         this.jumpIncrease = jumpIncrease - Movement.jump;
     }
-    
-    public boolean getInfiniteJump(){
+
+    public boolean getInfiniteJump() {
         return infiniteJump;
     }
-    
-    public void changeInfiniteJump(){
+
+    public void changeInfiniteJump() {
         infiniteJump = !infiniteJump;
     }
 

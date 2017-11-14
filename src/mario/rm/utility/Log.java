@@ -214,8 +214,8 @@ public class Log extends JFrame implements KeyListener {
                     break;
                 case "restart":
                     if (scomposto.length == 2 && scomposto[1].equals("level")) {
-                        if (main.getSuperMaio() != null) {
-                            main.getSuperMaio().createLV(true);
+                        if (main.getSuperMario() != null) {
+                            main.getSuperMario().createLV(true);
                         } else {
                             errore = true;
                             comando = "Error in restart level, the game have not yet been initialized: " + comando;

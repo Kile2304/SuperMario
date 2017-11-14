@@ -1,11 +1,10 @@
 package mario.rm.Menu.sprite_estractor.input;
 
+import mario.rm.utility.Punto;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -13,14 +12,11 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import java.awt.Robot;
-import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -47,8 +43,8 @@ public class Selezione implements MouseListener {
 
     private int type;
 
-    private Cursor cur1;
-    private Cursor cur2;
+    //private Cursor cur1;
+    //private Cursor cur2;
 
     private boolean isDefaultCursor;
 
@@ -56,17 +52,19 @@ public class Selezione implements MouseListener {
         this.g = g;
         this.fr = fr;
         cl = new Collegamenti();
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        /*Toolkit toolkit = Toolkit.getDefaultToolkit();
         Image image = toolkit.getImage("src/mario/res/Immagini/cursor/tool.png");
+        
         cur1 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");
         image = toolkit.getImage("src/mario/res/Immagini/cursor/pencil.png");
-        cur2 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");
+        
+        cur2 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");*/
         isDefaultCursor = true;
+
     }
 
     private void load() {
 
-        
         JFileChooser c = new JFileChooser(new File("src/mario/res/Immagini/extract").getAbsolutePath());
 
         int valid = c.showOpenDialog(fr);
@@ -118,7 +116,8 @@ public class Selezione implements MouseListener {
                 cl.estrazione();
                 break;
             case "CREATE POINT":
-                g.setCursor(cur2);
+               // g.setCursor(cur2);
+                
                 isDefaultCursor = false;
                 type = 1;
                 break;
@@ -149,7 +148,7 @@ public class Selezione implements MouseListener {
                 new Home().setVisible(true);
                 break;
             case "Selettore":
-                g.setCursor(cur1);
+                //g.setCursor(cur1);
                 isDefaultCursor = false;
                 type = 3;
                 break;
@@ -189,7 +188,7 @@ public class Selezione implements MouseListener {
                 scrollPane.setPreferredSize(new Dimension(700, 500));
                 JOptionPane.showMessageDialog(fr, scrollPane, "Sprite Estractor",
                         JOptionPane.INFORMATION_MESSAGE);
-            break;
+                break;
             case "toAcFile":
                 new Thread() {
                     @Override
@@ -216,7 +215,8 @@ public class Selezione implements MouseListener {
         if (isDefaultCursor) {
             riga = (e.getY()) / g.getPixel() + g.getMovY();
         } else {
-            riga = (e.getY() + 30) / g.getPixel() + g.getMovY();
+            //riga = (e.getY() + 30 / 500 * g.getHeight()) / g.getPixel() + g.getMovY();
+            riga = (e.getY()) / g.getPixel() + g.getMovY();
         }
 
         //System.out.println("colonna: " + colonna + " riga: " + riga);
@@ -230,7 +230,8 @@ public class Selezione implements MouseListener {
                         if (isDefaultCursor) {
                             riga = (e.getY()) / g.getPixel() + g.getMovY();
                         } else {
-                            riga = (e.getY() + 30) / g.getPixel() + g.getMovY();
+                            //riga = (e.getY() + 30 / 500 * g.getHeight()) / g.getPixel() + g.getMovY();
+                            riga = (e.getY()) / g.getPixel() + g.getMovY();
                         }
                         Punto[] p = cl.nuovoPunto(colonna, riga);
                         if (p != null) {

@@ -1,6 +1,11 @@
 package mario.rm.sprite.enemy;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import mario.rm.Animation.Anim;
 import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
@@ -22,7 +27,6 @@ public class Enemy extends Sprite {
     boolean canDie; //SE PUO' MORIRE O NO
 
     //protected Animazione up;    //ANIMAZIONE
-
     protected int direzioneY;   //DIREZIONEY
 
     protected static final double STACCO = adaptHeight(0.17);
@@ -53,7 +57,25 @@ public class Enemy extends Sprite {
         this.canDie = canDie;
         lastMove = Move.WALK;
         lastDirection = Direction.LEFT;
-        
+
+        direzione = -1;
+
+    }
+
+    public Enemy(int x, int y, int width, int height, Handler handler, Type type, boolean canDie, Anim animazione) {
+        super(x, y, width, height, null, type, null);
+        this.handler = handler;
+        this.animazione = animazione;
+
+        velX = type.getVelX();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        velY = type.getVelY();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+
+        isDie = false;  //IMPOSTO A NON MORTO
+
+        this.canDie = canDie;
+        lastMove = Move.WALK;
+        lastDirection = Direction.LEFT;
+
         direzione = -1;
     }
 
@@ -84,12 +106,17 @@ public class Enemy extends Sprite {
             x += velX * direzione;
             y += velY * direzioneY;
 
+            //System.out.println("" + x);
             falling = true;
 
             LinkedList<Tiles> tile = handler.getTiles();
             for (int i = 0; i < handler.getTiles().size(); i++) {
                 if (getBounds().intersects(tile.get(i).getBounds())) {
-                    if (tile.get(i).getType() != Type.MUSHROOM || tile.get(i).getType() != Type.COIN) {
+                    if (tile.get(i).getType() == Type.VOID) {
+                        canDie = true;
+                        isDie = true;
+                        die();
+                    } else if (tile.get(i).getType() != Type.MUSHROOM || tile.get(i).getType() != Type.COIN) {
                         if (getBoundsBottom().intersects(tile.get(i).getBounds())) { //INTERSEZIONE PARTE BASSA
                             y = tile.get(i).getY() - height + 1;//LA SUA POSIZIONE DIVIENE POSIZIONE TILE (Y) MENO L'ALTEZZA
 
@@ -154,4 +181,32 @@ public class Enemy extends Sprite {
     public boolean isDie() {
         return isDie;
     }
+
+    @Override
+    public Enemy clone() {
+        Enemy e = new Enemy(x, y, width, height, handler, type, canDie, animazione);
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("mario.rm.sprite.enemy.Tartosso");
+            Constructor<?> constructor = clazz.getConstructor(Integer.class, Integer.class, Integer.class, Integer.class,
+                    Handler.class, Type.class, Boolean.class, Anim.class);
+            Object instance = constructor.newInstance(x, y, width, height, handler, type, canDie, animazione);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return e;
+    }
+
 }

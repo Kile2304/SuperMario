@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mario.rm.Animation.Tile;
 import mario.rm.utility.Size;
 import mario.rm.SuperMario;
@@ -21,7 +23,7 @@ import mario.rm.identifier.Type;
  * ITEM... NE PERMETTE IL DISEGNO SULLO SCHERMO, E L'EVENTUALE MOVIMENTO O
  * AZIONE SPECIALE
  */
-public abstract class Tiles implements Size {    //sarebbe meglio astraatta per estensione ad altre classi
+public abstract class Tiles implements Size, Cloneable{    //sarebbe meglio astraatta per estensione ad altre classi
 
     protected int x;  //COORDINATA IN CUI SI TROVA(X)
     protected int y;  //COORDINATA IN CUI SI TROVA(Y)
@@ -80,6 +82,28 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
                 this.temp = tile.getImage(TilePart.valueOf(part));
             });
         }
+
+        numImma = temp != null ? temp.length : 0;
+
+        this.numSerieX = 1;
+        this.collide = collide;
+    }
+    
+    public Tiles(int x, int y, int width, int height, Handler handler, Type type, boolean collide, String part, boolean damage, BufferedImage[] temp) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.handler = handler;
+        this.type = type;
+        stop = type.getTempo();
+        isDelay = type.getDelay();
+        this.partTile = part;
+
+        this.damage = damage;
+        //System.out.println(""+type.name());
+        
+        this.temp = temp;
 
         numImma = temp != null ? temp.length : 0;
 
@@ -202,6 +226,26 @@ public abstract class Tiles implements Size {    //sarebbe meglio astraatta per 
 
     public String getTile() {
         return partTile;
+    }
+    
+    @Override
+    public Tiles clone(){
+        /*Tiles s = null;
+        try {
+            s = getClass().getDeclaredConstructor(Integer.class, Integer.class, Integer.class, Integer.class,
+                    Handler.class, Type.class, Boolean.class, String.class, Boolean.class, BufferedImage[].class).newInstance(
+                    x, y, width, height, handler, type, collide, partTile, damage, temp);
+            //return new Tiles(x, y, width, height, handler, type, collide, partTile, damage, temp)};
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
+        }*/
+        Tiles s = null;
+        try {
+            s = (Tiles) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(Tiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
     }
 
 }

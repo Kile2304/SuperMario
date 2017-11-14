@@ -30,18 +30,18 @@ import mario.rm.utility.RGB;
 public class Pannelli extends JPanel implements Checkable, ActionListener { //PANNELLO CONTENENTE IL MENU PER L'ESTRATTORE
 
     private Selezione s;    //vero e proprio listener
-    
+
     public static JTextField type; //textfielf per inserire il Type
     public static JComboBox move;   //combobox dove si scegliera' il tipo di movimento
     public static JComboBox direction;  //combobox per scegliere la direzione
     public static JTextField fileName;  //textfield per scegliere il nome del file
     public static JComboBox transformation; //indica se si e' trasformato in qualcosa o e' normale
     public static JCheckBox isPlayer; //se e' selezionato stiamo trattando con un tile
-    
+
     public static JComboBox tile;   //direzione specifica per i tile
     public static JCheckBox isUnlockable;
     public static JComboBox unlockType;
-    
+
     private ArrayList<JLabel> lb;   //server per eliminare le jlabel quando viene selezionata la checkbox
 
     public Pannelli(Selezione s) {
@@ -108,22 +108,24 @@ public class Pannelli extends JPanel implements Checkable, ActionListener { //PA
         add(isPlayer);
 
         addPlayer();
-        
+
         TilePart[] t = TilePart.values();
         mov = new String[t.length];
         for (int i = 0; i < mov.length; i++) {
             mov[i] = t[i].name();
         }
         tile = new JComboBox(mov);
-        
-        unlockType = new JComboBox(new String[]{"COIN","MUSHROOM","LIFE"});
+
+        unlockType = new JComboBox(new String[]{"COIN", "MUSHROOM", "LIFE"});
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Specifiche s = new Specifiche();
-        
+
+        String check = "";
+
         switch (e.getActionCommand()) {
             case "Player":
                 if (isPlayer.isSelected()) {
@@ -134,21 +136,36 @@ public class Pannelli extends JPanel implements Checkable, ActionListener { //PA
                 this.s.repaint();
                 break;
             case "Unlockable":
-                if(isUnlockable.isSelected()){
+                if (isUnlockable.isSelected()) {
                     add(unlockType);
                     //setLayout(new GridLayout(7, 4, 25, 25));
-                }else{
+                } else {
                     remove(unlockType);
                     unlockType.setSelectedIndex(0);
                     //setLayout(new GridLayout(7, 4, 25, 25));
                 }
                 this.s.repaint();
                 break;
+            case "CREATE POINT":
+                check = "CREATE POINT";
+            case "DELETE POINT":
+                if (check.equals("")) {
+                    check = "DELETE POINT";
+                }
+                for (Iterator<Specifiche> it = elenco.iterator(); it.hasNext();) {
+                    Specifiche specifiche = it.next();
+                    if (specifiche.getButton().getActionCommand().equals(check)) {
+                        specifiche.getButton().setEnabled(false);
+                    } else {
+                        specifiche.getButton().setEnabled(true);
+                    }
+                }
+                break;
         }
-        
+
         if ((e.getSource() instanceof JButton)) {
             s.setButton((JButton) e.getSource());
-            
+
             elenco.stream().forEach((specifiche) -> {
                 if (s.getButton().toString().equals(specifiche.getButton().toString())) {
                     specifiche.setCheck();
@@ -158,7 +175,7 @@ public class Pannelli extends JPanel implements Checkable, ActionListener { //PA
             });
             s.setCheck();
         }
-        
+
         try {
             this.s.action(e.getActionCommand());
         } catch (IOException ex) {
@@ -186,13 +203,13 @@ public class Pannelli extends JPanel implements Checkable, ActionListener { //PA
             remove(lb.get(0));
             lb.clear();
         }
-        if(isUnlockable != null){
-            if(isUnlockable.isSelected()){
+        if (isUnlockable != null) {
+            if (isUnlockable.isSelected()) {
                 isUnlockable.setSelected(false);
                 remove(isUnlockable);
                 remove(unlockType);
                 unlockType.setSelectedIndex(0);
-            }else{
+            } else {
                 remove(isUnlockable);
             }
         }
@@ -225,6 +242,10 @@ public class Pannelli extends JPanel implements Checkable, ActionListener { //PA
         add(isUnlockable = new JCheckBox("Unlockable", false));
         isUnlockable.addActionListener(this);
         setLayout(new GridLayout(7, 4, 25, 25));
+    }
+
+    public static void enable(String able) {
+
     }
 
 }

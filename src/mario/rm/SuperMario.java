@@ -17,6 +17,7 @@ import mario.rm.input.Movement;
 import mario.rm.sprite.Player;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
+import mario.rm.utility.joystick.ControllerListener;
 
 /**
  *
@@ -56,12 +57,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     private static boolean video = false;
 
-    private Movement movement;
+    private ControllerListener movement;
 
     private Menu option;
-    
-    //private Thread t;
 
+    //private Thread t;
     //
     public SuperMario() {
         Log.append("" + ManagementFactory.getRuntimeMXBean().getName(), DefaultFont.INFORMATION);
@@ -116,7 +116,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
         frame.inizializza(WIDTH, HEIGHT);
 
-        addKeyListener((movement = new Movement(adaptWidth((int) 5.0), adaptHeight(10.0), handler, this))); //AGGIUNGE UN KEY LISTENER DALLA CLASSE MOVEMENT
+        addKeyListener((movement = new ControllerListener(adaptWidth((int) 5.0), adaptHeight(10.0), handler, this))); //AGGIUNGE UN KEY LISTENER DALLA CLASSE MOVEMENT
 
         frame.add(this);
 
@@ -165,12 +165,12 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     int dsty1 = handler.getPlayer().get(0).getY() - HEIGHT / 2 + standardHeight;
                     int dstx2 = WIDTH + dstx1;
                     int dsty2 = HEIGHT + dsty1;
-                    
+
                     int srcx1 = dstx1 * 64 / standardWidth;
                     int srcy1 = dsty1 * 64 / standardHeight;
                     int srcx2 = srcx1 + WIDTH * 64 / standardWidth;
                     int srcy2 = srcy1 + HEIGHT * 64 / standardHeight;
-                    
+
                     g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
                     handler.render(g);  //DISEGNA TUTTO
 
@@ -215,8 +215,14 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
             if (!menu) {
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
+                //System.out.println(""+delta);
+                if(delta > 1){
+                    delta = 1.0f;
+                }
+                //delta = Math.min(delta, 1 / 60);
                 lastTime = now;
                 if (delta >= 1) {
+                    //if(delta > 0.00f)
                     tick();
                     ticks++;
                     delta--;
@@ -236,37 +242,41 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public synchronized void addOption() {
+        if (!menu) {
+            this.setVisible(false);
 
-        this.setVisible(false);
+            menu = true;
 
-        menu = true;
+            handler.getSound().stop();
 
-        handler.getSound().stop();
+            frame.add((option = new Menu(this)));
+            frame.removeKeyListener(movement);
 
-        frame.add((option = new Menu(this)));
-        frame.removeKeyListener(movement);
-
-        frame.revalidate();
-        frame.repaint();
+            frame.revalidate();
+            frame.repaint();
+        } else {
+            removeOption();
+        }
     }
 
     public void removeOption() {
+        if (menu) {
+            frame.remove(option);
 
-        frame.remove(option);
+            this.setVisible(true);
 
-        this.setVisible(true);
+            handler.getSound().loop();
+            frame.addKeyListener(movement);
 
-        handler.getSound().loop();
-        frame.addKeyListener(movement);
+            menu = false;
 
-        menu = false;
-
-        frame.revalidate();
-        frame.repaint();
-        revalidate();
-        repaint();
-        //t.notify();
-        new Thread(this).start();
+            frame.revalidate();
+            frame.repaint();
+            revalidate();
+            repaint();
+            //t.notify();
+            new Thread(this).start();
+        }
     }
 
     public static int adaptWidth(int val) { //RIADATTO LA LARGHEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
@@ -291,4 +301,12 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         new MainComponent();
     }
 
+    public Frame getFrame() {
+        return frame;
+    }
+
+    public boolean getMenu(){
+        return menu;
+    }
+    
 }

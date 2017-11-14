@@ -56,7 +56,6 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
     /*protected BufferedImage[] ti;
     int ind;
     int delay2;*/
-    
     public Sprite(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Anim> elenco) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         this.x = x; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE X
         this.y = y; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE Y
@@ -70,11 +69,13 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         this.type = type;   //CHE TIPO DI SPRITE E'
         lastMove = Move.STAND;
         lastDirection = Direction.RIGHT;
-
-        for (Iterator<Anim> it = elenco.iterator(); it.hasNext();) {
-            Anim animazione = it.next();
-            if (animazione.getType() == type) {
-                this.animazione = animazione;   //DA CAMBIARE (PROBABILMENTE COSTRUTTORE CHE CREA COPIA)
+        
+        if (handler != null) {
+            for (Iterator<Anim> it = elenco.iterator(); it.hasNext();) {
+                Anim animazione = it.next();
+                if (animazione.getType() == type) {
+                    this.animazione = animazione;   //DA CAMBIARE (PROBABILMENTE COSTRUTTORE CHE CREA COPIA)
+                }
             }
         }
 
@@ -118,7 +119,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      */
     public void render(Graphics g) {//DA MODIFICARE, SOPRATTUTTO IL VALORE COSTANTE
         temp = animazione.getImage(lastMove, lastDirection);
-        
+
         g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
 
     }
@@ -157,7 +158,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
     public Rectangle getBounds() {   //RITORNA L'AREA OCCUPANTE TOTALE DALLO SPRITE
         return new Rectangle(x, y, width, height);  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
     }
-    
+
     public Rectangle getBounds(int x, int y) {   //RITORNA L'AREA OCCUPANTE TOTALE DALLO SPRITE
         return new Rectangle(x, y, width, height);  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
     }

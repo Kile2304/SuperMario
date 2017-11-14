@@ -3,13 +3,15 @@ package mario;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import mario.rm.Animation.Memoria;
 import mario.rm.Menu.home.Home;
 
 import mario.rm.SuperMario;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
+import mario.rm.utility.joystick.Joystick;
+import net.java.games.input.Controller;
 
 /**
  *
@@ -26,7 +28,9 @@ public class MainComponent {
 
     private SuperMario su;
 
-    private static Log log;
+    public static Log log;
+
+    ArrayList<Controller> contr = new ArrayList<>();
 
     public MainComponent() {
         if (log == null) {
@@ -49,6 +53,37 @@ public class MainComponent {
         File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 
         Log.append(jarFile.getAbsolutePath(), DefaultFont.INFORMATION);
+
+        Joystick.UPDATE = true;
+        
+        //Joystick.ControllerLoader();
+        
+        new Thread(new Joystick()).start();
+        
+        /*Controller[] joystick = Joystick.getController();
+        PlaystationController[] play = new PlaystationController[joystick.length];
+
+        for (int i = 0; i < play.length; i++) {
+            play[i] = new PlaystationController(joystick[i]);
+        }
+
+        while (true) {
+            for (PlaystationController controller : play) {
+                String[] button = controller.listener();
+                if (button != null) {
+                    Log.append("" + button[0], DefaultFont.DEBUG);
+                }
+            }
+            try {
+                sleep(50);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainComponent.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }*/
+        //ControllerEnvironment cc = ControllerEnvironment.getDefaultEnvironment();
+        //cc.addControllerListener(this);
+        
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -64,8 +99,24 @@ public class MainComponent {
         su = new SuperMario();
     }
 
-    public SuperMario getSuperMaio() {
+    public SuperMario getSuperMario() {
         return su;
     }
+
+    /*@Override
+    public void controllerRemoved(ControllerEvent ce) {
+        Log.append("remove: " + ce.getController().getName(), DefaultFont.DEBUG);
+        contr.remove(ce.getController());
+    }
+
+    @Override
+    public void controllerAdded(ControllerEvent ce) {
+        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+        int indexOf = ce.getController().getType() == Controller.Type.GAMEPAD ? contr.indexOf(ce.getController()) : -1;
+        if (indexOf == -1) {
+            Log.append("collegato: " + ce.getController().getName(), DefaultFont.DEBUG);
+            contr.add(ce.getController());
+        }
+    }*/
 
 }

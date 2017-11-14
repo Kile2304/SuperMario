@@ -53,7 +53,7 @@ public class Griglia extends JPanel {
     private ArrayList<String> attach;
 
     private boolean isEraser;
-
+    
     public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel) {
         super();
 
@@ -144,7 +144,7 @@ public class Griglia extends JPanel {
         if (background && img != null) {
             int x = (pixel) - (moveX * pixel);
             int y = (pixel) - (moveY * pixel);
-            g.drawImage(img, x, y, img.getWidth() * pixel, img.getHeight() * pixel, this);
+            g.drawImage(img, x, y , img.getWidth() * pixel, img.getHeight() * pixel, this);
         }
 
         if (grid) {
