@@ -92,6 +92,12 @@ public class Preview {
 
         EditLoad ed = new EditLoad();
 
+        try{
+            path = path.substring(path.lastIndexOf("Immagini\\"));
+        } catch(StringIndexOutOfBoundsException e){
+            
+        }
+        
         new Loader().convertTextInMap(path, ed);
 
         ArrayList<Cell> cl = ed.getCell();
@@ -253,6 +259,10 @@ public class Preview {
             return coord;
         }
 
+    }
+    
+    public MemoriaAC getMemoria(){
+        return memoria;
     }
 
 }

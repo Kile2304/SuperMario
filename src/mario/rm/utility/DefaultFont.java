@@ -10,7 +10,7 @@ import java.awt.Font;
 public enum DefaultFont {
     
 
-    STANDARD(new Font("Arial", Font.PLAIN, 10), Color.BLACK),
+    STANDARD(new Font("Arial", Font.PLAIN, 10), Color.WHITE),
     ERROR(new Font("Arial", Font.BOLD, 15), Color.RED),
     DEBUG(new Font("Arial", Font.BOLD, 15), Color.BLUE),
     COMMAND(new Font("Arial", Font.ITALIC, 15), Color.GREEN),

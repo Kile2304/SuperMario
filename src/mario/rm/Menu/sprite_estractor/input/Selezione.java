@@ -21,9 +21,12 @@ import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import mario.rm.Animation.Test;
+import mario.rm.Menu.Cell;
 import mario.rm.Menu.Griglia;
+import mario.rm.Menu.Specifiche;
 import mario.rm.Menu.home.Home;
 import mario.rm.Menu.sprite_estractor.output.Design;
+import mario.rm.identifier.Type;
 import mario.rm.input.Loader;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
@@ -47,6 +50,8 @@ public class Selezione implements MouseListener {
     //private Cursor cur2;
 
     private boolean isDefaultCursor;
+    
+    private static final Specifiche delete = new Specifiche("");
 
     public Selezione(Griglia g, JFrame fr) {
         this.g = g;
@@ -88,7 +93,7 @@ public class Selezione implements MouseListener {
             case "+":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 isDefaultCursor = true;
-                type = 0;
+                //type = 0;
                 g.increasePixel();
                 fr.repaint();
                 fr.revalidate();
@@ -97,7 +102,7 @@ public class Selezione implements MouseListener {
                 fr.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 isDefaultCursor = true;
                 g.decreasePixel();
-                type = 0;
+                //type = 0;
                 fr.repaint();
                 fr.revalidate();
                 break;
@@ -112,7 +117,7 @@ public class Selezione implements MouseListener {
             case "Extract":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 isDefaultCursor = true;
-                type = 0;
+                //type = 0;
                 cl.estrazione();
                 break;
             case "CREATE POINT":
@@ -131,7 +136,7 @@ public class Selezione implements MouseListener {
             case "Clean":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 isDefaultCursor = true;
-                type = 0;
+                //type = 0;
                 cl.partialClean();
                 fr.repaint();
                 fr.revalidate();
@@ -199,7 +204,8 @@ public class Selezione implements MouseListener {
                 break;
             case "testAnim": {
                 try {
-                    new Test();
+                    new Test(fr);
+                    fr.setVisible(false);
                 } catch (FileNotFoundException | ClassNotFoundException ex) {
                     Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
@@ -251,7 +257,7 @@ public class Selezione implements MouseListener {
                 if (p != null) {
                     for (int i = 0; i < p.length; i++) {
                         if (p[i] != null) {
-                            g.setItem(p[i].getX(), p[i].getY());
+                            g.setItem(p[i].getX(), p[i].getY(), delete);
                         }
                     }
                 }

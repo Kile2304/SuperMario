@@ -95,7 +95,7 @@ public class Cut implements Serializable {
         errore = false;
 
         BufferedImage original = null;
-        //System.out.println(""+path);
+        System.out.println(""+path);
         original = new Loader().LoadImageCompletePath(path);
         this.type = type;
 
@@ -305,7 +305,7 @@ public class Cut implements Serializable {
     public Cut(String path, LinkedList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation, Type unlockable) {
 
         errore = false;
-
+        System.out.println(""+path);
         BufferedImage original = null;
         original = new Loader().LoadImageCompletePath(path);
         this.type = type;

@@ -52,11 +52,11 @@ public enum Type implements Serializable {
 
     UP1(0, 0, 0, 0, 0),
     MUSHROOMPLATFORM(0, 0, 0, 0, 0),
-    UNLOCKABLE£COIN(0, 0, 0, 0, 0),
+    UNLOCKABLE_COIN(0, 0, 0, 0, 0),
     SPINE(0, 0, 0, 0, 0),
     BULLET (0, 0, 0, 0, 0),
     BRIDGE (0, 0, 0, 0, 0),
-    PLAYER£LUIGI (0, 0, 0, 0, 0),
+    PLAYER_LUIGI (0, 0, 0, 0, 0),
     KI (0, 0, 0, 0, 0);
     
      private int tempo;

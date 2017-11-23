@@ -1,5 +1,6 @@
 package mario.rm.Menu.editor;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,15 +10,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import mario.MainComponent;
 import mario.rm.Animation.Animated;
+import mario.rm.Animation.Memoria;
 import mario.rm.identifier.Move;
 import mario.rm.Menu.Componenti.Checkable;
 import static mario.rm.Menu.Componenti.Checkable.elenco;
+import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.Menu.Specifiche;
 import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Type;
 import mario.rm.input.MemoriaAC;
-import mario.rm.input.MemoriaAnim;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -32,16 +35,17 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private static boolean collider;
 
-    public Pannelli(Editor ed) {
+    public Pannelli(Editor ed, MemoriaAC memoria) {
         super();
-        /*setSize(new Dimension(300, 1000));
-        setPreferredSize(new Dimension(300, 1000));
-        setMaximumSize(new Dimension(300, 1000));
-        setMinimumSize(new Dimension(300, 1000));*/
         this.ed = ed;
+        
+        this.memoria = memoria;
 
         collider = false;
-        JButton indietro = new JButton("INDIETRO");
+        
+        
+        JButton indietro = initColor();
+        indietro.setText("INDIETRO");
         indietro.setMaximumSize(new Dimension(100, 100));
         indietro.addActionListener((ActionEvent e) -> {
             pulisci();
@@ -49,7 +53,8 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             ed.getSelezione().checkEraser();
         });
         add(indietro);
-        JButton gomma = new JButton("GOMMA");
+        JButton gomma = initColor();
+        gomma.setText("GOMMA");
         gomma.setMaximumSize(new Dimension(100, 100));
         gomma.addActionListener((ActionEvent e) -> {
             elenco.stream().forEach((specifiche) -> {
@@ -59,7 +64,8 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         });
         add(gomma);
 
-        JButton coll = new JButton("COLLIDER TILE");
+        JButton coll = initColor();
+        coll.setText("COLLIDER TILE");
         coll.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,18 +75,28 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
         });
         add(coll);
-        JButton zoomP = new JButton("+");
+        JButton zoomP = initColor();
+        zoomP.setText("+");
         zoomP.addActionListener(this);
         add(zoomP);
-        JButton zoomM = new JButton("-");
+        JButton zoomM = initColor();
+        zoomM.setText("-");
         zoomM.addActionListener(this);
         add(zoomM);
 
         base();
-        memoria = new MemoriaAC();
-        memoria.carica();
     }
 
+    private TranslucentButton initColor() {
+        TranslucentButton button = new TranslucentButton();
+        button.setBgCol(Color.gray);
+        button.setBgColro(Color.LIGHT_GRAY);
+        button.setFgCol(Color.BLACK);
+        button.setFgColsel(Color.BLACK);
+
+        return button;
+    }
+    
     public void collider() {
         collider = Boolean.logicalXor(collider, true);
         if (collider) {
@@ -116,7 +132,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         Specifiche tile = new Specifiche("TILE");
         tile.getButton().addActionListener((ActionEvent e) -> {
             terreni("/tile/other", false);
-            
+
             BufferedImage img = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
             for (int i = 0; i < img.getWidth(); i++) {
                 for (int j = 0; j < img.getHeight(); j++) {
@@ -147,12 +163,21 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void choseTerrain() {   //Ottiene in input l'elenco dei terreni e aggiunge un bottone per ogni terreno
         pulisci();
-
-        String[] temp = MemoriaAnim.getDirectory("mario/res/Animazioni/tile/terrain");
+        String[] temp = null;
+        temp = Memoria.getDirectory("Animazioni/tile/terrain");
 
         for (int i = 0; i < temp.length; i++) {
-            String t1 = temp[i].substring(temp[i].lastIndexOf("\\") + 1, temp[i].length());
-            Specifiche spec = new Specifiche(t1.toUpperCase());
+            String a = null;
+            if(MainComponent.jar.isFile()){
+                StringBuilder s = new StringBuilder(temp[i]);
+                s.deleteCharAt(s.length() - 1);
+                a = s.substring(s.lastIndexOf("/") + 1, s.length());
+            }else {
+                a = temp[i].substring(temp[i].lastIndexOf("\\") + 1, temp[i].length());
+            }
+            String t1 = a;  //il listener sotto vuole solo valori final e questo e' l'unico modo
+            Specifiche spec = new Specifiche(a.toUpperCase());
+            
             spec.getButton().addActionListener((ActionEvent e) -> {
                 terreni("/tile/terrain/" + t1, true);
             });
@@ -171,7 +196,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     private void terreni(String path, boolean terr) {
         pulisci();
         ArrayList temp = new ArrayList<>();
-        temp = memoria.getAnim("mario/res/Animazioni" + path, temp);
+        temp = memoria.getAnim("Animazioni" + path, temp);
         addButton(temp);
         if (terr) {
             elenco.stream().filter((spec) -> (spec.getButton().getText().equals(""))).forEach((spec) -> {
@@ -240,7 +265,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             resize(1 + elenco.size() / 2);
             setLayout(new GridLayout(3 + elenco.size(), 2, 25, 25));
         } else {
-            Log.append("Nessuno sprite trovato\n"+(Pannelli.class).getName()+"\n", DefaultFont.ERROR);
+            Log.append("Nessuno sprite trovato\n" + (Pannelli.class).getName() + "\n", DefaultFont.ERROR);
         }
         ed.repaint();
         ed.revalidate();

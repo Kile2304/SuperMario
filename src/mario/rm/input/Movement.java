@@ -24,7 +24,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     public static int velX;  //COSTANTE PER LA VELOCITA' SULL'ASSE X
     public static double jump; //COSTANTE PER LA DISTANZA DI SALTO
 
-    private static final Sound salto = new Sound("mario/res/Sound/nsmb_jump.wav");
+    private static final Sound salto = new Sound("Sound/nsmb_jump.wav");
 
     private final boolean move[];
 
@@ -51,49 +51,52 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         if (e == null) {
             return;
         }
+        Log.append(""+e.getID());
+        int id = e.getID() == 401 ? 0 : e.getID();
+        
         int keyCode = e.getKeyCode();   //NON STRETTAMENTE NECCESSARIO
         for (Player sp : handler.getPlayer()) {
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:  //SE VIENE PREMUTO IL TATO SINISTRO
-                    if (!sp.isFalling()) {   //SE STA TOCCANDO IL TEERRENO
+                    if (!handler.getPlayer().get(id).isFalling()) {   //SE STA TOCCANDO IL TEERRENO
                         //sp.setDirezione(-1);    //IMPOSTO A STA CORRENDO SPECCHIATO
-                        sp.setLastMovement(Direction.LEFT, Move.WALK);
+                        handler.getPlayer().get(id).setLastMovement(Direction.LEFT, Move.WALK);
                     } else {
                         //sp.setDirezione(-30);   //SALTO SPECCHIATO
-                        sp.setLastMovement(Direction.LEFT, Move.JUMP);
+                        handler.getPlayer().get(id).setLastMovement(Direction.LEFT, Move.JUMP);
                     }
-                    sp.setVelX(-sp.getMoveXIncrease());   //LA VELOCITA X  = -5
+                    handler.getPlayer().get(id).setVelX(-sp.getMoveXIncrease());   //LA VELOCITA X  = -5
                     move[0] = true;
-                    sp.setWalking(true);  //STA CAMMINANDO
+                    handler.getPlayer().get(id).setWalking(true);  //STA CAMMINANDO
                     break;
                 case KeyEvent.VK_RIGHT: //SE VIENE PREMUTO IL TASTO DESTRO
-                    if (!sp.isFalling()) {   //SE STA TOCCANDO IL PAVIMENTO
+                    if (!handler.getPlayer().get(id).isFalling()) {   //SE STA TOCCANDO IL PAVIMENTO
                         //sp.setDirezione(1); //IMPOSTO A STA' CORRENDO
-                        sp.setLastMovement(Direction.RIGHT, Move.WALK);
+                        handler.getPlayer().get(id).setLastMovement(Direction.RIGHT, Move.WALK);
                     } else {
                         //sp.setDirezione(30);    //IMPOSTO A SALTO NORMALE
-                        sp.setLastMovement(Direction.RIGHT, Move.JUMP);
+                        handler.getPlayer().get(id).setLastMovement(Direction.RIGHT, Move.JUMP);
                     }
-                    sp.setVelX(sp.getMoveXIncrease());    //VELOCITA X = 5
+                    handler.getPlayer().get(id).setVelX(sp.getMoveXIncrease());    //VELOCITA X = 5
                     move[1] = true;
-                    sp.setWalking(true);  //STA CAMMINANDO
+                    handler.getPlayer().get(id).setWalking(true);  //STA CAMMINANDO
                     break;
                 case KeyEvent.VK_UP:
-                    if (!sp.isJumping() && !sp.isFalling() || sp.getInfiniteJump()) {    //SE NON STAVA GIA SALTANDO PRIMA
+                    if (!handler.getPlayer().get(id).isJumping() && !handler.getPlayer().get(id).isFalling() || handler.getPlayer().get(id).getInfiniteJump()) {    //SE NON STAVA GIA SALTANDO PRIMA
                         if (salto.getCurrentFrame() != 0) {
                             salto.stop();
                         }
                         salto.start();
-                        sp.setJumping(true);  //ORA STA SALTANDO
-                        sp.setFalling(false);   //IMPOSTO A NON STA' SALTANDO
-                        sp.setGravity(sp.getJumpIncrease()); //LA GRAVITA E' UGUALE A 7
+                        handler.getPlayer().get(id).setJumping(true);  //ORA STA SALTANDO
+                        handler.getPlayer().get(id).setFalling(false);   //IMPOSTO A NON STA' SALTANDO
+                        handler.getPlayer().get(id).setGravity(sp.getJumpIncrease()); //LA GRAVITA E' UGUALE A 7
                         //sp.setDirezione((sp.getDirezione() / Math.abs(sp.getDirezione())) * 30);    //IMPOSTO IL SALTO NELLA DIREZIONE IN CUI ERA PRIMA
-                        sp.setLastMovement(sp.getLastDirection(), Move.JUMP);
+                        handler.getPlayer().get(id).setLastMovement(handler.getPlayer().get(id).getLastDirection(), Move.JUMP);
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (!sp.isFalling()) {
-                        sp.setTeleport();
+                    if (!handler.getPlayer().get(id).isFalling()) {
+                        handler.getPlayer().get(id).setTeleport();
                     }
                     break;
                 case KeyEvent.VK_TAB:
@@ -120,29 +123,32 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         if (e == null) {
             return;
         }
+        
+        int id = e.getID() == 402 ? 0 : e.getID();
+        
         int keyCode = e.getKeyCode();   //PALESE
         for (Sprite sp : handler.getPlayer()) {
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:  //SE VIENE PREMUTO IL TATO SINISTRO
                     move[0] = false;
                     if (!move[0] && !move[1]) {
-                        sp.setWalking(false); //NON STA PIU CAMMINANDO
+                        handler.getPlayer().get(id).setWalking(false); //NON STA PIU CAMMINANDO
                     }
                     break;
                 case KeyEvent.VK_RIGHT: //SE VIENE PREMUTO IL TASTO DESTRO
                     move[1] = false;
                     if (!move[0] && !move[1]) {
-                        sp.setWalking(false);
+                        handler.getPlayer().get(id).setWalking(false);
                     }
-                    ; //NON STA PIU CAMMINANDO
+                     //NON STA PIU CAMMINANDO
                     break;
                 case KeyEvent.VK_UP:
-                    if (sp.isJumping() && sp.getGravity() <= 1) {
-                        sp.setFalling(true);  //STA CADENDO
-                        sp.setGravity(-(jump / 3)); //FACCIO IN MODO CHE NON SI FERMI BRUSCAMENTE
+                    if (handler.getPlayer().get(id).isJumping() && handler.getPlayer().get(id).getGravity() <= 1) {
+                        handler.getPlayer().get(id).setFalling(true);  //STA CADENDO
+                        handler.getPlayer().get(id).setGravity(-(jump / 3)); //FACCIO IN MODO CHE NON SI FERMI BRUSCAMENTE
                     } else if (sp.isJumping()) {
-                        sp.setFalling(true);  //STA CADENDO
-                        sp.setGravity(0);   //LO FERMO
+                        handler.getPlayer().get(id).setFalling(true);  //STA CADENDO
+                        handler.getPlayer().get(id).setGravity(0);   //LO FERMO
                     }
                     break;
                 case KeyEvent.VK_ESCAPE:

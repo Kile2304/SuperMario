@@ -69,7 +69,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         this.type = type;   //CHE TIPO DI SPRITE E'
         lastMove = Move.STAND;
         lastDirection = Direction.RIGHT;
-        
+
         if (handler != null) {
             for (Iterator<Anim> it = elenco.iterator(); it.hasNext();) {
                 Anim animazione = it.next();
@@ -119,8 +119,9 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      */
     public void render(Graphics g) {//DA MODIFICARE, SOPRATTUTTO IL VALORE COSTANTE
         temp = animazione.getImage(lastMove, lastDirection);
-
-        g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
+        if (temp != null) {
+            g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
+        }
 
     }
 

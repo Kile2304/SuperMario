@@ -31,9 +31,10 @@ public class Loader {
     public static final BufferedImage LoadImage(String path) {    //MEMORIZZA NEL BUFFERIMAGE L'IMMAGINE
         BufferedImage img = null;
         try {
-            if (MainComponent.jar != null && MainComponent.jar.isFile()) {
+            Log.append(path, DefaultFont.DEBUG);
+            //if (MainComponent.jar != null && MainComponent.jar.isFile()) {
                 img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
-            }else{
+            /*}else{
                 File f = null;
                 if(!path.substring(0, 4).equals("src/")){
                     f = new File("src/"+path);
@@ -43,7 +44,7 @@ public class Loader {
                     img = ImageIO.read(f);
                 }
                 Log.append(f.getAbsolutePath(), DefaultFont.INFORMATION);
-            }
+            }*/
         } catch (IOException ex) {
             //System.out.println("Immagine alla posizione: " + (path) + " non caricata correttamente!");
             Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
@@ -59,17 +60,18 @@ public class Loader {
     public static final BufferedImage LoadImageCompletePath(String path) {
         BufferedImage img = null;
         try {
-            if (MainComponent.jar != null && MainComponent.jar.isFile()) {
-                path = path.substring(path.indexOf("mario/"));
+            //if (MainComponent.jar != null && MainComponent.jar.isFile()) {
+                //path = path.substring(path.indexOf("mario/"));
                 Log.append(path,DefaultFont.INFORMATION);
                 img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
-            }else{
-                File f = new File(path);
+            //}else{
+                //File f = new File(path);
                 /*if(f.exists()){
                     System.out.println("porco dio");
                 }*/
-                img = ImageIO.read(new File(path));
-            }
+                //img = ImageIO.read(new File(path));
+                //Log.append(f.getAbsolutePath(), DefaultFont.INFORMATION);
+            //}
         } catch (IOException ex) {
             //System.out.println("Immagine alla posizione: " + new File(path).getAbsoluteFile() + " non caricata correttamente!");
             Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
@@ -83,7 +85,7 @@ public class Loader {
      * @param read: metodo creaLivello
      * @return se ritorna falso, vuol dire che il percorso non e' valido
      */
-    public static final boolean  convertTextInMap(String path, Reader read) {
+    public static final boolean convertTextInMap(String path, Reader read) {
         Log.append("4)CREO IL LIVELLO",DefaultFont.INFORMATION);
 
 
@@ -92,13 +94,14 @@ public class Loader {
         }
         try {
             Object fr = null;
-            if(MainComponent.jar.isFile()){
+            /*if(MainComponent.jar.isFile()){
                 path = path.replace("src/", "");
-                Log.append(path);
+                Log.append(path);*/
+            System.out.println(""+path);
                 fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
-            }else{
+            /*}else{
                 fr = new FileReader(path);
-            }
+            }*/
             Log.append(path);
             BufferedReader br = new BufferedReader((java.io.Reader) fr);
 
@@ -134,7 +137,7 @@ public class Loader {
                             } else {
                                 unlockable = type;
                                 String t = type.name();
-                                type = Type.valueOf(t.substring(0, t.lastIndexOf("£")));
+                                type = Type.valueOf(t.substring(0, t.lastIndexOf("_")));
                             }
                             word = "";
                             break;

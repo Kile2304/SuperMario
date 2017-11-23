@@ -1,20 +1,25 @@
 package mario.rm.Menu.home;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.PopupMenu;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,11 +27,14 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.xml.bind.DatatypeConverter;
 import mario.MainComponent;
+import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.Menu.Componenti.Visualizzatore;
 import mario.rm.Menu.editor.Editor;
 import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.handler.SelectLevel;
+import mario.rm.input.Loader;
 import mario.rm.multigiocatore.TypeMulti;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
@@ -46,6 +54,8 @@ public class Home extends JFrame implements ActionListener {
 
     private JPasswordField passwordField;
 
+    protected BufferedImage background = Loader.LoadImage("Immagini/luigiBG.png");
+
     private Dimension dim = getToolkit().getScreenSize();
 
     /**
@@ -55,20 +65,33 @@ public class Home extends JFrame implements ActionListener {
      */
     public Home() {
         super(TITLE);
-        setLayout(new BorderLayout());
+
+        setLayout(new GridLayout());    //layout per avere un pannello a pieno schermo e disegnarmi il background
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(600, 600);
         setResizable(false);
 
         Dimension dim = getToolkit().getScreenSize();
-        this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        JPanel panel = new JPanel();
-        panel.add(bottoni());
-        add(panel, BorderLayout.CENTER);
+        //this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        setSize(dim.width / 2, dim.height / 2);
+        setLocationRelativeTo(null);
+        JPanel panel = new JPanel() {   //pannello per disegnarmi lo sfondo
+            public void paintComponent(Graphics g) {
+                g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+            }
+        };
+        panel.setLayout(new GridBagLayout());   //layout per accentrarmi i bottoni
+        panel.add(bottoni(), gbc);
+        add(panel);
         //add(bottoni(), BorderLayout.NORTH);
 
-        setUndecorated(true);
+        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
+
+        setUndecorated(true);   //tolgo barre x _ ed il resto
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
 
         setVisible(true);
@@ -137,7 +160,39 @@ public class Home extends JFrame implements ActionListener {
     }
 
     private boolean isCorrect(char[] input) {
-        String password = "pamplona";
+        String password = null;
+        /*String hex=null;
+        try {
+            hex = String.format("%040x", new BigInteger(1, "here<<<<2.getBytes("UTF8")));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(""+hex);*/
+        /*try {
+            //System.out.println(""+hex+" "+Integer.toHexString(Integer.parseInt(hex)));
+            System.out.println(""+new String(hex.getBytes(), "UTF8"));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        byte[] bytes = DatatypeConverter.parseHexBinary("70616d706c6f6e61");
+        try {
+            String result= new String(bytes, "UTF8");
+            //System.out.println(""+(int)result.charAt(0));
+            StringBuilder s = new StringBuilder();
+            s.append(result);
+            for (int i = 0; i < s.length(); i++) {
+                if((int)s.charAt(i) == 0){
+                    s.delete(i, i+1);
+                    i--;
+                } else {
+                    break;
+                }
+            }
+            //System.out.println(""+s);
+            password = s.toString();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
         char[] converted = password.toCharArray();
 
         boolean correct = true;
@@ -175,7 +230,8 @@ public class Home extends JFrame implements ActionListener {
                 dispose();
                 JOptionPane.showMessageDialog(rootPane, "Attenzione mentre si usa questa modalita\nsi potrebbe rompere l'intero progetto", "titolo", JOptionPane.ERROR_MESSAGE);
                 new SpriteEstractor();
-
+            } else {
+                Log.append("PASSWORD: "+new String(password)+". NON RICONOSCIUTA.", DefaultFont.ERROR);
             }
         }
     }
@@ -187,12 +243,29 @@ public class Home extends JFrame implements ActionListener {
 
     private JPanel bottoni() {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false); //gli dico di non disegnarmi lo sfondo
 
+        panel.setLayout(new GridBagLayout());   //layout per mettere bottoni in verticale spaziati
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        int w = (int) (5.0 / 960.0 * getWidth());
+        int h = (int) (5.0 / 540.0 * getHeight());
+        // System.out.println(""+w+" "+h);
+        gbc.insets = new Insets(w, h, w, h);    //gli dico di mettermi uno spazio fra ogni bottone
+
+        //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         for (int i = 0; i < bottonList.length; i++) {
-            JButton b = new JButton(bottonList[i]);
+            TranslucentButton b = new TranslucentButton(bottonList[i]);
+
+            b.setBgCol(Color.WHITE);
+            b.setBgColro(Color.GRAY);
+            b.setFgCol(Color.BLACK);
+            b.setFgColsel(Color.BLACK);
+            
             b.addActionListener(this);
-            panel.add(b);
+            panel.add(b, gbc);
         }
         return panel;
     }
@@ -206,7 +279,7 @@ public class Home extends JFrame implements ActionListener {
             case "MULTIGIOCATORE":
                 mutltigiocatore();
                 break;
-            case "SELEZIONE LIVELLO":
+            case "SELEZIONA LIVELLO":
                 visualizza();
                 break;
             case "CREA LIVELLO":
@@ -216,7 +289,7 @@ public class Home extends JFrame implements ActionListener {
                 spriteEstractor();
                 break;
             case "OPZIONI":
-                
+
                 break;
             case "RIGRAZIAMENTI":
                 ringraziamenti();

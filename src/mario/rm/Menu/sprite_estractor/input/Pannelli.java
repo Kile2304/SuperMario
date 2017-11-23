@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import mario.rm.Menu.Componenti.Checkable;
+import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.Menu.Specifiche;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
@@ -60,8 +61,8 @@ public class Pannelli extends JPanel implements Checkable, ActionListener { //PA
             }
         }
 
-        elenco.add(new Specifiche("+"));
-        elenco.add(new Specifiche("-"));
+        elenco.add(new Specifiche("+", img, Type.VOID));
+        elenco.add(new Specifiche("-", img, Type.VOID));
 
         elenco.add(new Specifiche("DELETE POINT"));
         elenco.add(new Specifiche("CREATE POINT", img, Type.VOID));

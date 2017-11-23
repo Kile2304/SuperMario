@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mario.MainComponent;
 import mario.rm.Animation.Cut;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
@@ -104,7 +105,8 @@ public class Estratta {
                 }
             }
         }
-
+        //path = path.replace("/src/mario/res", "");
+        
         //System.out.println("estratta path: "+path);
         Log.append(p1, DefaultFont.INFORMATION);
         ObjectOutputStream out = null;
@@ -116,6 +118,10 @@ public class Estratta {
         } catch (StringIndexOutOfBoundsException e) {
             cart = nomeFile.substring(0, nomeFile.lastIndexOf("."));
         }
+        
+        //System.out.println(""+path + "\\" + cart);
+        System.out.println(""+p1);
+        p1 = "Immagini\\extract"+path + "\\" + p1.substring(p1.lastIndexOf("\\") + 1);
         Cut cut = null;
         if (tile == null) {
             cut = new Cut(p1, coord, move, type, direction, path + "\\" + cart, transformation);
@@ -129,7 +135,8 @@ public class Estratta {
             return;
         }
 
-        File f = new File("src\\mario\\res\\Animazioni" + path + "\\" + cart);
+        //File f = new File("src\\mario\\res\\Animazioni" + path + "\\" + cart);
+        File f = new File("res\\Animazioni" + path + "\\" + cart);
         if (!f.exists()) {
             f.mkdir();
         }
@@ -137,7 +144,8 @@ public class Estratta {
         //System.out.println(""+new File("src\\dragon\\ball\\res\\animazioni"+path+"\\"+cart+"\\"+nomeFile).getAbsolutePath());
         //System.out.println(""+path);
         try {
-            fos = new FileOutputStream(new File("src\\mario\\res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
+            //fos = new FileOutputStream(new File("src\\mario\\res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
+            fos = new FileOutputStream(new File("res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
             out = new ObjectOutputStream(fos);
             out.writeObject(cut);
 

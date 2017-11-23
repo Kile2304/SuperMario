@@ -32,7 +32,7 @@ import mario.rm.utility.Log;
  */
 public class Handler implements Reader {
 
-    private static LinkedList<Player> player;    //ELENCO PLAYER
+    private LinkedList<Player> player;    //ELENCO PLAYER
     private static LinkedList<Tiles> tiles; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
     private static LinkedList<Enemy> enemy; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
 
@@ -71,7 +71,7 @@ public class Handler implements Reader {
 
         next = false;   //INDICA SE DEVE CAMBIARE LIVELLO
 
-        nextL = new Sound("mario/res/Sound/nsmb_stage_clear.mid");
+        nextL = new Sound("Sound/nsmb_stage_clear.mid");
 
         this.mario = mario;
 
@@ -276,6 +276,7 @@ public class Handler implements Reader {
                     tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), true, tile, false));   //SE E NERO E' NORMALE SOLIDO
                     break;
                 case PLAYER:
+                    System.out.println(""+unlockable);
                     player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, unlockable));   //SE PIXEL BLU è UN PLAYER
                     break;
                 case COIN:
@@ -290,7 +291,7 @@ public class Handler implements Reader {
                 case UNLOCKABLE:
                     String unlock = unlockable.name();
 
-                    Type getUnlock = Type.valueOf(unlock.substring(unlock.lastIndexOf("£") + 1, unlock.length()));
+                    Type getUnlock = Type.valueOf(unlock.substring(unlock.lastIndexOf("_") + 1, unlock.length()));
                     tiles.add(new CoinBlock(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), getUnlock, true, tile));
                     break;
                 case SPINE:
@@ -381,7 +382,7 @@ public class Handler implements Reader {
      *
      * @return RITORNA L'ELENCO DEI PLAYER
      */
-    public static LinkedList<Player> getPlayer() {
+    public LinkedList<Player> getPlayer() {
         return player;
     }
 
@@ -480,5 +481,11 @@ public class Handler implements Reader {
             tiles.add(tilesClone.get(i).clone());
         }
         Log.append("Tempo di copia: "+(System.currentTimeMillis() - before), DefaultFont.DEBUG);
+    }
+    
+    public void clean(){
+        player = null;
+        enemy = null;
+        tiles = null;
     }
 }

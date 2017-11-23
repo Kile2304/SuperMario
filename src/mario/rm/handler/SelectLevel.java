@@ -16,7 +16,7 @@ public class SelectLevel {
 
     private static final String[] history = {"provetta.level"};    //livelli da cambiare con .level
 
-    private static final String path = "src/mario/res/Immagini/livelli/";
+    private static final String path = "Immagini/livelli/";
 
     private static boolean custom = false;
 
@@ -36,9 +36,9 @@ public class SelectLevel {
         custom = true;
         next = new String[]{path};
         index = -1;
-        if(MainComponent.jar.isFile()){
+        /*if(MainComponent.jar.isFile()){
             path = path.replaceFirst("src/", "");
-        }
+        }*/
     }
 
     public String getNext() {

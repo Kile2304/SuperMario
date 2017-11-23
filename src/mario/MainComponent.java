@@ -3,7 +3,10 @@ package mario;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import mario.rm.Animation.Memoria;
 import mario.rm.Menu.home.Home;
 
@@ -11,7 +14,6 @@ import mario.rm.SuperMario;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.joystick.Joystick;
-import net.java.games.input.Controller;
 
 /**
  *
@@ -30,9 +32,11 @@ public class MainComponent {
 
     public static Log log;
 
-    ArrayList<Controller> contr = new ArrayList<>();
-
+    //ArrayList<Controller> contr = new ArrayList<>();
     public MainComponent() {
+        
+        su = null;
+        
         if (log == null) {
             log = new Log(this);
         }
@@ -43,46 +47,21 @@ public class MainComponent {
         } catch (NullPointerException e) {
 
         }
-        Memoria memoria = new Memoria(true);
+        
+        Memoria.setJarFile(jar);
+        
         //System.out.println(jarPath.getAbsolutePath());
 
         Home home = new Home();
         home.setMainComponent(this);
-        home.setVisible(true);
 
-        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        //File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
 
-        Log.append(jarFile.getAbsolutePath(), DefaultFont.INFORMATION);
+        Log.append(jar.getAbsolutePath(), DefaultFont.INFORMATION);
 
-        Joystick.UPDATE = true;
-        
-        //Joystick.ControllerLoader();
-        
+        Joystick.UPDATE = false;
+
         new Thread(new Joystick()).start();
-        
-        /*Controller[] joystick = Joystick.getController();
-        PlaystationController[] play = new PlaystationController[joystick.length];
-
-        for (int i = 0; i < play.length; i++) {
-            play[i] = new PlaystationController(joystick[i]);
-        }
-
-        while (true) {
-            for (PlaystationController controller : play) {
-                String[] button = controller.listener();
-                if (button != null) {
-                    Log.append("" + button[0], DefaultFont.DEBUG);
-                }
-            }
-            try {
-                sleep(50);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MainComponent.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
-        //ControllerEnvironment cc = ControllerEnvironment.getDefaultEnvironment();
-        //cc.addControllerListener(this);
-        
 
     }
 
@@ -93,6 +72,7 @@ public class MainComponent {
             Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
         }*/
         new MainComponent();
+        
     }
 
     public void start() {
@@ -102,21 +82,5 @@ public class MainComponent {
     public SuperMario getSuperMario() {
         return su;
     }
-
-    /*@Override
-    public void controllerRemoved(ControllerEvent ce) {
-        Log.append("remove: " + ce.getController().getName(), DefaultFont.DEBUG);
-        contr.remove(ce.getController());
-    }
-
-    @Override
-    public void controllerAdded(ControllerEvent ce) {
-        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
-        int indexOf = ce.getController().getType() == Controller.Type.GAMEPAD ? contr.indexOf(ce.getController()) : -1;
-        if (indexOf == -1) {
-            Log.append("collegato: " + ce.getController().getName(), DefaultFont.DEBUG);
-            contr.add(ce.getController());
-        }
-    }*/
 
 }

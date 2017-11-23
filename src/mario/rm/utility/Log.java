@@ -21,7 +21,7 @@ import javax.swing.text.StyledDocument;
 import mario.MainComponent;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
-import mario.rm.input.Movement;
+import mario.rm.input.Loader;
 import mario.rm.sprite.Player;
 
 /**
@@ -73,6 +73,8 @@ public class Log extends JFrame implements KeyListener {
         logConsole.setBorder(BorderFactory.createMatteBorder( //SETTO IL BORDO
                 1, 0, 0, 0, Color.BLACK));
         logConsole.setAutoscrolls(true);    //SCORRE VERSO IL BASSO AUTOMATICAMENTE
+        
+        logConsole.setBackground(Color.BLACK);
 
         logCommand = new JTextArea();
         logCommand.setCaretPosition(0); //LO FACCIO COMINCIARE DALL'INIZIO
@@ -109,6 +111,8 @@ public class Log extends JFrame implements KeyListener {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
+        
         setVisible(true);
 
     }
@@ -169,6 +173,11 @@ public class Log extends JFrame implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         boolean errore = false;
+        SuperMario mario = main.getSuperMario();
+        Handler handler = null;
+        if(mario != null){
+            handler = mario.getHandler();
+        }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             String comando = logCommand.getText().toLowerCase();
             //System.out.println(comando);
@@ -176,10 +185,10 @@ public class Log extends JFrame implements KeyListener {
             switch (scomposto[0]) {
                 case "god":
                     if (scomposto.length == 3 && scomposto[1].equals("mode")) {
-                        if (Handler.getPlayer() != null) {
+                        if (handler.getPlayer() != null) {
                             int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                            if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                Handler.getPlayer().get(numberOfPlayer).changeGodMode();
+                            if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                handler.getPlayer().get(numberOfPlayer).changeGodMode();
                             } else {
                                 errore = true;
                                 comando = "Error, the player number " + numberOfPlayer + " does not exist";
@@ -195,10 +204,10 @@ public class Log extends JFrame implements KeyListener {
                     break;
                 case "fly":
                     if (scomposto.length == 3 && scomposto[1].equals("mode")) {
-                        if (Handler.getPlayer() != null) {
+                        if (handler.getPlayer() != null) {
                             int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                            if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                Handler.getPlayer().get(numberOfPlayer).changeInfiniteJump();
+                            if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                handler.getPlayer().get(numberOfPlayer).changeInfiniteJump();
                             } else {
                                 errore = true;
                                 comando = "Error, the player number " + numberOfPlayer + " does not exist";
@@ -238,10 +247,10 @@ public class Log extends JFrame implements KeyListener {
                                 Player.PUNTEGGIO = Integer.parseInt(scomposto[2]);
                                 break;
                             case "life":
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                                    if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                        Handler.getPlayer().get(numberOfPlayer).setLife(Integer.parseInt(scomposto[3]));
+                                    if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                        handler.getPlayer().get(numberOfPlayer).setLife(Integer.parseInt(scomposto[3]));
                                     } else {
                                         errore = true;
                                         comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -253,10 +262,10 @@ public class Log extends JFrame implements KeyListener {
                                 break;
                             case "move":
                                 //Movement.velX = Integer.parseInt(scomposto[2]);
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                                    if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                        Handler.getPlayer().get(numberOfPlayer).setMoveXIncrease(Integer.parseInt(scomposto[3]));
+                                    if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                        handler.getPlayer().get(numberOfPlayer).setMoveXIncrease(Integer.parseInt(scomposto[3]));
                                     } else {
                                         errore = true;
                                         comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -267,10 +276,10 @@ public class Log extends JFrame implements KeyListener {
                                 }
                                 break;
                             case "jump":
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                                    if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > - 1) {
-                                        Handler.getPlayer().get(numberOfPlayer).setJumpIncrease(Double.parseDouble(scomposto[3]));
+                                    if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > - 1) {
+                                        handler.getPlayer().get(numberOfPlayer).setJumpIncrease(Double.parseDouble(scomposto[3]));
                                     } else {
                                         errore = true;
                                         comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -298,10 +307,10 @@ public class Log extends JFrame implements KeyListener {
                                 comando = "Point = " + Player.PUNTEGGIO;
                                 break;
                             case "life":
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                                    if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                        comando = "Life = " + Handler.getPlayer().get(numberOfPlayer).getLife();
+                                    if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                        comando = "Life = " + handler.getPlayer().get(numberOfPlayer).getLife();
                                     } else {
                                         errore = true;
                                         comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -312,11 +321,11 @@ public class Log extends JFrame implements KeyListener {
                                 }
                                 break;
                             case "move":
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     if (scomposto.length == 3) {
                                         int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                                        if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                            comando = "Move = " + Handler.getPlayer().get(numberOfPlayer).getMoveXIncrease();
+                                        if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                            comando = "Move = " + handler.getPlayer().get(numberOfPlayer).getMoveXIncrease();
                                         } else {
                                             errore = true;
                                             comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -332,11 +341,11 @@ public class Log extends JFrame implements KeyListener {
                                 break;
                             case "jump":
                                 //comando = "Jump = " + Movement.jump + "px";
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     if (scomposto.length == 3) {
                                         int numberOfPlayer = Integer.parseInt(scomposto[2]) - 1;
-                                        if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                            comando = "Jump = " + Handler.getPlayer().get(numberOfPlayer).getJumpIncrease();
+                                        if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                            comando = "Jump = " + handler.getPlayer().get(numberOfPlayer).getJumpIncrease();
                                         } else {
                                             errore = true;
                                             comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -351,11 +360,11 @@ public class Log extends JFrame implements KeyListener {
                                 }
                                 break;
                             case "god":
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     if (scomposto[2].equals("mode") && scomposto.length == 4) {
                                         int numberOfPlayer = Integer.parseInt(scomposto[3]) - 1;
-                                        if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                            comando = "God mode = " + Handler.getPlayer().get(numberOfPlayer).getGodMode();
+                                        if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                            comando = "God mode = " + handler.getPlayer().get(numberOfPlayer).getGodMode();
                                         } else {
                                             errore = true;
                                             comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -370,11 +379,11 @@ public class Log extends JFrame implements KeyListener {
                                 }
                                 break;
                             case "fly":
-                                if (Handler.getPlayer() != null) {
+                                if (handler.getPlayer() != null) {
                                     if (scomposto[2].equals("mode") && scomposto.length == 4) {
                                         int numberOfPlayer = Integer.parseInt(scomposto[3]) - 1;
-                                        if (numberOfPlayer < Handler.getPlayer().size() && numberOfPlayer > -1) {
-                                            comando = "fly mode = " + Handler.getPlayer().get(numberOfPlayer).getInfiniteJump();
+                                        if (numberOfPlayer < handler.getPlayer().size() && numberOfPlayer > -1) {
+                                            comando = "fly mode = " + handler.getPlayer().get(numberOfPlayer).getInfiniteJump();
                                         } else {
                                             errore = true;
                                             comando = "Error, the player number " + (numberOfPlayer + 1) + " does not exist";
@@ -390,6 +399,7 @@ public class Log extends JFrame implements KeyListener {
                                 break;
                             default:
                                 comando = "Error in get command: " + comando;
+                                errore = true;
                                 break;
                         }
                     } else {

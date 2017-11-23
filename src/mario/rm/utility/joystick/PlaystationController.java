@@ -1,5 +1,8 @@
 package mario.rm.utility.joystick;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 import net.java.games.input.Component;
@@ -15,21 +18,23 @@ public class PlaystationController {    //fino a 13, non so le frecce e le leve
 
     private Controller controller;
 
+    private int id;
+
+    private static LinkedList<Integer> player = new LinkedList<>(Arrays.asList(0, 1, 2, 3));
+
     /*private static final String[] name = new String[]{"quadrato", "x", "cerchio", "triangolo", "l1", "r1", "l2", "r2", "share",
         "options", "l3", "r3", "home", "centro"};*/
-
     public PlaystationController(Controller controller) {
         this.controller = controller;
+        id = player.pop();
     }
 
     public String[] listener() {
-
-        //Rotazione Z Asse Z Asse Y Asse X Hat Switch Pulsante 0 Pulsante 1 Pulsante 2 Pulsante 3 Pulsante 4 Pulsante 5 Pulsante 6 Pulsante 7 Pulsante 8 Pulsante 9 Pulsante 10 Pulsante 11 Pulsante 12 Pulsante 13 Rotazione Y Rotazione X
+        
         String[] key = null;
 
         controller.poll();
         for (Component c : controller.getComponents()) {
-            //System.out.print(""+c.getName()+" ");
 
             EventQueue queue = controller.getEventQueue();
             Event event = new Event();
@@ -61,7 +66,7 @@ public class PlaystationController {    //fino a 13, non so le frecce e le leve
                         }*/
                         key = new String[2];
                         key[0] = comp.getIdentifier().toString();
-                        key[1] = ""+comp.getPollData();
+                        key[1] = "" + comp.getPollData();
                     }
 
                 }
@@ -71,8 +76,18 @@ public class PlaystationController {    //fino a 13, non so le frecce e le leve
         }
         return key;
     }
-    
-    public Controller getController(){
+
+    public int getID() {
+        return id;
+    }
+
+    public Controller getController() {
         return controller;
     }
+
+    public void insert() {
+        player.push(id);
+        Collections.sort(player);
+    }
+
 }

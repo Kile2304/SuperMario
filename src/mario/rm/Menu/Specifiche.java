@@ -1,9 +1,11 @@
 package mario.rm.Menu;
 
+import java.awt.Color;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.identifier.Type;
 import mario.rm.utility.RGB;
 
@@ -22,18 +24,34 @@ public class Specifiche extends Cell {
 
         button = new JButton();
 
-        button.setMargin(new Insets(0, 0, 0, 0));
+        //button.setMargin(new Insets(0, 0, 0, 0));
+        button.setBorder(null);
+        //button.setFocusPainted(true);
+        //button.setContentAreaFilled(false);
+        
         button.setIcon(new ImageIcon(img));
     }
 
     public Specifiche(String s) {
-        button = new JButton(s);
+        button = initColor();
+        button.setText(s);
     }
 
     public Specifiche(String s, BufferedImage img, Type id) {
-        button = new JButton(s);
+        button = initColor();
+        button.setText(s);
         this.img = img;
         this.type = id;
+    }
+
+    private TranslucentButton initColor() {
+        TranslucentButton button = new TranslucentButton();
+        button.setBgCol(Color.gray);
+        button.setBgColro(Color.LIGHT_GRAY);
+        button.setFgCol(Color.BLACK);
+        button.setFgColsel(Color.BLACK);
+
+        return button;
     }
 
     public Specifiche() {

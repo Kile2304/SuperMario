@@ -11,13 +11,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import mario.MainComponent;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Tile;
@@ -57,7 +58,7 @@ public class MemoriaAC {
             jarFile = MainComponent.jar;
         }
 
-        indirizzo = "mario/res/Animazioni/";
+        indirizzo = "Animazioni/";
 
         enemy = new ArrayList<>();  //ELENCO IMMAGINI NEMICI
         player = new ArrayList<>(); //ELENCO IMMAGINI PLAYER
@@ -77,12 +78,12 @@ public class MemoriaAC {
          *
          */
         t[0] = new Thread(() -> {
-            String path = indirizzo + "player/";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
+            String path = indirizzo + "player";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
             getAnim(path, player);
         });
         t[0].start();
         t[1] = new Thread(() -> {
-            String path = indirizzo + "enemy/";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
+            String path = indirizzo + "enemy";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
             getAnim(path, enemy);
         });
         t[1].start();
@@ -112,7 +113,7 @@ public class MemoriaAC {
     }
 
     public void nextSound() {
-        String indirizzo = "mario/res/Sound/level/";
+        String indirizzo = "Sound/level/";
         if (numberOfLevel < audio.length) {
             level = new Sound(indirizzo + audio[numberOfLevel]);
             numberOfLevel++;
@@ -129,31 +130,41 @@ public class MemoriaAC {
 
     public ArrayList<Object> getAnim(String path, ArrayList list) {
         ArrayList<String> Files = new ArrayList<>();
-        if (jarFile != null && jarFile.isFile()) {
+        
+        if (jarFile.isFile()) {
+            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
+            ZipInputStream zip = null;
             try {
-                // Run with JAR file
-                JarFile jar = new JarFile(jarFile);
-                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-                while (entries.hasMoreElements()) {
-                    final String name = entries.nextElement().getName();
-                    if (name.startsWith(path + "/")) { //filter according to the path
-                        //System.out.println(name);
+                URL jar = src.getLocation();
+                zip = new ZipInputStream(jar.openStream());
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null) {
+                        break;
+                    }
+                    String name = e.getName();
+                    if (name.startsWith(path + "/")) {
+                        /* Do something with this entry. */
                         //System.out.println("" + name);
-                        if (!(new File(name).isDirectory())) {
-                            //System.out.println("" + name);
-                            if (name.charAt(name.length() - 1) != '/') {
-                                Files.add(name);
-                            }
+                        //Log.append(name, DefaultFont.DEBUG);
+                        if (name.charAt(name.length() - 1) != '/') {
+                            //Log.append(name, DefaultFont.DEBUG);
+                            Files.add(name);
                         }
                     }
                 }
-                jar.close();
             } catch (IOException ex) {
-                Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
+                Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    zip.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
             LinkedList<String> Dir = new LinkedList<>();
-            String pat = "src/" + path;
+            String pat = "res/" + path;
             File f = new File(pat);
 
             Dir.add(f.getAbsolutePath());
@@ -161,6 +172,7 @@ public class MemoriaAC {
             while (!Dir.isEmpty()) {
                 //System.out.println("" +f.getAbsolutePath());
                 f = new File(Dir.pop());
+                    //Log.append(""+f.getAbsolutePath(), DefaultFont.DEBUG);
                 //System.out.println(""+f.getAbsolutePath());
                 if (f.isFile()) {
                     Files.add(f.getAbsolutePath());
@@ -185,7 +197,7 @@ public class MemoriaAC {
         try {
             for (String string : Files) {
                 Object ob = null;
-                if (jarFile != null && jarFile.isFile()) {
+                if (jarFile.isFile()) {
                     InputStream in = new BufferedInputStream(MainComponent.class.getClassLoader().get‌​ResourceAsStream(string));
                     ob = new ObjectInputStream(in).readObject();
 

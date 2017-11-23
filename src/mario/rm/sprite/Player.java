@@ -44,7 +44,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     private static final double STACCO = adaptHeight(0.17); //COSTANTE VARIABILE IN BASE ALLA RISOLUZIONE DELLO SCHERMO, PER IL SALTO 
 
-    private static final Sound[] sound = new Sound[]{new Sound("mario/res/Sound/nsmb_death.wav"), new Sound("mario/res/Sound/nsmb_power-up.wav"), new Sound("mario/res/Sound/nsmb_coin.wav")};   //SUONE DELLA MORTEM DEL POWER UP E DEL COIN
+    private static final Sound[] sound = new Sound[]{new Sound("Sound/nsmb_death.wav"), new Sound("Sound/nsmb_power-up.wav"), new Sound("Sound/nsmb_coin.wav")};   //SUONE DELLA MORTEM DEL POWER UP E DEL COIN
 
     //cheat
     private boolean godMode = false;
@@ -54,7 +54,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     public Player(int x, int y, int width, int height, Handler handler, Type type) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         super(x, y, width, height, handler, type, handler.getMemoria().getPlayer());
-        Log.append("6)INIZIALIZZO IL PLAYER", DefaultFont.INFORMATION);
+        Log.append("6)INIZIALIZZO IL PLAYER"+ "(number of player) "+handler.getMemoria().getPlayer().size(), DefaultFont.INFORMATION);
         grow = false;   //INDICA SE E' GRANDE O PICCOLO
 
         immortal = false;   //QUANDO VIENE COLPITO HA UN TOT DI TEMPO PER SCAPPARE DAL NEMICO

@@ -6,13 +6,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import mario.MainComponent;
 import mario.rm.input.Sound;
 import mario.rm.utility.DefaultFont;
@@ -58,7 +59,7 @@ public class Memoria {
 
         Thread[] t = new Thread[1];
 
-        indirizzo = "mario/res/Animazioni/";
+        indirizzo = "Animazioni/";
 
         //System.out.println(""+indirizzo);
         enemy = new ArrayList<>();  //ELENCO IMMAGINI NEMICI
@@ -184,7 +185,7 @@ public class Memoria {
     }
 
     public void nextSound() {
-        String indirizzo = "mario/Sound/level/";
+        String indirizzo = "Sound/level/";
         if (numberOfLevel < audio.length) {
             level = new Sound(indirizzo + audio[numberOfLevel]);
             numberOfLevel++;
@@ -201,31 +202,39 @@ public class Memoria {
 
     public ArrayList<Cut> getAnim(String path, ArrayList<Cut> list) {
         ArrayList<String> Files = new ArrayList<>();
+
         if (jarFile.isFile()) {
+            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
+            ZipInputStream zip = null;
             try {
-                // Run with JAR file
-                JarFile jar = new JarFile(jarFile);
-                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-                while (entries.hasMoreElements()) {
-                    final String name = entries.nextElement().getName();
-                    if (name.startsWith(path + "/")) { //filter according to the path
-                        //System.out.println(name);
+                URL jar = src.getLocation();
+                zip = new ZipInputStream(jar.openStream());
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null) {
+                        break;
+                    }
+                    String name = e.getName();
+                    if (name.startsWith(path + "/")) {
+                        /* Do something with this entry. */
                         //System.out.println("" + name);
-                        if (!(new File(name).isDirectory())) {
-                            //System.out.println("" + name);
-                            if (name.charAt(name.length() - 1) != '/') {
-                                Files.add(name);
-                            }
+                        if (name.charAt(name.length() - 1) != '/') {
+                            Files.add(name);
                         }
                     }
                 }
-                jar.close();
             } catch (IOException ex) {
                 Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    zip.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
             LinkedList<String> Dir = new LinkedList<>();
-            String pat = "src/" + path;
+            String pat = "res/" + path;
             File f = new File(pat);
             Dir.add(f.getAbsolutePath());
             //System.out.println(""+f.getAbsolutePath());
@@ -279,31 +288,41 @@ public class Memoria {
 
     public static String[] getFile(String path) {
         ArrayList<String> Files = new ArrayList<>();
+        Log.append(path, DefaultFont.ERROR);
+
         if (jarFile.isFile()) {
+            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
+            ZipInputStream zip = null;
             try {
-                // Run with JAR file
-                JarFile jar = new JarFile(jarFile);
-                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-                while (entries.hasMoreElements()) {
-                    final String name = entries.nextElement().getName();
-                    if (name.startsWith(path + "/")) { //filter according to the path
-                        //System.out.println(name);
+                URL jar = src.getLocation();
+                zip = new ZipInputStream(jar.openStream());
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null) {
+                        break;
+                    }
+                    String name = e.getName();
+                    //Log.append(name, DefaultFont.ERROR);
+                    if (name.startsWith(path)) {
+                        /* Do something with this entry. */
                         //System.out.println("" + name);
-                        if (!(new File(name).isDirectory())) {
-                            //System.out.println("" + name);
-                            if (name.charAt(name.length() - 1) != '/') {
-                                Files.add(name);
-                            }
+                        if (name.charAt(name.length() - 1) != '/') {
+                            Files.add(name);
                         }
                     }
                 }
-                jar.close();
             } catch (IOException ex) {
                 Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    zip.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
             LinkedList<String> Dir = new LinkedList<>();
-            String pat = "src/" + path;
+            String pat = "res/" + path;
             File f = new File(pat);
             Dir.add(f.getAbsolutePath());
             //System.out.println(""+f.getAbsolutePath());
@@ -358,6 +377,72 @@ public class Memoria {
         return elenco;
     }
 
+    public static String[] getDirectory(String path){
+        ArrayList<String> Files = new ArrayList<>();
+
+        if (MainComponent.jar.isFile()) {
+            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
+            ZipInputStream zip = null;
+            try {
+                URL jar = src.getLocation();
+                zip = new ZipInputStream(jar.openStream());
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null) {
+                        break;
+                    }
+                    String name = e.getName();
+                    if (name.startsWith(path + "/")) {
+                        /* Do something with this entry. */
+                        //System.out.println("" + name);
+                        Log.append(name, DefaultFont.DEBUG);
+                        if (name.charAt(name.length() - 1) == '/') {
+                            Files.add(name);
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    zip.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            String pat = "res/" + path;
+            LinkedList<String> Dir = new LinkedList<>();
+            File f = new File(pat);
+            Dir.add(f.getAbsolutePath());
+            //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
+            while (!Dir.isEmpty()) {
+                //System.out.println("" + f.getAbsolutePath());
+                f = new File(Dir.pop());
+                //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
+                if (f.isDirectory()) {
+                    //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
+                    Files.add(f.getAbsolutePath());
+                    String arr[] = f.list();
+                    try {
+                        for (int i = 0; i < arr.length; i++) {
+                            Dir.add(f.getAbsolutePath() + "/" + arr[i]);
+                        }
+                    } catch (NullPointerException exp) {
+                        Dir.remove(f.getAbsoluteFile());
+                    }
+                }
+            }
+        }
+        String[] elenco = new String[Files.size()];
+
+        for (int i = 0; i < Files.size(); i++) {
+            elenco[i] = Files.get(i);
+            System.out.println(""+elenco[i]);
+        }
+        return elenco;
+    }
+    
     public ArrayList<Cut> getEnemy() {
         return enemy;
     }
@@ -378,4 +463,16 @@ public class Memoria {
         return terreni;
     }
 
+    public void clean(){
+        enemy.clear();
+        player.clear();
+        tiles.clear();
+        terreni.clear();
+        unlockable.clear();
+    }
+    
+    public static final void setJarFile(File jarFile){
+        Memoria.jarFile = jarFile;
+    }
+    
 }

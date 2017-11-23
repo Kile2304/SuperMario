@@ -2,9 +2,8 @@ package mario.rm.Menu.sprite_estractor.input;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -37,17 +36,21 @@ public class SpriteEstractor extends JFrame implements Scrollable {
 
     private JScrollPane gri;
 
-    private final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+   // private final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
 
     public SpriteEstractor() {
         super(TITLE);
 
         setAlwaysOnTop(false);
 
-        device.setFullScreenWindow(this);
+        /*device.setFullScreenWindow(this);
         WIDTH = device.getFullScreenWindow().getWidth() / 16 * 13;
         HEIGHT = device.getFullScreenWindow().getHeight() / 16 * 13;
-        device.setFullScreenWindow(null);
+        device.setFullScreenWindow(null);*/
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = d.width / 16 * 13;
+        HEIGHT = d.height / 16 * 13;
+        
 
         setSize(new Dimension(WIDTH, HEIGHT));
 
@@ -85,6 +88,8 @@ public class SpriteEstractor extends JFrame implements Scrollable {
 
         g.addMouseListener(s);
         g.setPanel(p);
+        
+        setLocationRelativeTo(null);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 

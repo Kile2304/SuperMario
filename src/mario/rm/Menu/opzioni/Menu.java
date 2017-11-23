@@ -3,6 +3,8 @@ package mario.rm.Menu.opzioni;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
@@ -33,11 +35,15 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
     public Menu(SuperMario mario) {
         super();
 
-        setLayout(new GridBagLayout());
+        setLayout(new GridLayout());
 
         normal();
         
-        add(center, new GridBagConstraints());
+        /*GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;*/
+        
+        add(center);
 
         this.mario = mario;
 
@@ -46,29 +52,42 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
     private void normal() {
         center.removeAll();
 
-        center.setPreferredSize(new Dimension(SuperMario.WIDTH / 5, SuperMario.HEIGHT / 3));
+        //center.setPreferredSize(new Dimension(SuperMario.WIDTH / 5, SuperMario.HEIGHT / 3));
         
-        center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
+        //center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
+        
+        
+        center.setLayout(new GridBagLayout());   //layout per mettere bottoni in verticale spaziati
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        int w = (int) (5.0 / 960.0 * SuperMario.WIDTH);
+        int h = (int) (5.0 / 540.0 * SuperMario.HEIGHT);
+        // System.out.println(""+w+" "+h);
+        gbc.insets = new Insets(w, h, w, h);    //gli dico di mettermi uno spazio fra ogni bottone
+
+        
 
         JButton resume = new JButton("RESUME");
         resume.addActionListener(this);
-        center.add(resume);
+        center.add(resume, gbc);
         
         JButton restart = new JButton("RESTART");
         restart.addActionListener(this);
-        center.add(restart);
+        center.add(restart, gbc);
 
         JButton option = new JButton("OPTION");
         option.addActionListener(this);
-        center.add(option);
+        center.add(option, gbc);
 
         JButton home = new JButton("HOME");
         home.addActionListener(this);
-        center.add(home);
+        center.add(home, gbc);
 
         JButton esci = new JButton("ESCI");
         esci.addActionListener(this);
-        center.add(esci);
+        center.add(esci, gbc);
 
         revalidate();
         repaint();
@@ -76,10 +95,24 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
 
     private void option() {
         center.removeAll();
-        center.setPreferredSize(new Dimension(SuperMario.WIDTH / 3, SuperMario.HEIGHT / 3));
+        //center.setPreferredSize(new Dimension(SuperMario.WIDTH / 3, SuperMario.HEIGHT / 3));
 
+        //center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
+        
+        center.setLayout(new GridBagLayout()); 
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        int w = (int) (5.0 / 960.0 * SuperMario.WIDTH);
+        int h = (int) (5.0 / 540.0 * SuperMario.HEIGHT);
+        // System.out.println(""+w+" "+h);
+        gbc.insets = new Insets(w, h, w, h);    //gli dico di mettermi uno spazio fra ogni bottone
+        
         center.add((sound = new JCheckBox("Sound")));
         sound.setSelected(Sound.soundON);
+        sound.addActionListener(this);
         
         float vol = Sound.getVolume().getValue();
         vol += Math.abs(Sound.getVolume().getMinimum());
@@ -90,17 +123,18 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
         slider.setMajorTickSpacing(5);
         slider.setPaintTicks(true);
         slider.addChangeListener(this);
-        center.add(slider);
+        slider.setEnabled(sound.isSelected());
+        center.add(slider, gbc);
         
-        center.add((current = new JLabel("Il volume corrente e': " + (int) vol+"%")));
+        center.add((current = new JLabel("Il volume corrente e': " + (int) vol+"%")), gbc);
         
         JButton indietro = new JButton("Indietro");
         indietro.addActionListener(this);
-        center.add(indietro);
+        center.add(indietro, gbc);
         
         JButton applica = new JButton("Applica");
         applica.addActionListener(this);
-        center.add(applica);
+        center.add(applica, gbc);
 
         revalidate();
         repaint();
@@ -146,6 +180,9 @@ public class Menu extends JPanel implements ActionListener, ChangeListener {
             case "Applica":
                 applica();
                 normal();
+                break;
+            case "Sound":
+                slider.setEnabled(sound.isSelected());
                 break;
         }
 

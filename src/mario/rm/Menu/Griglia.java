@@ -187,6 +187,21 @@ public class Griglia extends JPanel {
             if (s == null && !isEraser) {
                 return;
             }
+            
+            livello.addElement(colonna, riga, s);
+        } else {
+            if(livello.getMappa()[colonna][riga] != null){
+                livello.getMappa()[colonna][riga].changeCollider();
+            }
+        }
+    }
+    
+    public void setItem(int colonna, int riga, Cell s) {
+        if (!col) {
+            if (s == null && !isEraser) {
+                return;
+            }
+            
             livello.addElement(colonna, riga, s);
         } else {
             if(livello.getMappa()[colonna][riga] != null){
@@ -306,8 +321,8 @@ public class Griglia extends JPanel {
     private String processSave(int i, int j, Cell[][] cl) {
         String str = "{<" + i + ">" + "<" + j + ">" + "[" + cl[i][j].getType().name() + "]";
         String unlock = cl[i][j].getType().name();
-        if (unlock.lastIndexOf("£") + 1 != 0) {
-            unlock = unlock.substring(unlock.lastIndexOf("£") + 1, unlock.length());
+        if (unlock.lastIndexOf("_") + 1 != 0) {
+            unlock = unlock.substring(unlock.lastIndexOf("_") + 1, unlock.length());
             str += "[" + unlock + "]";
         }
         //System.out.println("" + cl[i][j].getPartTil());
@@ -329,12 +344,13 @@ public class Griglia extends JPanel {
         BufferedImage image = new BufferedImage(elenco.length * pix, elenco[0].length * pix, BufferedImage.TYPE_INT_RGB);
 
         JFileChooser c = null;
-        if (MainComponent.jar.isFile()) {
+        /*if (MainComponent.jar.isFile()) {
             c = new JFileChooser(new File("src/mario/res/Immagini/livelli"));
         } else {
             // String f = MainComponent.jarPath.getAbsolutePath().substring(0, MainComponent.jarPath.getAbsolutePath().lastIndexOf("\\"));
             c = new JFileChooser(new File("src/mario/res/Immagini/livelli"));
-        }
+        }*/
+            c = new JFileChooser(new File(MainComponent.class.getClassLoader().getResource("Immagini/livelli").getFile()));
 
         int valid = c.showSaveDialog(null);
 
@@ -539,4 +555,8 @@ public class Griglia extends JPanel {
         return isEraser;
     }
 
+    public Preview getPreview(){
+        return livello;
+    }
+    
 }

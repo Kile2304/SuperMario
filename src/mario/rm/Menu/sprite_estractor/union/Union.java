@@ -6,16 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Cut;
+import mario.rm.Animation.Memoria;
 import mario.rm.Animation.Tile;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.TilePart;
-import mario.rm.input.MemoriaAnim;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -26,7 +24,7 @@ import mario.rm.utility.Log;
 public class Union {
 
     public Union(JFrame fr) {
-        MemoriaAnim m = new MemoriaAnim();
+        Memoria m = new Memoria();
         m.carica();
 
         ArrayList<Cut> p = m.getPlayer();
@@ -118,10 +116,13 @@ public class Union {
             } catch (StringIndexOutOfBoundsException e) {
             }
 
-            File directory = new File("src\\mario\\res\\Animazioni\\" + path);
+            //File directory = new File("src\\mario\\res\\Animazioni\\" + path);
+            //System.out.println("attuale: "+path);
+            File directory = new File("res\\Animazioni\\" + path);
             Log.append("checker: " + directory.getAbsolutePath(), DefaultFont.INFORMATION);
 
             File[] files = directory.listFiles();
+            System.out.println(""+directory.length());
 
             for (File f : files) {
                 Log.append("" + f.getAbsolutePath(), DefaultFont.INFORMATION);
@@ -133,9 +134,9 @@ public class Union {
             }
 
             if (anim1 instanceof Anim) {
-                fos = new FileOutputStream("src\\mario\\res\\Animazioni\\" + path + "\\" + newFile + ".ac");
+                fos = new FileOutputStream("res\\Animazioni\\" + path + "\\" + newFile + ".ac");
             } else {
-                fos = new FileOutputStream("src\\mario\\res\\Animazioni\\" + path + "\\" + newFile + "-" + tile + ".ti");
+                fos = new FileOutputStream("res\\Animazioni\\" + path + "\\" + newFile + "-" + tile + ".ti");
             }
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(anim1);

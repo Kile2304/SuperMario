@@ -17,6 +17,8 @@ import net.java.games.input.ControllerEnvironment;
 public class Joystick extends Thread {
 
     public static boolean UPDATE = false;
+    
+    public static Controller[] lastUpdate;
 
     public static final Controller[] getController() {
         LinkedList<Controller> joystick = new LinkedList<>();
@@ -33,7 +35,7 @@ public class Joystick extends Thread {
             System.exit(1);
         }*/
 
- /*for (Controller c : ControllerEnvironment.getDefaultEnvironment().getControllers()) {
+        /*for (Controller c : ControllerEnvironment.getDefaultEnvironment().getControllers()) {
             System.out.println("last: " + c.getName());
         }*/
         Controller[] contr = new Controller[joystick.size()];
@@ -50,14 +52,16 @@ public class Joystick extends Thread {
             Controller[] controller = getController();
 
             LinkedList<Controller> toAdd = new LinkedList<>();
+            LinkedList<PlaystationController> toRemove = new LinkedList<>();
 
-            LinkedList<PlaystationController> actual = (LinkedList<PlaystationController>) ControllerListener.controller;
+            LinkedList<PlaystationController> actual =  ControllerListener.controller;
 
             for (int i = 0; i < controller.length; i++) {  //per fare funzionare il ciclo bisogna invertirlo ed eliinare tutti gli elementi della linkedlist
                 boolean find = false;
+                //Log.append(""+controller[i].hashCode(), DefaultFont.ERROR);
                 for (int j = 0; j < actual.size(); j++) {
-                    if (actual.get(j) == controller[i]) {
-                        actual.remove(j);
+                    if (actual.get(j).getController() == controller[i]) {
+                        //actual.remove(j);
                         find = true;
                         break;
                     }
@@ -66,9 +70,20 @@ public class Joystick extends Thread {
                     toAdd.add(controller[i]);
                 }
             }
+            for (int i = 0; i < actual.size(); i++) {
+                boolean removed = true;
+                for (int j = 0; j < controller.length; j++) {
+                    if(controller[j] == actual.get(i).getController()){
+                        removed = false;
+                    }
+                }
+                if(removed){
+                    toRemove.add(actual.get(i));
+                }
+            }
 
             if (actual.size() > 0) {
-                ControllerListener.removeController(actual);
+                ControllerListener.removeController(toRemove);
             }
 
             if (toAdd.size() > 0) {

@@ -31,7 +31,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     private static boolean gameLoop;
 
-    private GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0]; //VARIABILE PER OTTENERE LA LARGHEZZA E ALTEZZA MASSIMA DEL FRAME
+    //private GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0]; //VARIABILE PER OTTENERE LA LARGHEZZA E ALTEZZA MASSIMA DEL FRAME
 
     public static Handler handler;  //CONTIENE E GESTISCE PLAYER E TILES
     private Camera cam; //NUOVA TELECAMERA
@@ -40,7 +40,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public static int standardHeight;    //TEMPORANEA PER HEIGHT DEGLI SPRITE
 
     private BufferedImage bg;    //SFONDO
-    private static final BufferedImage coin = (Loader.LoadImage("mario/res/Immagini/tiles.png").getSubimage(64 * 7 + 8, 10, 64, 64)); //FOTO DELLA MONETA ritagliata
+    private static final BufferedImage coin = (Loader.LoadImage("Immagini/tiles.png").getSubimage(64 * 7 + 8, 10, 64, 64)); //FOTO DELLA MONETA ritagliata
     //private BufferedImage life;
 
     private Image load = null;  //GIF PER IL DISEGNO DELLA GIF DI CARICAMENTO
@@ -57,7 +57,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     private static boolean video = false;
 
-    private ControllerListener movement;
+    public static ControllerListener movement;
 
     private Menu option;
 
@@ -298,6 +298,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public static void stopGame() {
         gameLoop = false;
         frame.dispose();
+        handler.clean();
         new MainComponent();
     }
 
@@ -307,6 +308,10 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     public boolean getMenu(){
         return menu;
+    }
+    
+    public Handler getHandler(){
+        return handler;
     }
     
 }

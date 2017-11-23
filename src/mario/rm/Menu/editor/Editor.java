@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
@@ -42,7 +43,6 @@ public class Editor extends JFrame implements Scrollable {
     
     private JScrollPane gri;
     
-    private final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];  
     
     public static void main(String[] args) {
         //new Editor();
@@ -52,10 +52,9 @@ public class Editor extends JFrame implements Scrollable {
         super(TITLE);
         
         
-        device.setFullScreenWindow(this);
-        
-        WIDTH = device.getFullScreenWindow().getWidth();
-        HEIGHT = device.getFullScreenWindow().getHeight();
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = d.width;
+        HEIGHT = d.height;
         
         setSize(WIDTH, HEIGHT);
         
@@ -75,7 +74,7 @@ public class Editor extends JFrame implements Scrollable {
         s = new Selezione(g, this);
         
        
-        p = new Pannelli(this);
+        p = new Pannelli(this, g.getPreview().getMemoria());
         p.setLayout(new GridLayout(8, 2, 25, 25));
         
         JScrollPane sc = new JScrollPane(p);
@@ -97,11 +96,6 @@ public class Editor extends JFrame implements Scrollable {
         
         mario.rm.Menu.Componenti.Selezione c = new mario.rm.Menu.Componenti.Selezione(g, this);
         
-        /*vertical = new ScrollButton(ScrollButton.VERTICALE, WIDTH, HEIGHT, c, 0);
-        center.add(vertical, BorderLayout.EAST);
-        orizontal = new ScrollButton(ScrollButton.ORIZZONTALE, WIDTH, HEIGHT, c, 550);
-        center.add(orizontal, BorderLayout.SOUTH);*/
-        
         center.add(gri);
         
         g.addMouseListener(s);
@@ -113,49 +107,9 @@ public class Editor extends JFrame implements Scrollable {
         setVisible(true);
     }
 
-    /*public Editor() {
-        super("editor");
-
-        Griglia g = new Griglia(WIDTH + 400, HEIGHT + 200, this, 30);
-
-        s = new Selezione(g, this);
-
-        Pannelli p = new Pannelli(this);
-
-        g.setBounds(0, 0, WIDTH - 409, HEIGHT - 80);
-        p.setBounds(WIDTH - 359, 0, 359, HEIGHT - 30);
-
-        p.setLayout(new GridLayout(8, 4));
-        g.setLayout(new GridLayout());
-
-        add(orizontal = new ScrollButton(ScrollButton.ORIZZONTALE, WIDTH, HEIGHT, s, 0));
-        add(vertical = new ScrollButton(ScrollButton.VERTICALE, WIDTH, HEIGHT, s, 500));
-
-        setLayout(null);
-        setSize(WIDTH, HEIGHT);
-
-        add(p);
-        add(g);
-
-        g.addMouseListener(s);
-        g.addMouseMotionListener(s);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
-        setVisible(true);
-    }*/
-
     public Selezione getSelezione() {
         return s;
     }
-
-   /* public ScrollButton getScrollHorizontal() {
-        return orizontal;
-    }
-
-    public ScrollButton getScrollVertical() {
-        return vertical;
-    }*/
 
     @Override
     public void changeStateOrizontal(int stato) {

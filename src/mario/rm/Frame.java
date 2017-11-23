@@ -27,7 +27,7 @@ public class Frame extends JFrame {
         setSize(WIDTH, HEIGHT);
         setResizable(false);
 
-        setIconImage(new Loader().LoadImage("mario/res/Immagini/Luma-Yellow-icon.png"));
+        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
 
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
