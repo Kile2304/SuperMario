@@ -98,7 +98,7 @@ public class Preview {
             
         }
         
-        new Loader().convertTextInMap(path, ed);
+        Loader.convertTextInMap(path, ed);
 
         ArrayList<Cell> cl = ed.getCell();
         ArrayList<Punto> coord = ed.getCoord();
@@ -148,12 +148,13 @@ public class Preview {
 
     class EditLoad implements Reader {
 
-        private ArrayList<Cell> cl;
-        private ArrayList<Punto> coord;
-        private final BufferedImage img = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
-        private MemoriaAC memoria;
+        private final ArrayList<Cell> cl;
+        private final ArrayList<Punto> coord;
+        private final BufferedImage img;
+        private final MemoriaAC memoria;
 
         EditLoad() {
+            this.img = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
             cl = new ArrayList<>();
             coord = new ArrayList<>();
             for (int i = 0; i < img.getWidth(); i++) {

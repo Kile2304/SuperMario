@@ -55,7 +55,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     private static Frame frame;
 
-    private static boolean video = false;
+    //private static boolean video = false;
 
     public static ControllerListener movement;
 

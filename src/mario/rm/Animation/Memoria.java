@@ -21,12 +21,8 @@ import mario.rm.utility.Log;
 
 /**
  *
+ *
  * @author LENOVO
- */
-/**
- *
- *
- * @return CARICA IN MEMORIA TUTTE LE ANIMAZIONI
  */
 public class Memoria {
 

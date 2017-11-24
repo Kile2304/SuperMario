@@ -1,40 +1,40 @@
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
++[h:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\tiles.png]
 !UNLOCKABLE_COIN|
 §UPLEFT*
 !COIN|◘unlockableCoin.anim○
 <131><10> <196><75>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPLEFT*
 ◘mushroomPlatform-left.anim○
 <196><140> <261><205>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPCENTER*
 ◘mushroomPlatform-center.anim○
 <261><140> <326><205>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPRIGHT*
 ◘mushroomPlatform-right.anim○
 <326><140> <391><205>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\unlockable\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\unlockable\tiles.png]
 !COIN|
 §UPLEFT*
 ◘coin.anim○
 <462><16> <514><67>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\tiles.png]
 !SPINE|
 §UPLEFT*
 ◘spine.anim○
 <134><273> <193><332>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\player\luigiAnim.png]
 !PLAYER_LUIGI|
 {WALK}
 ♣RIGHT♦
@@ -72,7 +72,7 @@
 <211><387> <228><424>
 <252><387> <268><424>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\player\luigiAnim.png]
 !PLAYER_LUIGI|
 {JUMP}
 ♣RIGHT♦
@@ -111,7 +111,7 @@
 <1095><335> <1075><313>
 <1122><344> <1100><323>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\player\luigiAnim.png]
 !PLAYER_LUIGI|
 {STAND}
 ♣RIGHT♦
@@ -166,7 +166,7 @@
 <505><497> <489><465>
 <529><497> <511><465>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\animazioneTiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\animazioneTiles.png]
 !UNLOCKABLE|
 §UPLEFT*
 ◘unlockable-upleft.anim○
@@ -187,7 +187,7 @@
 <975><260> <912><197>
 <1040><260> <977><197>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\animazioneTiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\animazioneTiles.png]
 !SOLID|
 §UPLEFT*
 ◘solid-upleft.anim○
@@ -208,7 +208,7 @@
 <975><64> <912><3>
 <1040><64> <977><3>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\aura dragonball.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\aura dragonball.png]
 !KI|
 §UPLEFT*
 ◘ki-upleft.anim○
@@ -217,7 +217,7 @@
 <266><212> <194><131>
 <357><213> <286><133>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\boo.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\boo.png]
 !BOO|
 {WALK}
 ♣LEFT♦
@@ -244,7 +244,7 @@
 <659><316> <555><218>
 <789><315> <686><219>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\boo.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\boo.png]
 !BOO|
 {STAND}
 ♣LEFT♦
@@ -256,7 +256,7 @@
 <528><531> <410><433>
 <658><532> <545><433>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\Tartosso.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\Tartosso.png]
 !TARTOSSO|
 {WALK}
 ♣LEFT♦
@@ -275,7 +275,7 @@
 <814><350> <692><202>
 <978><348> <866><199>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\Tartosso.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\Tartosso.png]
 !TARTOSSO|
 {DIE}
 ♣LEFT♦
@@ -324,7 +324,7 @@
 <846><2706> <698><2632>
 <1011><2706> <862><2631>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\Tartosso.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\Tartosso.png]
 !TARTOSSO|
 {RUN}
 ♣LEFT♦
