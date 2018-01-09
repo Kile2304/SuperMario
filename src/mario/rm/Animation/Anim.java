@@ -8,10 +8,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import static java.lang.Thread.sleep;
 import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import mario.rm.SuperMario;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
@@ -30,21 +33,16 @@ public class Anim implements Serializable, Animated {
     transient private BufferedImage[] stand;
     private Anim transformation;
 
-    private Move lastMove;
-    private Direction lastDirection;
+    private final Type type;
 
-    private Type type;
-
-    private String path;
+    private final String path;
 
     transient private int index;
 
     transient private long delay;
-    
+
     public Anim(Type type, String path) {
         this.type = type;
-        lastMove = Move.STAND;
-        lastDirection = Direction.LEFT;
         this.path = path;
     }
 
@@ -66,15 +64,17 @@ public class Anim implements Serializable, Animated {
             dest = new BufferedImage[anim.length * 4];
             //System.out.println("nuovo");
         }
-
-        System.arraycopy(anim, 0, dest, dest.length / 4 * direction.getMoltiplier(), anim.length);
-
+        try {
+            System.arraycopy(anim, 0, dest, dest.length / 4 * direction.getMoltiplier(), anim.length);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("" + type + " " + dest.length + " " + dest.length / 4 + " " + anim.length);
+        }
         return dest;
     }
 
-    public BufferedImage getImage(Move move, Direction dir) {
+    public BufferedImage getImage(Move move, Direction dir, Move lastMove, Direction lastDirection) {
         BufferedImage[] find = null;    //non funziona, da RIFARE
-        
+
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getName().equals(move.name().toLowerCase())) {
@@ -85,26 +85,55 @@ public class Anim implements Serializable, Animated {
                 }
             }
         }
-        
-        return find != null ? getImage(move, dir, find) : null;
+
+        return find != null ? getImage(move, dir, find, lastMove, lastDirection) : null;
     }
 
-    private BufferedImage getImage(Move move, Direction dir, BufferedImage[] anim) {
+    /**
+     * metodo usato nel caso ci siano piu' istanze che utilizzano lo stesso oggetto
+     * @param move  movimento corrente
+     * @param dir   direzione corrente
+     * @param lastMove  ultimo movimento effettuato
+     * @param lastDirection ultima direzione che ha avuto
+     * @param ma variabile che contiene l'indice attuale e il tempo dello sprite corrente
+     * @return ritorna un oggetto con immagine indice e tempo
+     */
+    public MultiAnim getImage(Move move, Direction dir, Move lastMove, Direction lastDirection, MultiAnim ma) {
+        index = ma.getIndex();
+        delay = ma.getDelay();
+        //System.out.println("Start: "+type+" "+index+" delay: "+delay);
+        BufferedImage img = getImage(move, dir, lastMove, lastDirection);
+        //System.out.println("Stop: "+type+" "+index+" delay: "+delay);
+        //if(type == Type.MISSILE)System.out.println(""+index);
+        //System.out.println(""+this.index);
+        //System.out.println(""+type+" "+delay);
+        return img != null ? new MultiAnim(img, index, delay) : null;
+    }
+
+    private BufferedImage getImage(Move move, Direction dir, BufferedImage[] anim, Move lastMove, Direction lastDirection) {
         if (lastMove != move || dir != lastDirection) {
             index = 0;
             lastMove = move;
             lastDirection = dir;
             delay = 0;
+            //System.out.println("New Action: "+type);
         }
-        if (delay + anim.length / 4 < System.currentTimeMillis()) {  //delay da fixare
+
+        if (delay + 70 < System.currentTimeMillis()) {  //delay da fixare
+
             delay = System.currentTimeMillis();
             if (index < anim.length / 4 - 1) {
                 index++;
+                //System.out.println("Increment: "+type+" "+index);
             } else {
+                /*if (type == Type.MISSILE) {
+                    System.out.println("index: " + index + " legth: " + anim.length / 4);
+                }*/
                 index = 0;
+                //System.out.println("Renew: "+type);
             }
         }
-        
+
         return anim[anim.length / 4 * dir.getMoltiplier() + index];
     }
 
@@ -186,9 +215,9 @@ public class Anim implements Serializable, Animated {
         return transformation;
     }
 
-    public boolean isEndDie() {
+    public boolean isEndDie(Move lastMove, int index) {
         BufferedImage[] find = null;    //non funziona, da RIFARE
-        
+
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getName().equals(lastMove.name().toLowerCase())) {
@@ -198,6 +227,9 @@ public class Anim implements Serializable, Animated {
                     Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
                 }
             }
+        }
+        if (find == null) {
+            return false;
         }
         return index >= find.length / 4 - 1;
     }
@@ -216,7 +248,7 @@ public class Anim implements Serializable, Animated {
             return null;
         }
 
-        return getImage(m, Direction.RIGHT);
+        return getImage(m, Direction.RIGHT, Move.WALK, Direction.LEFT);
     }
 
 }

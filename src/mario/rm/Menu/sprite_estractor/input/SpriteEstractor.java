@@ -6,11 +6,13 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import mario.rm.Menu.Componenti.ScrollButton;
 import mario.rm.Menu.Componenti.Scrollable;
 import mario.rm.Menu.Griglia;
@@ -21,7 +23,7 @@ import mario.rm.Menu.Griglia;
  */
 public class SpriteEstractor extends JFrame implements Scrollable {
 
-    private int WIDTH;
+    private static int WIDTH;
     private int HEIGHT;
     private static final String TITLE = "Sprite Estractor";
 
@@ -30,11 +32,15 @@ public class SpriteEstractor extends JFrame implements Scrollable {
 
     private static Selezione s;
 
-    private Pannelli p;
+    private Setting p;
 
     private static final int PIXEL = 30;
 
     private JScrollPane gri;
+    
+    public static JLabel coordinate;
+    
+    public static int adaptedWidth = adaptWidth(250);
 
    // private final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
 
@@ -56,7 +62,8 @@ public class SpriteEstractor extends JFrame implements Scrollable {
 
         setLayout(new BorderLayout());
 
-        final int adaptedWidth = adaptWidth(250);
+        adaptedWidth = adaptWidth(250);
+        
         final int adaptedHeight = adaptHeight(250);
 
         Griglia g = new Griglia(WIDTH + adaptedWidth, HEIGHT + adaptedHeight, this, PIXEL);
@@ -69,14 +76,24 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         gri.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         s = new Selezione(g, this);
+        
+        p = new Setting(s, HEIGHT);
+        JScrollPane panelScroll = new JScrollPane(p);
+        panelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        panelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        //p.setLayout(new GridLayout(8, 4, 25, 25));
 
-        p = new Pannelli(s);
-        p.setLayout(new GridLayout(8, 4, 25, 25));
-
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(adaptedWidth + 25, HEIGHT - adaptWidth(60)));
+        tabbedPane.addTab("Settings", null, panelScroll,
+                  "Does nothing");
+        tabbedPane.addTab("Strumenti", null, new Strumenti(s, HEIGHT),
+                  "Does nothing2");
+        
         addMenuBar();
 
         JPanel east = new JPanel();
-        east.add(p, BorderLayout.EAST);
+        east.add(tabbedPane, BorderLayout.EAST);
         add(east, BorderLayout.EAST);
 
         JPanel center = new JPanel();
@@ -85,14 +102,18 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         add(center, BorderLayout.CENTER);
 
         center.add(gri);
+        center.add((coordinate = new JLabel("C:0 R:0 X:0 Y:0")), BorderLayout.SOUTH);
 
         g.addMouseListener(s);
+        g.addMouseMotionListener(s);
         g.setPanel(p);
         
         setLocationRelativeTo(null);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        //setResizable(false);
+        
         setVisible(true);
 
     }
@@ -178,7 +199,7 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         gri.revalidate();
     }
 
-    public int adaptWidth(int val) {
+    public static int adaptWidth(int val) {
         return (int) ((double) val / 1200 * WIDTH);
     }
 

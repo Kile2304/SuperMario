@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mario.rm.Animation.Anim;
+import mario.rm.SuperMario;
 import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
@@ -18,10 +19,6 @@ import mario.rm.sprite.tiles.Tiles;
  *
  * @author LENOVO
  */
-/**
- *
- * @return INIZIALIZZAZIONE DI UN NEMICO NORMALE CHE VA AVANTI E INDIETRO
- */
 public class Enemy extends Sprite {
 
     boolean canDie; //SE PUO' MORIRE O NO
@@ -32,20 +29,18 @@ public class Enemy extends Sprite {
     protected static final double STACCO = adaptHeight(0.17);
 
     protected boolean isDie;
+    
+    protected boolean hurt;
 
     /**
      *
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param img
-     * @param handler
-     * @param canDie
-     * @param type
-     * @return (POSIZIONE X, POSIZIONE Y, ALTEZZA, LARGHEZZA, ELENCO DI
-     * ANIMAZIONI DA CUI ESTRAPOLARSI LA SUA, QUELLO CHE GESTISCE TUTTO IL
-     * LIVELLO, IL TIPO DEL NEMICO, SE PUO MORIRE)
+     * @param x coordinata x
+     * @param y coordinata y
+     * @param width larghezza
+     * @param height altezza 
+     * @param handler handler che deve gestire lo sprite
+     * @param type tipologia di personaggio
+     * @param canDie se puo morire 
      */
     public Enemy(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
         super(x, y, width, height, handler, type, handler.getMemoria().getEnemy());
@@ -57,15 +52,21 @@ public class Enemy extends Sprite {
         this.canDie = canDie;
         lastMove = Move.WALK;
         lastDirection = Direction.LEFT;
+        actualMove = Move.WALK;
+        actualDirection = Direction.LEFT;
 
         direzione = -1;
+        
+        hurt = true;
 
     }
 
     public Enemy(int x, int y, int width, int height, Handler handler, Type type, boolean canDie, Anim animazione) {
         super(x, y, width, height, null, type, null);
         this.handler = handler;
-        this.animazione = animazione;
+        if (animazione != null) {
+            this.animazione = animazione;
+        }
 
         velX = type.getVelX();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
         velY = type.getVelY();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
@@ -75,8 +76,12 @@ public class Enemy extends Sprite {
         this.canDie = canDie;
         lastMove = Move.WALK;
         lastDirection = Direction.LEFT;
+        actualMove = Move.WALK;
+        actualDirection = Direction.LEFT;
 
         direzione = -1;
+        
+        hurt = true;
     }
 
     /**
@@ -97,7 +102,7 @@ public class Enemy extends Sprite {
 
     /**
      *
-     * @return AGGIORNA LA POSIZIONE DEL NEMICO SEMPLICEMENTE CHE QUANDO VA A
+     * AGGIORNA LA POSIZIONE DEL NEMICO SEMPLICEMENTE CHE QUANDO VA A
      * SBATTERE CAMBIA DIREZIONE, E SE SOTTO DI LUI NON C'E' PAVIMENTO CADE
      */
     @Override
@@ -129,12 +134,12 @@ public class Enemy extends Sprite {
                         if (getBoundsRight().intersects(tile.get(i).getBounds())) {  //INTERSEZIONE PARTE DESTRA
                             x = tile.get(i).getX() - width; //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA
                             direzione *= -1;
-                            lastDirection = Direction.LEFT;
+                            actualDirection = Direction.LEFT;
                         }
                         if (getBoundsLeft().intersects(tile.get(i).getBounds())) {   //INTERSEZIONE PARTE SINISTRA (DOVREBBE ESSERE PERFETTO)
-                            x = tile.get(i).getX() + tile.get(i).getWidth() - 20; //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA del tile
+                            x = tile.get(i).getX() + tile.get(i).getWidth() - SuperMario.adaptWidth(20); //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA del tile
                             direzione *= -1;
-                            lastDirection = Direction.RIGHT;
+                            actualDirection = Direction.RIGHT;
                         }
                     }
                 }
@@ -144,7 +149,7 @@ public class Enemy extends Sprite {
                 gravity -= STACCO; //AUMENTA LA GRAVITA
                 velY = ((int) gravity); //LA VELOCITA E PARI ALLA GRAVITA
             } else {
-                direzioneY = 1;
+                direzioneY = 0;
             }
         }
     }
@@ -182,6 +187,7 @@ public class Enemy extends Sprite {
         return isDie;
     }
 
+    @Deprecated
     @Override
     public Enemy clone() {
         Enemy e = new Enemy(x, y, width, height, handler, type, canDie, animazione);
@@ -209,4 +215,8 @@ public class Enemy extends Sprite {
         return e;
     }
 
+    public boolean canHurt(){
+        return hurt;
+    }
+    
 }

@@ -4,16 +4,18 @@ import mario.rm.identifier.Type;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mario.rm.utility.Size;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.Animation.Anim;
-import mario.rm.Animation.Tile;
+import mario.rm.Animation.MultiAnim;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
-import mario.rm.identifier.TilePart;
 
 /**
  *
@@ -53,9 +55,11 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
     protected Move lastMove;
     protected Direction lastDirection;
 
-    /*protected BufferedImage[] ti;
-    int ind;
-    int delay2;*/
+    protected Move actualMove;
+    protected Direction actualDirection;
+
+    protected MultiAnim ma;
+
     public Sprite(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Anim> elenco) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         this.x = x; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE X
         this.y = y; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE Y
@@ -69,6 +73,8 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         this.type = type;   //CHE TIPO DI SPRITE E'
         lastMove = Move.STAND;
         lastDirection = Direction.RIGHT;
+        actualMove = Move.STAND;
+        actualDirection = Direction.RIGHT;
 
         if (handler != null) {
             for (Iterator<Anim> it = elenco.iterator(); it.hasNext();) {
@@ -78,6 +84,8 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
                 }
             }
         }
+
+        ma = new MultiAnim(null, 0, 0);
 
         /*handler.getMemoria().getTiles().stream().filter((t) -> (t.getType() == Type.KI)).forEach((t) -> {
             ti = t.getImage(TilePart.UPLEFT);
@@ -108,17 +116,31 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      * QUESTA FUNZIONE RITORNA VERO QUANDO L'ANIMAZIONE E' FINITA
      */
     public boolean isEndDie() {
-        return animazione.isEndDie();
+        if (actualMove == Move.DIE || actualMove == Move.RUN) {
+            return animazione.isEndDie(actualMove, ma.getIndex());
+        }
+        return false;
     }
 
     /**
      *
      * @param g
-     * @return DISEGNA LO SPRITE CORRENTE IN BASE AL MOVIMENTO CHE STA FACENDO,
-     * ES: STAZIONAMENTO, CAMMINA, CORRE...
      */
-    public void render(Graphics g) {//DA MODIFICARE, SOPRATTUTTO IL VALORE COSTANTE
-        temp = animazione.getImage(lastMove, lastDirection);
+    public void render(Graphics g) {//DA MODIFICARE
+        /*try {
+            sleep(10);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        MultiAnim t = animazione.getImage(actualMove, actualDirection, lastMove, lastDirection, ma);
+        if (t != null) {
+            ma.initialize(t);
+        }
+        //System.out.println("Get: "+type+" "+ma.getIndex()+" delay: "+ma.getDelay());
+        temp = ma.getImg();
+        lastMove = actualMove;
+        lastDirection = actualDirection;
+        //if(type == Type.MISSILE)System.out.println(""+ma.getIndex());
         if (temp != null) {
             g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
         }
@@ -126,12 +148,12 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
     }
 
     public void setLastMovement(Direction dir, Move move) {
-        lastDirection = dir;
-        lastMove = move;
+        actualDirection = dir;
+        actualMove = move;
     }
 
     public Direction getLastDirection() {
-        return lastDirection;
+        return actualDirection;
     }
 
     /**
@@ -218,6 +240,14 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     *
+     * @return RITORNA LA LARGHEZZA IN PIXEL DELLO SPRITE NELLO SCHERMO
+     */
+    public int getWidth() {
+        return width;
     }
 
     /**

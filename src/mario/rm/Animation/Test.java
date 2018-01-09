@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import mario.MainComponent;
 import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
@@ -101,7 +102,8 @@ public class Test extends Canvas implements Runnable, ActionListener {
 
     public boolean load() throws FileNotFoundException, IOException, ClassNotFoundException {
         Cut cut = null;
-        JFileChooser c = new JFileChooser(new File("src/mario/res/Animazioni").getAbsolutePath());
+        //JFileChooser c = new JFileChooser(new File("src/mario/res/Animazioni").getAbsolutePath());
+        JFileChooser c = new JFileChooser(MainComponent.class.getClassLoader().getResource("Animazioni/").getPath());
 
         int valid = c.showOpenDialog(null);
 
@@ -160,7 +162,8 @@ public class Test extends Canvas implements Runnable, ActionListener {
 
         //g.drawImage(an.nextNormal(), 100, 100, 100, 100, null);
         if (anim != null) {
-            g.drawImage(anim.getImage((Move) box.getSelectedItem(), Direction.valueOf((String) direction.getSelectedItem())), 0, 0, 64, 64, this);
+            BufferedImage temp = anim.getImage((Move) box.getSelectedItem(), Direction.valueOf((String) direction.getSelectedItem()), (Move) box.getSelectedItem(), Direction.valueOf((String) direction.getSelectedItem()));
+            g.drawImage(temp, 0, 0, 64, 64, this);
         } else if (tile != null) {
             //g.drawImage(tile.getImage(TilePart.UPLEFT)[0], 0, 0, 64, 64, this);
             BufferedImage[] img = tile.getImage(TilePart.UPLEFT);

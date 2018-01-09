@@ -1,13 +1,20 @@
 package mario.rm.Menu.sprite_estractor.union;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import mario.MainComponent;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Cut;
 import mario.rm.Animation.Memoria;
@@ -100,13 +107,49 @@ public class Union {
                 }
                 );
 
-        if (fr
-                != null) {
+        try {   //solo da build
+            m = null;
+            p.clear();
+            temp.clear();
+            Runtime.getRuntime().exec("cmd /c start " + new File("res/Animazioni/eliminazioneAnim.bat") + " " + new File("res/Animazioni/").getAbsolutePath());
+        } catch (IOException ex) {
+            Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (fr != null) {
             JOptionPane.showMessageDialog(fr, "Conversione dei file in AC e TI completata", "info", JOptionPane.DEFAULT_OPTION);
         }
 
     }
 
+    /*private void tempFile() {
+        try {
+            InputStreamReader isr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream("Animazioni\\eliminazioneAnim.bat"));
+            BufferedReader br = new BufferedReader(isr);
+
+            File f = new File(System.getProperty("user.dir") + "\\" + "eliminazioneFileAc.bat");
+            f.createNewFile();
+
+            FileWriter fw = new FileWriter(f);
+            BufferedWriter bw = new BufferedWriter(fw);
+            String temp = "";
+            while ((temp = br.readLine()) != null) {
+                bw.append(temp);
+            }
+            bw.close();
+            br.close();
+            
+            try {
+                Runtime.getRuntime().exec("cmd /c start " + System.getProperty("user.dir") + "\\" + "eliminazioneFileAc.bat"+" "+MainComponent.class.getClassLoader().getResource("Animazioni\\eliminazioneAnim.bat"));
+            } catch (IOException ex) {
+                Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            f.delete();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }*/
     private void toObject(Object anim1, String path, String tile) {
         FileOutputStream fos = null;
         try {
@@ -122,15 +165,15 @@ public class Union {
             Log.append("checker: " + directory.getAbsolutePath(), DefaultFont.INFORMATION);
 
             File[] files = directory.listFiles();
-            System.out.println(""+directory.length());
+            System.out.println("" + directory.length());
 
             for (File f : files) {
                 Log.append("" + f.getAbsolutePath(), DefaultFont.INFORMATION);
                 String s = f.getAbsolutePath();
                 s = s.substring(s.lastIndexOf("."));
-                if (s.equals(".anim")) {
+                /*if (s.equals(".anim")) {
                     f.deleteOnExit();
-                }
+                }*/
             }
 
             if (anim1 instanceof Anim) {

@@ -46,12 +46,12 @@ public class Boo extends Enemy {
         int direzioneX = p.getX() - x;  //CALCOLO VERSO DOVE DEVE MUOVERSI IL BOO
         direzioneX = direzioneX != 0 ? (direzioneX > 0 ? 1 : -1) : 0;   //CALCOLO DIREZIONE X
 
-        lastDirection = direzioneX != 0 ? (direzioneX > 0 ? Direction.RIGHT : Direction.LEFT) : lastDirection;  //CALCOLO LA DIREZIONE ATTUALE DEL BOO
+        actualDirection = direzioneX != 0 ? (direzioneX > 0 ? Direction.RIGHT : Direction.LEFT) : lastDirection;  //CALCOLO LA DIREZIONE ATTUALE DEL BOO
 
-        if (p.getLastDirection() != lastDirection && direzioneX < 0 || p.getLastDirection() != lastDirection && direzioneX > 0) {   //SE IL PLAYER E' RIVOLTO VERSO IL BOO GLI DICO DI FERMARSI
-            lastMove = Move.STAND;
+        if (p.getLastDirection() != actualDirection && direzioneX < 0 || p.getLastDirection() != actualDirection && direzioneX > 0) {   //SE IL PLAYER E' RIVOLTO VERSO IL BOO GLI DICO DI FERMARSI
+            actualMove = Move.STAND;
         } else {    //ALTRIMENTI SI MUOVE
-            lastMove = Move.WALK;
+            actualMove = Move.WALK;
 
             x += velX * direzioneX;
             y += velY * direzioneY;

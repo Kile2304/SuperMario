@@ -3,8 +3,6 @@ package mario.rm.utility.joystick;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
-import mario.rm.utility.DefaultFont;
-import mario.rm.utility.Log;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.Event;

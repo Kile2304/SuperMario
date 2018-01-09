@@ -7,7 +7,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import static java.lang.Thread.sleep;
 import java.lang.management.ManagementFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.Menu.opzioni.Menu;
 import mario.rm.camera.Camera;
@@ -60,12 +63,17 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public static ControllerListener movement;
 
     private Menu option;
+    
+    public static int playerNumber;
 
     //private Thread t;
     //
-    public SuperMario() {
+    public SuperMario(int player) {
         Log.append("" + ManagementFactory.getRuntimeMXBean().getName(), DefaultFont.INFORMATION);
+        Log.append("Il numero di player e' "+player, DefaultFont.INFORMATION);
         Log.append("1)INIZIO", DefaultFont.INFORMATION);
+        
+        playerNumber = player;
 
         handler = new Handler(this);    //NUOVI ARRAY DI SPRITE (TILE, E PLAYER) QUESTI SARANNO DEFINITI IN BASE AD UN FILE
 
@@ -91,9 +99,6 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         }
         gameLoop = true;
         menu = false;
-        /*t = new Thread(this);
-        t.setName("rendering");
-        t.start();*/
         new Thread(this).start();
     }
 
@@ -161,15 +166,16 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     g.translate(cam.getX(), cam.getY());    //SPOSTA IL CENTRAMENTO DELLA FINESTRA
 
                     //g.drawImage(bg, 0, 0, bg.getWidth() / 64 * standardWidth, bg.getHeight() / 64 * standardHeight, null);
+                    int pix = 64;
                     int dstx1 = handler.getPlayer().get(0).getX() - WIDTH / 2;
                     int dsty1 = handler.getPlayer().get(0).getY() - HEIGHT / 2 + standardHeight;
                     int dstx2 = WIDTH + dstx1;
                     int dsty2 = HEIGHT + dsty1;
 
-                    int srcx1 = dstx1 * 64 / standardWidth;
-                    int srcy1 = dsty1 * 64 / standardHeight;
-                    int srcx2 = srcx1 + WIDTH * 64 / standardWidth;
-                    int srcy2 = srcy1 + HEIGHT * 64 / standardHeight;
+                    int srcx1 = dstx1 * pix / standardWidth;
+                    int srcy1 = dsty1 * pix / standardHeight;
+                    int srcx2 = srcx1 + WIDTH * pix / standardWidth;
+                    int srcy2 = srcy1 + HEIGHT * pix / standardHeight;
 
                     g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
                     handler.render(g);  //DISEGNA TUTTO
@@ -233,7 +239,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                 if (System.currentTimeMillis() - timer > 1000) {
                     timer += 1000;
                     //System.out.println("FPS : " + frames + " Ticks : " + ticks);
-                    FPS = frames;
+                    FPS = ticks;
                     frames = 0;
                     ticks = 0;
                 }

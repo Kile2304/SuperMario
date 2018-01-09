@@ -17,14 +17,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.xml.bind.DatatypeConverter;
@@ -52,12 +50,12 @@ public class Home extends JFrame implements ActionListener {
 
     private static MainComponent main;
 
-    private JPasswordField passwordField;
-
-    protected BufferedImage background = Loader.LoadImage("Immagini/luigiBG.png");
+    protected BufferedImage background = Loader.LoadImage("Immagini/menu.png");
 
     private Dimension dim = getToolkit().getScreenSize();
-
+    
+    private final ArrayList<TranslucentButton> list;
+    
     /**
      * Creates new form Home
      *
@@ -65,6 +63,9 @@ public class Home extends JFrame implements ActionListener {
      */
     public Home() {
         super(TITLE);
+        
+        
+        this.list = new ArrayList<>();
 
         setLayout(new GridLayout());    //layout per avere un pannello a pieno schermo e disegnarmi il background
 
@@ -75,7 +76,6 @@ public class Home extends JFrame implements ActionListener {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        Dimension dim = getToolkit().getScreenSize();
         //this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         setSize(dim.width / 2, dim.height / 2);
         setLocationRelativeTo(null);
@@ -88,8 +88,12 @@ public class Home extends JFrame implements ActionListener {
         panel.add(bottoni(), gbc);
         add(panel);
         //add(bottoni(), BorderLayout.NORTH);
+        
+        /*for (Entry<Long, String> keyboard : GlobalKeyboardHook.listKeyboards().entrySet()) {
+            System.out.format("%d: %s\n", keyboard.getKey(), keyboard.getValue());
+        }*/
 
-        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
+        setIconImage(Loader.LoadImage("Immagini/Luma-Yellow-icon.png"));
 
         setUndecorated(true);   //tolgo barre x _ ed il resto
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
@@ -106,13 +110,13 @@ public class Home extends JFrame implements ActionListener {
         new SelectLevel(path);
         Log.append(path, DefaultFont.INFORMATION);
         dispose();
-        main.start();
+        main.start(1);
     }
 
     private void start() {
         dispose();
         new SelectLevel(false).reset();
-        main.start();
+        main.start(1);
     }
 
     private void esci() {
@@ -168,7 +172,7 @@ public class Home extends JFrame implements ActionListener {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(""+hex);*/
-        /*try {
+ /*try {
             //System.out.println(""+hex+" "+Integer.toHexString(Integer.parseInt(hex)));
             System.out.println(""+new String(hex.getBytes(), "UTF8"));
         } catch (UnsupportedEncodingException ex) {
@@ -176,13 +180,13 @@ public class Home extends JFrame implements ActionListener {
         }*/
         byte[] bytes = DatatypeConverter.parseHexBinary("70616d706c6f6e61");
         try {
-            String result= new String(bytes, "UTF8");
+            String result = new String(bytes, "UTF8");
             //System.out.println(""+(int)result.charAt(0));
             StringBuilder s = new StringBuilder();
             s.append(result);
             for (int i = 0; i < s.length(); i++) {
-                if((int)s.charAt(i) == 0){
-                    s.delete(i, i+1);
+                if ((int) s.charAt(i) == 0) {
+                    s.delete(i, i + 1);
                     i--;
                 } else {
                     break;
@@ -212,7 +216,7 @@ public class Home extends JFrame implements ActionListener {
     }
 
     private void spriteEstractor() {
-        JPanel panel = new JPanel();
+        /*JPanel panel = new JPanel();
         JLabel label = new JLabel("Enter a password:");
         JPasswordField pass = new JPasswordField(10);
         panel.add(label);
@@ -231,13 +235,15 @@ public class Home extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(rootPane, "Attenzione mentre si usa questa modalita\nsi potrebbe rompere l'intero progetto", "titolo", JOptionPane.ERROR_MESSAGE);
                 new SpriteEstractor();
             } else {
-                Log.append("PASSWORD: "+new String(password)+". NON RICONOSCIUTA.", DefaultFont.ERROR);
+                Log.append("PASSWORD: " + new String(password) + ". NON RICONOSCIUTA.", DefaultFont.ERROR);
             }
-        }
+        }*/
+        dispose();
+        new SpriteEstractor();
     }
 
     private void mutltigiocatore() {
-        new TypeMulti().setVisible(true);
+        new TypeMulti(main).setVisible(true);
         dispose();
     }
 
@@ -263,8 +269,9 @@ public class Home extends JFrame implements ActionListener {
             b.setBgColro(Color.GRAY);
             b.setFgCol(Color.BLACK);
             b.setFgColsel(Color.BLACK);
-            
+
             b.addActionListener(this);
+            list.add(b);
             panel.add(b, gbc);
         }
         return panel;

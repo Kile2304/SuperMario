@@ -185,14 +185,14 @@ public class TranslucentButton extends JButton implements TranslucentWidget {
         } else {
             g2d.setComposite(bgAC);
         }
-        if (this.isEnabled()) {
+        if (this.isEnabled() || isSelected()) {
             g2d.setColor(getBackground());
         } else {
             g2d.setColor(Color.LIGHT_GRAY);
         }
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.setComposite(fgAC);
-        if(isEnabled()){
+        if(isEnabled() || isSelected()){
             g2d.setColor(getForeground());
         } else {
             g2d.setColor(Color.LIGHT_GRAY);

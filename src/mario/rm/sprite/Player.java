@@ -54,7 +54,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     public Player(int x, int y, int width, int height, Handler handler, Type type) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         super(x, y, width, height, handler, type, handler.getMemoria().getPlayer());
-        Log.append("6)INIZIALIZZO IL PLAYER"+ "(number of player) "+handler.getMemoria().getPlayer().size(), DefaultFont.INFORMATION);
+        Log.append("6)INIZIALIZZO IL PLAYER" + "(number of player) " + handler.getMemoria().getPlayer().size(), DefaultFont.INFORMATION);
         grow = false;   //INDICA SE E' GRANDE O PICCOLO
 
         immortal = false;   //QUANDO VIENE COLPITO HA UN TOT DI TEMPO PER SCAPPARE DAL NEMICO
@@ -72,7 +72,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     /**
      *
-     * @return IMOSTA A POSSO USARE IL TUBO
+     * IMOSTA A POSSO USARE IL TUBO
      */
     @Override
     public void setTeleport() {
@@ -81,8 +81,8 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     /**
      *
-     * @param direzione
-     * @return IMPOSTO LA DIREZIONE
+     * @param direzione direione da impostare
+     * 
      */
     @Override
     public void setDirezione(int direzione) {
@@ -91,7 +91,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     /**
      *
-     * @return AGGIORNA LA SUA POSIZIONE, INOLTRE GESTISCE: GRAVITA, SALTO,
+     * AGGIORNA LA SUA POSIZIONE, INOLTRE GESTISCE: GRAVITA, SALTO,
      * COLLISIONI CON NEMICI/TILES, MORTE, RIPRODUZIONI SUONI, RICHIAMO CAMBIO
      * DI LIVELLO...
      */
@@ -101,6 +101,16 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
         Thread[] t = new Thread[2];
 
+        boolean dieOnCollide = false;
+        
+        if(x < handler.getPlayer().get(0).getX() - SuperMario.WIDTH / 2){
+            x = handler.getPlayer().get(0).getX() - SuperMario.WIDTH / 2;
+            dieOnCollide=true;
+        } else if(x > handler.getPlayer().get(0).getX() + SuperMario.WIDTH / 2 - width){
+            x = handler.getPlayer().get(0).getX() + SuperMario.WIDTH / 2 - width;
+            dieOnCollide = true;
+        }
+        
         t[0] = new Thread() {
             @Override
             public void run() {
@@ -109,7 +119,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
                     int tileX = tile.get(i).getX();
 
-                    if (tileX <= x + width * 3 && tileX >= x - width * 2 && tile.get(i).getY() >= y - height * 2 && tile.get(i).getY() <= y + height * 3) {
+                    //if (tileX <= x + width * 3 && tileX >= x - width * 2 && tile.get(i).getY() >= y - height * 2 && tile.get(i).getY() <= y + height * 3) {
                         Type tileType = tile.get(i).getType();
                         Rectangle bounds = tile.get(i).getBounds();
 
@@ -215,9 +225,9 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
                                     if (!jumping) { //SE NON STA' SALTANDO
                                         if (velX != 0) {    //SE LA VELOCITA' E' DIVERSA DA 0
-                                            lastMove = Move.WALK;
+                                            actualMove = Move.WALK;
                                         } else {
-                                            lastMove = Move.STAND;
+                                            actualMove = Move.STAND;
                                         }
                                     }
 
@@ -236,7 +246,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                                 }
                             }
                         }
-                    }
+                    //}
                 }
             }
         };
@@ -250,14 +260,33 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                         if (getBoundsBottom().intersects(enemy.get(i).getBoundsTop())) { //INTERSEZIONE PARTE BASSA
                             if (enemy.get(i).isCanDie()) {
                                 enemy.get(i).die(); //IL NEMICO VIENE SCONFITTO
-                                y = enemy.get(i).getY() - height - 1;
-                                gravity = -7.2;   //SALTA IN ALTO
+                                try {
+                                    y = enemy.get(i).getY() - height - 1;
+                                } catch (IndexOutOfBoundsException e) {
+                                    y = enemy.get(enemy.size() - 1).getY() - height - 1;
+                                }
+                                gravity = -3.2;   //SALTA IN ALTO
                                 jumping = true; //DICE CHE SALTANDO
                                 falling = false;    //DICE CHE NON STA CADENDO
                                 PUNTEGGIO += 1000;  //AGGIORNO IL PUNTEGGIO
+                            } else {
+                                y = enemy.get(i).getY() - height + 1;
+                                falling = false;
+                                if (!jumping) { //SE NON STA SALTANDO
+                                    gravity = 0.0;    //AZZERO LA GRAVITA'
+                                    velY = 0;   // AZZERO LA VELOCITA' ULL'ASSE Y
+                                }
+
+                                if (!jumping) { //SE NON STA' SALTANDO
+                                    if (velX != 0) {    //SE LA VELOCITA' E' DIVERSA DA 0
+                                        actualMove = Move.WALK;
+                                    } else {
+                                        actualMove = Move.STAND;
+                                    }
+                                }
                             }
                         } else if (getBounds().intersects(enemy.get(i).getBounds())) {  //SE COLPISCE IL NEMICO CON QUALSIASI ALTRA PARTE
-                            if (!immortal && !godMode) {    //NEL CASO NON SIA IMMORTALE
+                            if (!immortal && !godMode && enemy.get(i).canHurt()) {    //NEL CASO NON SIA IMMORTALE
                                 if (!grow) {    //NEL CASO NON SIA GRANDE
                                     die();
                                 } else {    //SE ERA GRANDE
@@ -268,6 +297,22 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                                 }
                                 time = System.currentTimeMillis();  //MEMORIZZA IN CHE MOMENTO E' STATO COLPITO
                                 immortal = true;    //LO RENDE TEMPORANEAMENTE IMMORTALE
+                            } else if (!enemy.get(i).canHurt()) {
+                                if (getBoundsTop().intersects(enemy.get(i).getBoundsBottom())) {    //INTERSEZIONE PARTE ALTA
+                                    gravity = 0.0;    //AZZERO LA GRAVITA'
+                                    y = enemy.get(i).getY() + enemy.get(i).getHeight();   //LA SUA COORDINATA Y DIVIENE PARI AD LA POSIZIONE DEL TILE (Y) PIU HEIGHT del tile
+                                    falling = true; //CADENDO E' VERO
+                                } else if (getBoundsLeft().intersects(enemy.get(i).getBounds())) {
+                                    x = enemy.get(i).getX() + enemy.get(i).getWidth(); //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA del tile
+                                    if (walking) {  //SE PRIMA STAVA CAMMINANDO
+                                        walking = false;    //NON STA PIU CAMMINANDO
+                                    }
+                                } else if (getBoundsRight().intersects(enemy.get(i).getBounds())) {
+                                    x = enemy.get(i).getX() - width; //LA POSIZIONE IN X DIVENTA LA X DEL TILE MENO LA LARGHEZZA
+                                    if (walking) {  //SE PRIMA STAVA CAMMINANDO
+                                        walking = false;    //NON STA PIU CAMMINANDO
+                                    }
+                                }
                             }
                         }
                     }

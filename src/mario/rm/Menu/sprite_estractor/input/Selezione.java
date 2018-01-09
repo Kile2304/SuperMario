@@ -12,14 +12,17 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import java.awt.Robot;
+import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import mario.MainComponent;
 import mario.rm.Animation.Test;
 import mario.rm.Menu.Cell;
 import mario.rm.Menu.Griglia;
@@ -35,7 +38,7 @@ import mario.rm.utility.Log;
  *
  * @author LENOVO
  */
-public class Selezione implements MouseListener {
+public class Selezione implements MouseListener, MouseMotionListener {
 
     private Griglia g;
     private JFrame fr;
@@ -48,9 +51,8 @@ public class Selezione implements MouseListener {
 
     //private Cursor cur1;
     //private Cursor cur2;
-
     private boolean isDefaultCursor;
-    
+
     private static final Specifiche delete = new Specifiche("");
 
     public Selezione(Griglia g, JFrame fr) {
@@ -70,7 +72,9 @@ public class Selezione implements MouseListener {
 
     private void load() {
 
-        JFileChooser c = new JFileChooser(new File("src/mario/res/Immagini/extract").getAbsolutePath());
+        //JFileChooser c = new JFileChooser(new File("src/mario/res/Immagini/extract").getAbsolutePath());
+        //System.out.println(""+MainComponent.class.getClassLoader().getResource("Immagini/extract").getPath());
+        JFileChooser c = new JFileChooser(MainComponent.class.getClassLoader().getResource("Immagini/extract").getPath());
 
         int valid = c.showOpenDialog(fr);
 
@@ -79,7 +83,10 @@ public class Selezione implements MouseListener {
                 action("New");
             } catch (IOException ex) {
             }
-            BufferedImage level = new Loader().LoadImageCompletePath(c.getSelectedFile().getAbsolutePath());
+            String s = (c.getSelectedFile().getAbsolutePath());
+            System.out.println("" + s);
+            s = s.substring(s.lastIndexOf("Immagini\\extract"));
+            BufferedImage level = Loader.LoadImageCompletePath(s);
             g.loadImage(level);
         } else {
             return;
@@ -121,8 +128,8 @@ public class Selezione implements MouseListener {
                 cl.estrazione();
                 break;
             case "CREATE POINT":
-               // g.setCursor(cur2);
-                
+                // g.setCursor(cur2);
+
                 isDefaultCursor = false;
                 type = 1;
                 break;
@@ -144,11 +151,11 @@ public class Selezione implements MouseListener {
             case "Home":
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 isDefaultCursor = true;
-                Pannelli.elenco.clear();
-                Pannelli.type.setText("");
-                Pannelli.move.setSelectedIndex(0);
-                Pannelli.isPlayer.setSelected(true);
-                Pannelli.tile = null;
+                Setting.elenco.clear();
+                Setting.type.setText("");
+                Setting.move.setSelectedIndex(0);
+                Setting.isPlayer.setSelected(true);
+                Setting.tile = null;
                 fr.dispose();
                 new Home().setVisible(true);
                 break;
@@ -163,27 +170,9 @@ public class Selezione implements MouseListener {
             case "Exit":
                 System.exit(0);
             case "Info":
-                StringBuilder build = new StringBuilder();
-                try {
-                    FileReader fr = new FileReader("src/mario/res/info/infoEstrattore.html");
-                    BufferedReader br = new BufferedReader(fr);
-
-                    String temp = "";
-
-                    while ((temp = br.readLine()) != null) {
-                        build.append(temp + "\n");
-                    }
-                } catch (FileNotFoundException ex) {
-                    Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
-                }
                 JEditorPane textArea = new JEditorPane();
-                URL resourceUrl = new URL("file:"
-                        + System.getProperty("user.dir")
-                        + System.getProperty("file.separator")
-                        + //"src"+
-                        //System.getProperty("file.separator")+
-                        "src/mario/res/info/infoEstrattore.html");
-                textArea.setPage(resourceUrl);
+
+                textArea.setPage(MainComponent.class.getClassLoader().getResource("info/infoEstrattore.html"));
                 //textArea.setText(build.toString());
                 textArea.setOpaque(false);
                 JScrollPane scrollPane = new JScrollPane(textArea);
@@ -211,6 +200,12 @@ public class Selezione implements MouseListener {
                 }
             }
             break;
+            case "Righello":
+                type = 4;
+                break;
+            case "altro":
+                fr.repaint();
+                break;
         }
     }
 
@@ -227,6 +222,7 @@ public class Selezione implements MouseListener {
 
         //System.out.println("colonna: " + colonna + " riga: " + riga);
         switch (type) {
+            case 4:
             case 1: {
                 new Thread() {
                     @Override
@@ -239,7 +235,13 @@ public class Selezione implements MouseListener {
                             //riga = (e.getY() + 30 / 500 * g.getHeight()) / g.getPixel() + g.getMovY();
                             riga = (e.getY()) / g.getPixel() + g.getMovY();
                         }
-                        Punto[] p = cl.nuovoPunto(colonna, riga);
+                        //System.out.println(""+riga+" "+colonna);
+                        Punto[] p = null;
+                        if (type == 1) {
+                            p = cl.nuovoPunto(colonna, riga);
+                        } else {
+                            p = cl.nuovoPuntoRighello(colonna, riga);
+                        }
                         if (p != null) {
                             for (int i = 0; i < p.length; i++) {
                                 if (p[i] != null) {
@@ -284,28 +286,42 @@ public class Selezione implements MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e
-    ) {
+    public void mousePressed(MouseEvent e) {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e
-    ) {
+    public void mouseReleased(MouseEvent e) {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e
-    ) {
+    public void mouseEntered(MouseEvent e) {
     }
 
     @Override
-    public void mouseExited(MouseEvent e
-    ) {
+    public void mouseExited(MouseEvent e) {
     }
 
     public void repaint() {
         fr.repaint();
         fr.revalidate();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        int colonna = (e.getX()) / g.getPixel() + g.getMovX();
+        int riga = 0;
+        if (isDefaultCursor) {
+            riga = (e.getY()) / g.getPixel() + g.getMovY();
+        } else {
+            //riga = (e.getY() + 30 / 500 * g.getHeight()) / g.getPixel() + g.getMovY();
+            riga = (e.getY()) / g.getPixel() + g.getMovY();
+        }
+        SpriteEstractor.coordinate.setText("C:" + colonna + " R:" + riga + " X:" + e.getX() + " Y:" + e.getY());
+        //SpriteEstractor.coordinate.repaint();
     }
 
 }

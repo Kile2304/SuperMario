@@ -83,7 +83,7 @@ public class Memoria {
     }
 
     public void carica() {
-        Thread[] t = new Thread[7];
+        Thread[] t = new Thread[3];
         Log.append("5)CARICO LE ANIMAZIONI IN MEMORIA", DefaultFont.INFORMATION);
 
         //String indirizzo = "C:\\Users\\LENOVO\\Christian\\Scuola\\supermario\\SuperMario_1\\src\\Animazioni";
@@ -93,12 +93,12 @@ public class Memoria {
          *
          */
         t[0] = new Thread(() -> {
-            String path = indirizzo + "enemy/koompa";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
+            String path = indirizzo + "enemy/";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
             getAnim(path, enemy);
         });
         t[0].start();
 
-        t[1] = new Thread(() -> {
+        /*t[1] = new Thread(() -> {
             String path = indirizzo + "enemy/tartosso"; //CARICO IN MEMORIA LE IMMAGNI TARTOSSO
             getAnim(path, enemy);
         });
@@ -120,21 +120,21 @@ public class Memoria {
             String path = indirizzo + "enemy/boo";  //CARICO IN MEMORIA LE IMMAGINI DEL FANTASMINO
             getAnim(path, enemy);
         });
-        t[4].start();
+        t[4].start();*/
 
-        t[5] = new Thread(() -> {
-            String path = indirizzo + "player/luigi";   //CARICO IN MEMORIA LE IMMAGINI DEL PLAYER
+        t[1] = new Thread(() -> {
+            String path = indirizzo + "player/";   //CARICO IN MEMORIA LE IMMAGINI DEL PLAYER
             getAnim(path, player);
         });
-        t[5].start();
+        t[1].start();
 
-        t[6] = new Thread(() -> {
+        t[2] = new Thread(() -> {
             String path = indirizzo;    // CARICO IN MEMORIA LE IMMAGINI TILES
             getAnim(path + "Tile/other", tiles);
             getAnim(path + "Tile/unlockable", tiles);
-            //getAnim(path + "Tile/terrain", terreni);
+            getAnim(path + "Tile/terrain", terreni);
         });
-        t[6].start();
+        t[2].start();
         /*t[7] = new Thread(new Runnable() {
             public void run() {
                 String path = indirizzo + "/Tile/terrain/ice";    // CARICO IN MEMORIA LE IMMAGINI TILES

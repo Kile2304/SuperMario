@@ -245,7 +245,7 @@ public class Preview {
             } else {
                 Anim an = (Anim) ob;
                 if (an != null) {
-                    cl.add(new Cell(type, an.getImage(Move.WALK, Direction.RIGHT), ""));
+                    cl.add(new Cell(type, an.getImage(Move.WALK, Direction.RIGHT, Move.WALK, Direction.RIGHT), ""));
                 } else {
                     Log.append("Anim = null", DefaultFont.INFORMATION);
                 }

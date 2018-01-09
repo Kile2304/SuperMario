@@ -36,6 +36,7 @@ public class MemoriaAC {
     private static ArrayList<Tile> tiles;
     private static ArrayList<Tile> unlockable;
     private static ArrayList<Tile> terreni;
+    private static ArrayList<Anim> bullet;
 
     private String[] audio = {"nsmb_world3-C.mid", "nsmb_bowser_jr_tower.mid"};
 
@@ -65,11 +66,12 @@ public class MemoriaAC {
         tiles = new ArrayList<>();  //ELENCO IMMAGINI TILESF
         unlockable = new ArrayList<>();     //IMMAGINI CHE SI POSSONO SBLOCCARE
         terreni = new ArrayList<>();
+        bullet = new ArrayList<>();
 
     }
 
     public void carica() {
-        Thread[] t = new Thread[5];
+        Thread[] t = new Thread[6];
         Log.append("5)CARICO LE ANIMAZIONI IN MEMORIA", DefaultFont.INFORMATION);
 
         /**
@@ -102,6 +104,11 @@ public class MemoriaAC {
             getAnim(path, unlockable);
         });
         t[4].start();
+        t[5] = new Thread(() -> {
+            String path = indirizzo + "enemy/missile";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
+            getAnim(path, bullet);
+        });
+        t[5].start();
 
         for (int i = 0; i < t.length; i++) {
             try {
@@ -243,6 +250,9 @@ public class MemoriaAC {
     public ArrayList<Tile> getTerreni() {
         return terreni;
     }
+    public ArrayList<Anim> getBullet() {
+        return bullet;
+    }
 
     public void clean() {
         enemy.clear();
@@ -250,5 +260,6 @@ public class MemoriaAC {
         tiles.clear();
         terreni.clear();
         unlockable.clear();
+        bullet.clear();
     }
 }

@@ -1,5 +1,6 @@
 package mario.rm.sprite.tiles;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -23,7 +24,7 @@ import mario.rm.identifier.Type;
  * ITEM... NE PERMETTE IL DISEGNO SULLO SCHERMO, E L'EVENTUALE MOVIMENTO O
  * AZIONE SPECIALE
  */
-public abstract class Tiles implements Size, Cloneable{    //sarebbe meglio astraatta per estensione ad altre classi
+public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio astraatta per estensione ad altre classi
 
     protected int x;  //COORDINATA IN CUI SI TROVA(X)
     protected int y;  //COORDINATA IN CUI SI TROVA(Y)
@@ -88,7 +89,7 @@ public abstract class Tiles implements Size, Cloneable{    //sarebbe meglio astr
         this.numSerieX = 1;
         this.collide = collide;
     }
-    
+
     public Tiles(int x, int y, int width, int height, Handler handler, Type type, boolean collide, String part, boolean damage, BufferedImage[] temp) {
         this.x = x;
         this.y = y;
@@ -102,7 +103,7 @@ public abstract class Tiles implements Size, Cloneable{    //sarebbe meglio astr
 
         this.damage = damage;
         //System.out.println(""+type.name());
-        
+
         this.temp = temp;
 
         numImma = temp != null ? temp.length : 0;
@@ -159,7 +160,13 @@ public abstract class Tiles implements Size, Cloneable{    //sarebbe meglio astr
                 g.drawImage(temp[mX], x + (width * i), y, width, height, null);   //DISEGNO L'IMMAGINE
             }
         }
-
+        /*g.setColor(Color.WHITE);
+        g.drawRect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+        g.drawRect(getBounds().x+1, getBounds().y+1, getBounds().width-1, getBounds().height-1);
+        g.drawRect(getBounds().x+2, getBounds().y+2, getBounds().width-2, getBounds().height-2);
+        g.drawRect(getBounds().x+3, getBounds().y+3, getBounds().width-3, getBounds().height-3);*/
+ /*if(numSerieX > 1)
+            System.out.println("Width: "+width+" numero: "+numSerieX+" = "+((width * numSerieX) - SuperMario.adaptWidth(20)) +" dichiarata: "+getBounds().width);*/
     }
 
     public Rectangle getBounds() {   //RITORNA L'AREA OCCUPANTE LO SPRITE SUL PIANO
@@ -227,9 +234,9 @@ public abstract class Tiles implements Size, Cloneable{    //sarebbe meglio astr
     public String getTile() {
         return partTile;
     }
-    
+
     @Override
-    public Tiles clone(){
+    public Tiles clone() {
         /*Tiles s = null;
         try {
             s = getClass().getDeclaredConstructor(Integer.class, Integer.class, Integer.class, Integer.class,

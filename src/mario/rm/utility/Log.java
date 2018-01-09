@@ -38,10 +38,14 @@ public class Log extends JFrame implements KeyListener {
 
     private static StyledDocument doc;
 
-    private JTextArea logCommand;   //zona per inserire i comandi
+    private final JTextArea logCommand;   //zona per inserire i comandi
 
-    private MainComponent main;
+    private final MainComponent main;
 
+    /**
+     * <b>viene utilizzato, per inizializzare la schermata di log</b>
+     * @param main questa classe deve contenere l'attributo SuperMario
+     */
     public Log(MainComponent main) {
         super(TITLE);
 
@@ -84,7 +88,7 @@ public class Log extends JFrame implements KeyListener {
         logCommand.getDocument().putProperty("filterNewlines", Boolean.TRUE);   //SI PUO LAVORARE SOLO SU UNA RIGA
 
         JScrollPane scrollLog = new JScrollPane(logConsole);
-        scrollLog.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollLog.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollLog.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         Border border = BorderFactory.createLineBorder(Color.BLACK);
@@ -132,6 +136,11 @@ public class Log extends JFrame implements KeyListener {
         }
     }
 
+    /**
+     *
+     * @param text Testo da aggiungere al log
+     * @param defFont font da usare (colore, stile, dimensione...)
+     */
     public static final void append(String text, DefaultFont defFont) { //UGUALE ALL'ALTRO APPEND MA LO STYLE SI BASA SU UN FONT PERSONALIZZATO
         try {
             Style style = logConsole.addStyle(defFont.getFont().getFontName(), null);
@@ -152,6 +161,11 @@ public class Log extends JFrame implements KeyListener {
         }
     }
 
+    /**
+     *
+     * @param e eccezione creata dall'errore
+     * @return ritorna una stringa dettagliata sull'errore e sui richiami delle funzioni
+     */
     public static final String stackTraceToString(Throwable e) {    //INSERISCE IN UNA STRINGA GLI ERRORI
         StringBuilder sb = new StringBuilder();
         for (StackTraceElement element : e.getStackTrace()) {

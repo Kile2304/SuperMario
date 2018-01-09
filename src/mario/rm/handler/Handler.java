@@ -2,8 +2,6 @@ package mario.rm.handler;
 
 import java.awt.Graphics;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mario.rm.SuperMario;
 import mario.rm.input.Sound;
 import mario.rm.sprite.Player;
@@ -13,6 +11,8 @@ import mario.rm.input.Loader;
 import mario.rm.input.MemoriaAC;
 import mario.rm.input.Reader;
 import mario.rm.sprite.enemy.Boo;
+import mario.rm.sprite.enemy.Bullet;
+import mario.rm.sprite.enemy.Cannone;
 import mario.rm.sprite.enemy.Enemy;
 import mario.rm.sprite.enemy.Plant;
 import mario.rm.sprite.enemy.Tartosso;
@@ -41,9 +41,9 @@ public class Handler implements Reader {
 
     /**
      *
-     * @return ELENCO DI LIVELLI DA CARICARE, IN ORDINE DAL PRIMO ALL'ULTIMO
+     *  level - ELENCO DI LIVELLI DA CARICARE, IN ORDINE DAL PRIMO ALL'ULTIMO
      */
-    private final SelectLevel level;
+    public final SelectLevel level;
 
     private final MemoriaAC memoria;
 
@@ -68,6 +68,8 @@ public class Handler implements Reader {
         level = new SelectLevel(false);
 
         memoria = new MemoriaAC();    //CLASSE DOVE MEMORIZZO TUTTE LE IMMAGINI
+        
+        Bullet.bullet = memoria.getBullet();
 
         next = false;   //INDICA SE DEVE CAMBIARE LIVELLO
 
@@ -126,6 +128,8 @@ public class Handler implements Reader {
                         } else {
                             enemy.get(i).die(); //ALTRIMENTI LO "UCCIDE"
                         }
+                    } else if(enemy.get(i) instanceof Bullet){  //SE E' UN PROIETTILE LO ELIMINA COME SE FOSSE ANDATO FUORI MAPPA
+                        enemy.get(i).die();
                     }
                 }
             }
@@ -251,6 +255,10 @@ public class Handler implements Reader {
     public void addTiles(Tiles til) {    //AGGIUNGE UN TILE ALL'ELENCO
         tiles.push(til);
     }
+    
+    public void addEnemy(Enemy en){
+        enemy.add(en);
+    }
 
     /**
      *
@@ -277,7 +285,9 @@ public class Handler implements Reader {
                     break;
                 case PLAYER:
                     System.out.println(""+unlockable);
-                    player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, unlockable));   //SE PIXEL BLU è UN PLAYER
+                    for (int i = 0; i < SuperMario.playerNumber; i++) {
+                        player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, unlockable));   //SE PIXEL BLU è UN PLAYER
+                    }
                     break;
                 case COIN:
                     tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getUnlockable(), false, tile, false)); //SE E GIALLO E' UNA MONETA
@@ -357,6 +367,11 @@ public class Handler implements Reader {
                     break;
                 case UP1:
                     tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getTiles(), false, tile, false));   //SE E NERO E' NORMALE SOLIDO
+                    break;
+                case CANNONE:
+                    x0 -= SuperMario.standardWidth;
+                    y0 -= SuperMario.standardHeight;
+                    enemy.add(new Cannone(x0, y0, SuperMario.standardWidth * 2, SuperMario.standardHeight * 2, this, Type.CANNONE, false, Type.MISSILE));
                     break;
                 default:
                     break;

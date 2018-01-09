@@ -1,40 +1,40 @@
-+[h:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
 !UNLOCKABLE_COIN|
 §UPLEFT*
 !COIN|◘unlockableCoin.anim○
 <131><10> <196><75>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\terrain\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPLEFT*
 ◘mushroomPlatform-left.anim○
 <196><140> <261><205>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\terrain\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPCENTER*
 ◘mushroomPlatform-center.anim○
 <261><140> <326><205>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\terrain\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPRIGHT*
 ◘mushroomPlatform-right.anim○
 <326><140> <391><205>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\unlockable\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\unlockable\tiles.png]
 !COIN|
 §UPLEFT*
 ◘coin.anim○
 <462><16> <514><67>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\tiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
 !SPINE|
 §UPLEFT*
 ◘spine.anim○
 <134><273> <193><332>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\player\luigiAnim.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
 !PLAYER_LUIGI|
 {WALK}
 ♣RIGHT♦
@@ -72,7 +72,7 @@
 <211><387> <228><424>
 <252><387> <268><424>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\player\luigiAnim.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
 !PLAYER_LUIGI|
 {JUMP}
 ♣RIGHT♦
@@ -111,7 +111,7 @@
 <1095><335> <1075><313>
 <1122><344> <1100><323>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\player\luigiAnim.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\player\luigiAnim.png]
 !PLAYER_LUIGI|
 {STAND}
 ♣RIGHT♦
@@ -166,7 +166,7 @@
 <505><497> <489><465>
 <529><497> <511><465>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\animazioneTiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\animazioneTiles.png]
 !UNLOCKABLE|
 §UPLEFT*
 ◘unlockable-upleft.anim○
@@ -187,7 +187,7 @@
 <975><260> <912><197>
 <1040><260> <977><197>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\animazioneTiles.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\animazioneTiles.png]
 !SOLID|
 §UPLEFT*
 ◘solid-upleft.anim○
@@ -208,7 +208,7 @@
 <975><64> <912><3>
 <1040><64> <977><3>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\tile\other\aura dragonball.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\aura dragonball.png]
 !KI|
 §UPLEFT*
 ◘ki-upleft.anim○
@@ -217,7 +217,7 @@
 <266><212> <194><131>
 <357><213> <286><133>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\boo.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\boo.png]
 !BOO|
 {WALK}
 ♣LEFT♦
@@ -244,7 +244,7 @@
 <659><316> <555><218>
 <789><315> <686><219>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\boo.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\boo.png]
 !BOO|
 {STAND}
 ♣LEFT♦
@@ -256,7 +256,7 @@
 <528><531> <410><433>
 <658><532> <545><433>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\Tartosso.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\Tartosso.png]
 !TARTOSSO|
 {WALK}
 ♣LEFT♦
@@ -275,7 +275,7 @@
 <814><350> <692><202>
 <978><348> <866><199>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\Tartosso.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\Tartosso.png]
 !TARTOSSO|
 {DIE}
 ♣LEFT♦
@@ -324,7 +324,7 @@
 <846><2706> <698><2632>
 <1011><2706> <862><2631>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\res\Immagini\extract\enemy\Tartosso.png]
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\enemy\Tartosso.png]
 !TARTOSSO|
 {RUN}
 ♣LEFT♦
@@ -400,4 +400,298 @@
 <307><5240> <194><5092>
 <474><5237> <362><5094>
 <640><5236> <535><5094>
+
++[C:\Users\Matteo\Desktop\Super-Mario-origin\src\mario\res\Immagini\extract\enemy\43908.png]
+!CANNONE|
+{WALK}
+♣LEFT♦
+☼normal♪
+◘cannone-stand.anim○
+<66><88> <1><8>
+<144><87> <70><7>
+<233><87> <150><5>
+<330><87> <238><4>
+<435><87> <335><2>
+<93><176> <1><93>
+<185><176> <97><94>
+<267><176> <189><95>
+<343><176> <271><97>
+<414><176> <347><98>
+<66><260> <2><183>
+<135><260> <71><183>
+<204><260> <138><183>
+<274><260> <208><183>
+<349><260> <279><182>
+<422><260> <354><182>
+<69><344> <1><266>
+<139><344> <75><266>
+<208><344> <144><266>
+<277><344> <214><266>
+<346><344> <281><266>
+<66><428> <1><350>
+<135><428> <70><350>
+
++[C:\Users\Matteo\Desktop\Super-Mario-origin\src\mario\res\Immagini\extract\enemy\43908.png]
+!MISSILE|
+{WALK}
+♣LEFT♦
+☼normal♪
+◘missile-stand.anim○
+<73><505> <1><454>
+<151><505> <78><454>
+<227><505> <155><454>
+<305><505> <232><454>
+<383><506> <309><454>
+<74><564> <1><511>
+<151><563> <78><511>
+<228><564> <155><511>
+<305><564> <232><512>
+<384><563> <309><512>
+<75><622> <1><571>
+<152><622> <78><571>
+<230><622> <155><571>
+<306><623> <232><571>
+<383><623> <309><570>
+<74><682> <1><629>
+<151><681> <78><629>
+<228><682> <155><629>
+<306><681> <232><630>
+<75><740> <1><689>
+<151><740> <78><689>
+<229><741> <155><689>
+<306><740> <232><689>
+<387><742> <309><689>
+<75><800> <1><747>
+<152><800> <78><747>
+<229><801> <155><747>
+<306><801> <232><748>
+<389><801> <309><748>
+<74><858> <1><807>
+<152><859> <78><807>
+<230><859> <155><807>
+<306><859> <232><807>
+<384><859> <309><807>
+<74><918> <1><865>
+<152><918> <78><865>
+<228><918> <155><865>
+<306><918> <232><865>
+<386><919> <309><866>
+<74><976> <1><924>
+<151><977> <78><924>
+<228><977> <155><924>
+<306><976> <232><924>
+<384><977> <309><924>
+<74><1035> <1><983>
+<149><1037> <78><982>
+<229><1035> <155><982>
+<306><1036> <232><982>
+<386><1037> <309><982>
+<73><1096> <1><1042>
+<152><1094> <78><1042>
+<229><1096> <155><1042>
+<306><1096> <232><1042>
+<384><1096> <309><1042>
+<74><1155> <1><1101>
+<150><1155> <78><1100>
+<229><1155> <155><1100>
+<305><1155> <232><1100>
+<384><1158> <309><1100>
+<74><1213> <1><1160>
+<151><1213> <78><1159>
+<229><1213> <155><1159>
+<306><1213> <232><1159>
+<384><1213> <309><1160>
+<75><1272> <1><1217>
+<153><1271> <78><1217>
+<228><1271> <155><1217>
+<305><1271> <232><1216>
+<385><1274> <309><1215>
+<73><1331> <1><1274>
+<151><1330> <78><1274>
+<228><1329> <155><1275>
+<305><1329> <232><1275>
+<384><1328> <309><1275>
+<74><1387> <1><1333>
+<149><1387> <78><1332>
+<230><1388> <154><1332>
+<306><1386> <232><1333>
+<386><1389> <309><1333>
+<75><1445> <1><1390>
+<152><1444> <78><1390>
+<230><1445> <155><1390>
+<307><1444> <232><1391>
+<384><1444> <309><1391>
+<75><1503> <1><1450>
+<152><1503> <78><1450>
+<229><1504> <155><1449>
+<306><1504> <232><1450>
+<387><1505> <309><1449>
+<73><1562> <1><1506>
+<152><1563> <78><1507>
+<227><1562> <155><1508>
+<305><1563> <232><1508>
+<384><1563> <309><1508>
+<75><1621> <1><1567>
+<150><1620> <78><1567>
+<227><1620> <155><1567>
+<306><1620> <232><1566>
+<383><1620> <309><1565>
+<75><1681> <1><1624>
+<153><1681> <78><1624>
+<227><1682> <155><1625>
+<306><1680> <232><1626>
+<384><1679> <309><1626>
+<73><1737> <1><1685>
+<153><1738> <78><1685>
+<229><1738> <155><1685>
+<307><1739> <232><1685>
+<384><1740> <309><1685>
+<75><1798> <1><1742>
+<152><1798> <78><1741>
+<229><1796> <155><1742>
+<305><1797> <232><1742>
+<386><1798> <309><1743>
+<74><1855> <1><1802>
+<151><1854> <78><1802>
+<228><1855> <155><1802>
+<306><1855> <232><1802>
+<386><1858> <309><1802>
+<74><1916> <1><1860>
+<151><1915> <78><1860>
+<228><1914> <155><1860>
+<306><1913> <232><1860>
+<385><1916> <309><1861>
+<75><1973> <0><1919>
+
++[C:\Users\Matteo\Desktop\Super-Mario-origin\src\mario\res\Immagini\extract\enemy\43908.png]
+!MISSILE|
+{WALK}
+♣RIGHT♦
+☼normal♪
+◘missile-walk.anim○
+<73><505> <1><454>
+<151><505> <78><454>
+<227><505> <155><454>
+<305><505> <232><454>
+<383><506> <309><454>
+<74><564> <1><511>
+<151><563> <78><511>
+<228><564> <155><511>
+<305><564> <232><512>
+<384><563> <309><512>
+<75><622> <1><571>
+<152><622> <78><571>
+<230><622> <155><571>
+<306><623> <232><571>
+<383><623> <309><570>
+<74><682> <1><629>
+<151><681> <78><629>
+<228><682> <155><629>
+<306><681> <232><630>
+<75><740> <1><689>
+<151><740> <78><689>
+<229><741> <155><689>
+<306><740> <232><689>
+<387><742> <309><689>
+<75><800> <1><747>
+<152><800> <78><747>
+<229><801> <155><747>
+<306><801> <232><748>
+<389><801> <309><748>
+<74><858> <1><807>
+<152><859> <78><807>
+<230><859> <155><807>
+<306><859> <232><807>
+<384><859> <309><807>
+<74><918> <1><865>
+<152><918> <78><865>
+<228><918> <155><865>
+<306><918> <232><865>
+<386><919> <309><866>
+<74><976> <1><924>
+<151><977> <78><924>
+<228><977> <155><924>
+<306><976> <232><924>
+<384><977> <309><924>
+<74><1035> <1><983>
+<149><1037> <78><982>
+<229><1035> <155><982>
+<306><1036> <232><982>
+<386><1037> <309><982>
+<73><1096> <1><1042>
+<152><1094> <78><1042>
+<229><1096> <155><1042>
+<306><1096> <232><1042>
+<384><1096> <309><1042>
+<74><1155> <1><1101>
+<150><1155> <78><1100>
+<229><1155> <155><1100>
+<305><1155> <232><1100>
+<384><1158> <309><1100>
+<74><1213> <1><1160>
+<151><1213> <78><1159>
+<229><1213> <155><1159>
+<306><1213> <232><1159>
+<384><1213> <309><1160>
+<75><1272> <1><1217>
+<153><1271> <78><1217>
+<228><1271> <155><1217>
+<305><1271> <232><1216>
+<385><1274> <309><1215>
+<73><1331> <1><1274>
+<151><1330> <78><1274>
+<228><1329> <155><1275>
+<305><1329> <232><1275>
+<384><1328> <309><1275>
+<74><1387> <1><1333>
+<149><1387> <78><1332>
+<230><1388> <154><1332>
+<306><1386> <232><1333>
+<386><1389> <309><1333>
+<75><1445> <1><1390>
+<152><1444> <78><1390>
+<230><1445> <155><1390>
+<307><1444> <232><1391>
+<384><1444> <309><1391>
+<75><1503> <1><1450>
+<152><1503> <78><1450>
+<229><1504> <155><1449>
+<306><1504> <232><1450>
+<387><1505> <309><1449>
+<73><1562> <1><1506>
+<152><1563> <78><1507>
+<227><1562> <155><1508>
+<305><1563> <232><1508>
+<384><1563> <309><1508>
+<75><1621> <1><1567>
+<150><1620> <78><1567>
+<227><1620> <155><1567>
+<306><1620> <232><1566>
+<383><1620> <309><1565>
+<75><1681> <1><1624>
+<153><1681> <78><1624>
+<227><1682> <155><1625>
+<306><1680> <232><1626>
+<384><1679> <309><1626>
+<73><1737> <1><1685>
+<153><1738> <78><1685>
+<229><1738> <155><1685>
+<307><1739> <232><1685>
+<384><1740> <309><1685>
+<75><1798> <1><1742>
+<152><1798> <78><1741>
+<229><1796> <155><1742>
+<305><1797> <232><1742>
+<386><1798> <309><1743>
+<74><1855> <1><1802>
+<151><1854> <78><1802>
+<228><1855> <155><1802>
+<306><1855> <232><1802>
+<386><1858> <309><1802>
+<74><1916> <1><1860>
+<151><1915> <78><1860>
+<228><1914> <155><1860>
+<306><1913> <232><1860>
+<385><1916> <309><1861>
+<75><1973> <0><1919>
 

@@ -23,6 +23,7 @@ import mario.rm.Menu.Componenti.Checkable;
 import mario.rm.Menu.Componenti.Scrollable;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
+import mario.rm.utility.Punto;
 
 /**
  *
@@ -187,7 +188,6 @@ public class Griglia extends JPanel {
             if (s == null && !isEraser) {
                 return;
             }
-            
             livello.addElement(colonna, riga, s);
         } else {
             if(livello.getMappa()[colonna][riga] != null){
@@ -340,8 +340,33 @@ public class Griglia extends JPanel {
         int pix = 64;
 
         Cell[][] elenco = livello.getMappa();
-
-        BufferedImage image = new BufferedImage(elenco.length * pix, elenco[0].length * pix, BufferedImage.TYPE_INT_RGB);
+        
+        Punto min = new Punto(elenco.length, elenco[0].length);
+        Punto max = new Punto(0, 0);
+        //calcolo salvo spazio
+        for (int i = 0; i < elenco[0].length; i++) {
+            boolean notNull = true;
+            int xMin = 0, xMax = 0, yMin = 0,yMax = 0;
+            for (int j = 0; j < elenco.length; j++) {
+                if(elenco[j][i] != null){
+                    if(xMin > j) xMin = j;
+                    if(xMax < j) xMax = j;
+                    if(yMin > i) yMin = i;
+                    if(yMax < i) yMax = i;
+                    notNull = false;
+                }
+            }
+            if(!notNull){
+                if(min.getX() > xMin) min.setX(xMin);
+                if(max.getX() < xMax) max.setX(xMax);
+                if(min.getY() > yMin) min.setY(yMin);
+                if(max.getY() < yMax) max.setY(yMax);
+            }
+        }
+        //fine calcolo salvo spazio
+        System.out.println("xMin: "+min.getX()+" xMax: "+max.getX()+" yMin: "+min.getY()+" yMax: "+max.getY());
+        
+        BufferedImage image = new BufferedImage((max.getX() - min.getX()) * pix, (max.getY() - min.getY()) * pix, BufferedImage.TYPE_INT_RGB);
 
         JFileChooser c = null;
         /*if (MainComponent.jar.isFile()) {
@@ -392,8 +417,8 @@ public class Griglia extends JPanel {
             Graphics2D g = image.createGraphics();
 
             //Color color = new Color(255, 255, 255);
-            for (int i = 0; i < elenco[0].length; i++) {
-                for (int j = 0; j < elenco.length; j++) {
+            for (int i = min.getY(); i < max.getY(); i++) {
+                for (int j = min.getX(); j < max.getX(); j++) {
                     if (elenco[j][i] != null && elenco[j][i].getTerrain() || elenco[j][i] != null && !elenco[j][i].getCollider()) {
                         g.setComposite(AlphaComposite.Src);
 

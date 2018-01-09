@@ -34,7 +34,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
     private static Griglia g;
     private final JFrame fr;
 
-    ArrayList<Punto> punto;
+    private ArrayList<Punto> punto;
 
     private static final int spostamento = 5;
 

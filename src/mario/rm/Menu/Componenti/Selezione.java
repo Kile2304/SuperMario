@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
-import mario.rm.Menu.sprite_estractor.input.Pannelli;
+import mario.rm.Menu.sprite_estractor.input.Setting;
 import mario.rm.utility.Punto;
 
 /**
@@ -113,7 +113,7 @@ public class Selezione implements MouseListener, ActionListener, MouseMotionList
             case "Home":
                 ed.dispose();
                 //new Home();   creare metodo new home
-                Pannelli.elenco.clear();
+                Setting.elenco.clear();
                 break;
             case "Exit":
                 System.exit(0);

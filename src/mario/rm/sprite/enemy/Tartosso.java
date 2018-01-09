@@ -34,13 +34,13 @@ public class Tartosso extends Enemy {
     @Override
     public boolean isEndDie() {//NECCESSARIO RIFARE LA CLASSE ANIM COME LA CLASSE TILE (HASHMAP<>)
         if (isDie) {    //CONTINUA L'ANIMAZIONE DI MORTE
-            if (animazione.isEndDie() && !test) {
-                lastMove = Move.RUN;
+            if (animazione.isEndDie(actualMove, ma.getIndex()) && !test) {
+                actualMove = Move.RUN;
                 test = true;
                 //animazione.getImage(lastMove, lastDirection);
-            } else if (animazione.isEndDie() && test) {   //CONTINUA L'ANIMAZIONE DI RESSURREZZIONE
+            } else if (animazione.isEndDie(actualMove, ma.getIndex()) && test) {   //CONTINUA L'ANIMAZIONE DI RESSURREZZIONE
                 velX = type.getVelX();
-                lastMove = Move.WALK;
+                actualMove = Move.WALK;
                 isDie = false;
             }
         }
@@ -55,7 +55,7 @@ public class Tartosso extends Enemy {
     public void die() {
         if (!isDie) {
             test = false;
-            lastMove = Move.DIE;
+            actualMove = Move.DIE;
             isDie = true;
             velX = 0;
         } else {

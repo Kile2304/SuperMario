@@ -1,8 +1,11 @@
 package mario.rm.Menu.editor;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -18,6 +21,7 @@ import mario.rm.Menu.Componenti.Checkable;
 import static mario.rm.Menu.Componenti.Checkable.elenco;
 import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.Menu.Specifiche;
+import mario.rm.SuperMario;
 import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Type;
 import mario.rm.input.MemoriaAC;
@@ -34,19 +38,51 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     private Editor ed;
 
     private static boolean collider;
+    
+    private GridBagConstraints gbc;
+    
+    private Insets primo;
+    private Insets secondo;
+    
+    private int HEIGHT;
 
-    public Pannelli(Editor ed, MemoriaAC memoria) {
+    public Pannelli(Editor ed, MemoriaAC memoria, int height) {
         super();
         this.ed = ed;
+        
+        this.HEIGHT = height;
         
         this.memoria = memoria;
 
         collider = false;
         
+        setLayout(new GridBagLayout());
+        
+        gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        
+        gbc.weightx = 1;
+        gbc.weighty = 0.9;
+        
+        gbc.fill = GridBagConstraints.BOTH;
+
+        int w = (int) (5.0 / 960.0 * Editor.adaptedWidth * 2);
+        int h = (int) (5.0 / 540.0 * height);
+        
+        // System.out.println(""+w+" "+h);
+        primo = new Insets(h, w, h, w); 
+        gbc.insets = primo;    //gli dico di mettermi uno spazio fra ogni bottone
+        
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         
         JButton indietro = initColor();
         indietro.setText("INDIETRO");
-        indietro.setMaximumSize(new Dimension(100, 100));
+        //indietro.setMaximumSize(new Dimension(100, 100));
         indietro.addActionListener((ActionEvent e) -> {
             pulisci();
             base();
@@ -55,7 +91,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         add(indietro);
         JButton gomma = initColor();
         gomma.setText("GOMMA");
-        gomma.setMaximumSize(new Dimension(100, 100));
+        //gomma.setMaximumSize(new Dimension(100, 100));
         gomma.addActionListener((ActionEvent e) -> {
             elenco.stream().forEach((specifiche) -> {
                 specifiche.unCheck();
@@ -112,6 +148,9 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void base() {
 
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        
         Specifiche enemy = new Specifiche("NEMICI");
         enemy.getButton().addActionListener((ActionEvent e) -> {
             nemici();
@@ -133,7 +172,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         tile.getButton().addActionListener((ActionEvent e) -> {
             terreni("/tile/other", false);
 
-            BufferedImage img = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+            BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
             for (int i = 0; i < img.getWidth(); i++) {
                 for (int j = 0; j < img.getHeight(); j++) {
                     img.setRGB(j, i, (255 & 0xFF));
@@ -142,6 +181,9 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             elenco.add(new Specifiche(Type.VOID, img, ""));
             add(elenco.get(elenco.size() - 1).getButton());
             elenco.get(elenco.size() - 1).getButton().addActionListener(this);
+            
+            resize(1 + elenco.size() / 2);
+            
             ed.repaint();
             ed.revalidate();
         });
@@ -150,18 +192,20 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         elenco.add(player);
         elenco.add(terreni);
         elenco.add(tile);
-        for (Specifiche specifiche : elenco) {
+        elenco.stream().forEach((specifiche) -> {
             add(specifiche.getButton());
-        }
+        });
+        System.out.println(""+2 + elenco.size() / 2+" "+2 + (elenco.size() / 2)+" "+elenco.size());
+        resize((4 + elenco.size()) / 2 + elenco.size() % 2);
 
-        resize(1 + elenco.size() / 2);
-        setLayout(new GridLayout(8, 2, 25, 25));
-
+        System.out.println(""+getPreferredSize().toString());
+        
         ed.repaint();
         ed.revalidate();
     }
 
     private void choseTerrain() {   //Ottiene in input l'elenco dei terreni e aggiunge un bottone per ogni terreno
+        gbc.gridx = 1;
         pulisci();
         String[] temp = null;
         temp = Memoria.getDirectory("Animazioni/tile/terrain");
@@ -195,6 +239,8 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void terreni(String path, boolean terr) {
         pulisci();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         ArrayList temp = new ArrayList<>();
         temp = memoria.getAnim("Animazioni" + path, temp);
         addButton(temp);
@@ -203,26 +249,42 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
                 spec.setTerrain(true);
             });
         }
+        System.out.println("asdasd"+elenco.size());
+        System.out.println(""+1 + elenco.size() / 2+" "+1 + (elenco.size() / 2));
+        resize((4 + elenco.size()) / 2 + elenco.size() % 2);
+        System.out.println(""+getPreferredSize().toString());
     }
 
     private void item() {
         pulisci();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         ArrayList temp = memoria.getUnlockable();
         //System.out.println(""+temp.size());
         addButton(temp);
+        System.out.println(""+1 + elenco.size() / 2+" "+1 + (elenco.size() / 2));
+        resize((4 + elenco.size()) / 2 + elenco.size() % 2);
+        System.out.println(""+getPreferredSize().toString());
     }
 
     private void nemici() {
         pulisci();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         ArrayList temp = memoria.getEnemy();
         addButton(temp);
+        System.out.println(""+1 + elenco.size() / 2+" "+1 + (elenco.size() / 2));
+        resize((4 + elenco.size()) / 2 + elenco.size() % 2);
     }
 
     private void player() {
         pulisci();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         ArrayList temp = memoria.getPlayer();
         addButton(temp);
-
+        System.out.println(""+1 + elenco.size() / 2+" "+1 + (elenco.size() / 2));
+        resize((4 + elenco.size()) / 2 + elenco.size() % 2);
     }
 
     private void addButton(ArrayList<Animated> temp) {  //aggiunge i bottoni partendo avendo in input Tile ed Anim
@@ -262,8 +324,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
             }
             //System.out.println(""+(4 +elenco.size()/2));
-            resize(1 + elenco.size() / 2);
-            setLayout(new GridLayout(3 + elenco.size(), 2, 25, 25));
+            //setLayout(new GridLayout(3 + elenco.size(), 2, 25, 25));
         } else {
             Log.append("Nessuno sprite trovato\n" + (Pannelli.class).getName() + "\n", DefaultFont.ERROR);
         }
@@ -272,13 +333,13 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     }
 
     private void resize(int numBottoni) {
-        final int height = numBottoni * 10;
+        final int height = numBottoni * adaptHeight(170);
 
-        //System.out.println("" + height);
-        setSize(new Dimension(300, height));
-        setPreferredSize(new Dimension(300, height));
-        setMaximumSize(new Dimension(300, height));
-        setMinimumSize(new Dimension(300, height));
+        Dimension d = new Dimension(Editor.adaptedWidth, height);
+        
+        setPreferredSize(d);
+        System.out.println("heightRefact: "+height);
+        ed.getPanelScroll().setPreferredSize(new Dimension(d.width, d.height + adaptHeight(50)));
     }
 
     public void pulisci() {
@@ -315,5 +376,16 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             }
         }
         return null;
+    }
+    
+    @Override
+    public Component add(Component c){
+        super.add(c, gbc);
+        gbc.gridx^=1;
+        gbc.gridy+=(gbc.gridx^1);
+        return null;
+    }
+    public int adaptHeight(int val){
+        return (int) ((double)val / 900 * HEIGHT);
     }
 }

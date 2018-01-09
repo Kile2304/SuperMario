@@ -29,7 +29,7 @@ public class Frame extends JFrame {
 
         setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
 
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         

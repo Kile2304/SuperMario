@@ -1,12 +1,7 @@
 package mario;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import mario.rm.Animation.Memoria;
 import mario.rm.Menu.home.Home;
 
@@ -32,7 +27,6 @@ public class MainComponent {
 
     public static Log log;
 
-    //ArrayList<Controller> contr = new ArrayList<>();
     public MainComponent() {
         
         su = null;
@@ -59,13 +53,13 @@ public class MainComponent {
 
         Log.append(jar.getAbsolutePath(), DefaultFont.INFORMATION);
 
-        Joystick.UPDATE = false;
+        Joystick.UPDATE = true;
 
         new Thread(new Joystick()).start();
 
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         /*try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -75,8 +69,8 @@ public class MainComponent {
         
     }
 
-    public void start() {
-        su = new SuperMario();
+    public void start(int player) {
+        su = new SuperMario(player);
     }
 
     public SuperMario getSuperMario() {

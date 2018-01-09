@@ -9,7 +9,7 @@ import java.io.Serializable;
 public enum Type implements Serializable {
 
     SOLID (2000, 6, 16, 0, 0), //TILE NON ATTRAVERSABILE
-    TARTOSSO (0, 0, 0, 3, 0), //NEMICO TARTOSSO
+    TARTOSSO (0, 0, 0, 2, 0), //NEMICO TARTOSSO
     SOLIDFIRE (2000, 6, 16, 0, 0), //TILE NON ATTRAVERSABILE
     SOLIDLIGHT (2000, 6, 16, 0, 0), //TILE NON ATTRAVERSABILE
     CROSSABLE (0, 0, 0, 0, 0), //TILE ATTRAVERSABILE
@@ -54,10 +54,11 @@ public enum Type implements Serializable {
     MUSHROOMPLATFORM(0, 0, 0, 0, 0),
     UNLOCKABLE_COIN(0, 0, 0, 0, 0),
     SPINE(0, 0, 0, 0, 0),
-    BULLET (0, 0, 0, 0, 0),
     BRIDGE (0, 0, 0, 0, 0),
     PLAYER_LUIGI (0, 0, 0, 0, 0),
-    KI (0, 0, 0, 0, 0);
+    KI (0, 0, 0, 0, 0),
+    CANNONE (0, 0, 0, 0, 0),
+    MISSILE (0, 0, 0, 1, 0);
     
      private int tempo;
     private int delay;

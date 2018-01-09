@@ -14,7 +14,7 @@ public class SelectLevel {
 
     private int index;
 
-    private static final String[] history = {"provetta.level"};    //livelli da cambiare con .level
+    private static final String[] history = {"riprova.level","speedTest.level", "provaBull.level", "provetta.level"};    //livelli da cambiare con .level
 
     private static final String path = "Immagini/livelli/";
 

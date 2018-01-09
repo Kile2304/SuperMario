@@ -2,8 +2,6 @@ package mario.rm.Menu.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -43,29 +41,28 @@ public class Editor extends JFrame implements Scrollable {
     
     private JScrollPane gri;
     
+    private JScrollPane sc;
     
-    public static void main(String[] args) {
-        //new Editor();
-    }
-
+    public static int adaptedWidth;
+    
     public Editor(Home home) {
         super(TITLE);
         
         
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        WIDTH = d.width;
-        HEIGHT = d.height;
+        WIDTH = d.width / 1;
+        HEIGHT = d.height / 1;
         
         setSize(WIDTH, HEIGHT);
         
         setLayout(new BorderLayout());
         
         
-        final int adaptedWidth = adaptWidth(250);
+        adaptedWidth = adaptWidth(240);
         final int adaptedHeight = adaptHeight(250);
         Log.append(adaptedWidth+ " "+adaptedHeight, DefaultFont.ERROR);
         Griglia g = new Griglia(WIDTH + adaptedWidth, HEIGHT + adaptedHeight, this, PIXEL);
-        
+        System.out.println("height: "+HEIGHT);
         gri = new JScrollPane(g);
         gri.setPreferredSize(new Dimension(WIDTH - adaptedWidth, HEIGHT));
         gri.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -73,13 +70,12 @@ public class Editor extends JFrame implements Scrollable {
         
         s = new Selezione(g, this);
         
-       
-        p = new Pannelli(this, g.getPreview().getMemoria());
-        p.setLayout(new GridLayout(8, 2, 25, 25));
         
-        JScrollPane sc = new JScrollPane(p);
-        sc.setPreferredSize(new Dimension(adaptedWidth, HEIGHT));
-        //sc.setSize(300, HEIGHT);
+        sc = new JScrollPane();
+        p = new Pannelli(this, g.getPreview().getMemoria(), HEIGHT - adaptHeight(50));
+
+        sc.setViewportView(p);
+        sc.setPreferredSize(new Dimension(adaptedWidth, HEIGHT - adaptWidth(50)));
         sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         sc.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         
@@ -91,10 +87,7 @@ public class Editor extends JFrame implements Scrollable {
         
         JPanel center = new JPanel();
         center.setLayout(new BorderLayout());
-        //center.setBackground(Color.red);
         add(center, BorderLayout.CENTER);
-        
-        mario.rm.Menu.Componenti.Selezione c = new mario.rm.Menu.Componenti.Selezione(g, this);
         
         center.add(gri);
         
@@ -107,6 +100,10 @@ public class Editor extends JFrame implements Scrollable {
         setVisible(true);
     }
 
+    public JScrollPane getPanelScroll(){
+        return sc;
+    }
+    
     public Selezione getSelezione() {
         return s;
     }
@@ -121,6 +118,7 @@ public class Editor extends JFrame implements Scrollable {
         //vertical.changeState(stato);
     }
     
+    @Override
     public void changeState(){
         gri.repaint();
         gri.revalidate();
