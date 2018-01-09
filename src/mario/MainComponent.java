@@ -53,7 +53,7 @@ public class MainComponent {
 
         Log.append(jar.getAbsolutePath(), DefaultFont.INFORMATION);
 
-        Joystick.UPDATE = true;
+        Joystick.UPDATE = false;
 
         new Thread(new Joystick()).start();
 

@@ -54,7 +54,7 @@ public class Griglia extends JPanel {
     private ArrayList<String> attach;
 
     private boolean isEraser;
-    
+
     public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel) {
         super();
 
@@ -69,7 +69,7 @@ public class Griglia extends JPanel {
         Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
 
         setPreferredSize(size);
-        
+
         grid = true;
 
         background = true;
@@ -83,7 +83,6 @@ public class Griglia extends JPanel {
     public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel, boolean grid) {
         super();
 
-
         this.pixel = pixel;
 
         this.ed = (Scrollable) ed;
@@ -93,7 +92,7 @@ public class Griglia extends JPanel {
         Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
 
         setPreferredSize(size);
-        
+
         grid = false;
 
         background = true;
@@ -112,9 +111,9 @@ public class Griglia extends JPanel {
         grid = false;
 
         livello = new Preview();
-        
+
         load(path);
-        
+
         Dimension size = new Dimension(livello.getMappa().length * pixel + 1, livello.getMappa()[0].length * pixel + 1);
 
         setPreferredSize(size);
@@ -145,7 +144,7 @@ public class Griglia extends JPanel {
         if (background && img != null) {
             int x = (pixel) - (moveX * pixel);
             int y = (pixel) - (moveY * pixel);
-            g.drawImage(img, x, y , img.getWidth() * pixel, img.getHeight() * pixel, this);
+            g.drawImage(img, x, y, img.getWidth() * pixel, img.getHeight() * pixel, this);
         }
 
         if (grid) {
@@ -189,24 +188,20 @@ public class Griglia extends JPanel {
                 return;
             }
             livello.addElement(colonna, riga, s);
-        } else {
-            if(livello.getMappa()[colonna][riga] != null){
-                livello.getMappa()[colonna][riga].changeCollider();
-            }
+        } else if (livello.getMappa()[colonna][riga] != null) {
+            livello.getMappa()[colonna][riga].changeCollider();
         }
     }
-    
+
     public void setItem(int colonna, int riga, Cell s) {
         if (!col) {
             if (s == null && !isEraser) {
                 return;
             }
-            
+
             livello.addElement(colonna, riga, s);
-        } else {
-            if(livello.getMappa()[colonna][riga] != null){
-                livello.getMappa()[colonna][riga].changeCollider();
-            }
+        } else if (livello.getMappa()[colonna][riga] != null) {
+            livello.getMappa()[colonna][riga].changeCollider();
         }
     }
 
@@ -340,32 +335,48 @@ public class Griglia extends JPanel {
         int pix = 64;
 
         Cell[][] elenco = livello.getMappa();
-        
+
         Punto min = new Punto(elenco.length, elenco[0].length);
         Punto max = new Punto(0, 0);
         //calcolo salvo spazio
         for (int i = 0; i < elenco[0].length; i++) {
             boolean notNull = true;
-            int xMin = 0, xMax = 0, yMin = 0,yMax = 0;
+            int xMin = 0, xMax = 0, yMin = 0, yMax = 0;
             for (int j = 0; j < elenco.length; j++) {
-                if(elenco[j][i] != null){
-                    if(xMin > j) xMin = j;
-                    if(xMax < j) xMax = j;
-                    if(yMin > i) yMin = i;
-                    if(yMax < i) yMax = i;
+                if (elenco[j][i] != null) {
+                    if (xMin > j) {
+                        xMin = j;
+                    }
+                    if (xMax < j) {
+                        xMax = j;
+                    }
+                    if (yMin > i) {
+                        yMin = i;
+                    }
+                    if (yMax < i) {
+                        yMax = i;
+                    }
                     notNull = false;
                 }
             }
-            if(!notNull){
-                if(min.getX() > xMin) min.setX(xMin);
-                if(max.getX() < xMax) max.setX(xMax);
-                if(min.getY() > yMin) min.setY(yMin);
-                if(max.getY() < yMax) max.setY(yMax);
+            if (!notNull) {
+                if (min.getX() > xMin) {
+                    min.setX(xMin);
+                }
+                if (max.getX() < xMax) {
+                    max.setX(xMax);
+                }
+                if (min.getY() > yMin) {
+                    min.setY(yMin);
+                }
+                if (max.getY() < yMax) {
+                    max.setY(yMax);
+                }
             }
         }
         //fine calcolo salvo spazio
-        System.out.println("xMin: "+min.getX()+" xMax: "+max.getX()+" yMin: "+min.getY()+" yMax: "+max.getY());
-        
+        System.out.println("xMin: " + min.getX() + " xMax: " + max.getX() + " yMin: " + min.getY() + " yMax: " + max.getY());
+
         BufferedImage image = new BufferedImage((max.getX() - min.getX()) * pix, (max.getY() - min.getY()) * pix, BufferedImage.TYPE_INT_RGB);
 
         JFileChooser c = null;
@@ -375,7 +386,7 @@ public class Griglia extends JPanel {
             // String f = MainComponent.jarPath.getAbsolutePath().substring(0, MainComponent.jarPath.getAbsolutePath().lastIndexOf("\\"));
             c = new JFileChooser(new File("src/mario/res/Immagini/livelli"));
         }*/
-            c = new JFileChooser(new File(MainComponent.class.getClassLoader().getResource("Immagini/livelli").getFile()));
+        c = new JFileChooser(new File(MainComponent.class.getClassLoader().getResource("Immagini/livelli").getFile()));
 
         int valid = c.showSaveDialog(null);
 
@@ -420,27 +431,33 @@ public class Griglia extends JPanel {
             for (int i = min.getY(); i < max.getY(); i++) {
                 for (int j = min.getX(); j < max.getX(); j++) {
                     if (elenco[j][i] != null && elenco[j][i].getTerrain() || elenco[j][i] != null && !elenco[j][i].getCollider()) {
+                        //g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
                         g.setComposite(AlphaComposite.Src);
-
                         BufferedImage im = elenco[j][i].getImg();
 
                         for (int k = 0; k < im.getHeight(); k++) {
                             for (int l = 0; l < im.getWidth(); l++) {
                                 if (!Integer.toHexString(im.getRGB(l, k)).equals("0xFFFFFF")) {
+                                    g.setComposite(AlphaComposite.Src);
+                                    //g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
                                     int color = im.getRGB(l, k);
                                     g.setColor(new Color(color));
                                     g.fillRect(j * pix + l, i * pix + k, pix, pix);
                                 } else {  //prestare attenzione
+                                    //g.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+                                    //int color = ((255 & 0xff) << 24);
+                                    //g.setColor(new Color(color));
                                     g.setComposite(AlphaComposite.Clear);
-
                                     g.fillRect(j * pix + l, i * pix + k, pix, pix);
                                 }
                             }
                         }
                         //g.drawImage(elenco[j][i].getImg(), j * pix, i * pix, pix, pix, null);
                     } else {
+                        //g.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+                        //int color = ((255 & 0xff) << 24);
+                        //g.setColor(new Color(color));
                         g.setComposite(AlphaComposite.Clear);
-
                         g.fillRect(j * pix, i * pix, pix, pix);
                     }
                 }
@@ -580,8 +597,8 @@ public class Griglia extends JPanel {
         return isEraser;
     }
 
-    public Preview getPreview(){
+    public Preview getPreview() {
         return livello;
     }
-    
+
 }

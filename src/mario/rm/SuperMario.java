@@ -2,21 +2,15 @@ package mario.rm;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import static java.lang.Thread.sleep;
 import java.lang.management.ManagementFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.Menu.opzioni.Menu;
 import mario.rm.camera.Camera;
 import mario.rm.handler.Handler;
 import mario.rm.input.Loader;
-import mario.rm.input.Movement;
 import mario.rm.sprite.Player;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
@@ -43,6 +37,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public static int standardHeight;    //TEMPORANEA PER HEIGHT DEGLI SPRITE
 
     private BufferedImage bg;    //SFONDO
+    private BufferedImage bgB;    //SFONDO
     private static final BufferedImage coin = (Loader.LoadImage("Immagini/tiles.png").getSubimage(64 * 7 + 8, 10, 64, 64)); //FOTO DELLA MONETA ritagliata
     //private BufferedImage life;
 
@@ -56,7 +51,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     private boolean isLoad = false;  //INDICA SE MANDARE IN OUTPUT LA GIF DI LOADING
 
-    private static Frame frame;
+    public static Frame frame;
 
     //private static boolean video = false;
 
@@ -140,6 +135,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         next = handler.getLevel();
         next = next.substring(0, next.lastIndexOf(".")) + ".png";
         Log.append("Bg image: " + next, DefaultFont.INFORMATION);
+        bgB = Loader.LoadImage("Immagini/bg.png");
         bg = Loader.LoadImage(next); //CARICO IN MEMORIA LO SFONDO
 
         cam = new Camera(handler.getPlayer().get(0));    //SERVE PER ACCENTRARE SUL PLAYER LA TELECAMERA
@@ -177,6 +173,8 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     int srcx2 = srcx1 + WIDTH * pix / standardWidth;
                     int srcy2 = srcy1 + HEIGHT * pix / standardHeight;
 
+                    
+                    g.drawImage(bgB, -cam.getX(), -cam.getY(), WIDTH, HEIGHT, frame);
                     g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
                     handler.render(g);  //DISEGNA TUTTO
 

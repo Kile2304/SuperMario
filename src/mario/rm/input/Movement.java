@@ -1,8 +1,18 @@
 package mario.rm.input;
 
+import java.awt.AWTException;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.LinkedList;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import mario.MainComponent;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
@@ -12,8 +22,6 @@ import mario.rm.sprite.Player;
 import mario.rm.sprite.Sprite;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
-import mario.rm.utility.joystick.PlaystationController;
-import net.java.games.input.Controller;
 
 /**
  *
@@ -51,9 +59,9 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         if (e == null) {
             return;
         }
-        Log.append(""+e.getID());
+        Log.append("" + e.getID());
         int id = e.getID() == 401 ? 0 : e.getID();
-        
+
         int keyCode = e.getKeyCode();   //NON STRETTAMENTE NECCESSARIO
         for (Player sp : handler.getPlayer()) {
             switch (keyCode) {
@@ -123,9 +131,9 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         if (e == null) {
             return;
         }
-        
+
         int id = e.getID() == 402 ? 0 : e.getID();
-        
+
         int keyCode = e.getKeyCode();   //PALESE
         for (Sprite sp : handler.getPlayer()) {
             switch (keyCode) {
@@ -140,7 +148,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     if (!move[0] && !move[1]) {
                         handler.getPlayer().get(id).setWalking(false);
                     }
-                     //NON STA PIU CAMMINANDO
+                    //NON STA PIU CAMMINANDO
                     break;
                 case KeyEvent.VK_UP:
                     if (handler.getPlayer().get(id).isJumping() && handler.getPlayer().get(id).getGravity() <= 1) {
@@ -154,6 +162,29 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                 case KeyEvent.VK_ESCAPE:
                     if (mario.getFrame().isFocused()) {
                         mario.addOption();
+                    }
+                    break;
+
+                case KeyEvent.VK_Z:
+                    BufferedImage image;
+                    try {
+                        Toolkit tk = Toolkit.getDefaultToolkit(); //Toolkit class                         returns the default toolkit
+                        Dimension d = tk.getScreenSize();
+
+//Dimension class object stores width & height of the toolkit screen
+// toolkit.getScreenSize() determines the size of the screen
+                        Rectangle rec = new Rectangle(SuperMario.frame.getX(), SuperMario.frame.getY(), SuperMario.frame.getWidth(), SuperMario.frame.getHeight());
+//Creates a Rectangle with screen dimensions,         
+
+                        Robot ro = new Robot(); //to capture the screen image
+                        BufferedImage img = ro.createScreenCapture(rec);
+
+                        File f;
+                        f = new File("myimage.png"); // File class is used to write the above generated buffered image to a file
+                        if(f.exists()) f.createNewFile();
+                        ImageIO.write(img, "png", f);
+                    } catch (AWTException | IOException ex) {
+                        Logger.getLogger(Movement.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
                 default:
