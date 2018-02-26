@@ -26,7 +26,6 @@ import mario.rm.Menu.Specifiche;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.TilePart;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -97,11 +96,11 @@ public class Setting extends JPanel implements Checkable, ActionListener { //PAN
             }
         }
 
-        elenco.add(new Specifiche("+", img, Type.VOID));
-        elenco.add(new Specifiche("-", img, Type.VOID));
+        elenco.add(new Specifiche("+", img, "VOID", true));
+        elenco.add(new Specifiche("-", img, "VOID", true));
 
         elenco.add(new Specifiche("DELETE POINT"));
-        elenco.add(new Specifiche("CREATE POINT", img, Type.VOID));
+        elenco.add(new Specifiche("CREATE POINT", img, "VOID", true));
 
         for (Specifiche jButton : elenco) {
             jButton.getButton().addActionListener(this);

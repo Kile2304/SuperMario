@@ -1,9 +1,3 @@
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\tiles.png]
-!UNLOCKABLE_COIN|
-§UPLEFT*
-!COIN|◘unlockableCoin.anim○
-<131><10> <196><75>
-
 +[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\terrain\tiles.png]
 !MUSHROOMPLATFORM|
 §UPLEFT*
@@ -694,4 +688,94 @@
 <306><1913> <232><1860>
 <385><1916> <309><1861>
 <75><1973> <0><1919>
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grass2.PNG]
+!GRASS|
+§UPLEFT*
+◘grass-upleft.anim○
+<96><72> <49><1>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grass2.PNG]
+!GRASS|
+§UPCENTER*
+◘grass-upcenter.anim○
+<145><72> <96><1>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grass2.PNG]
+!GRASS|
+§UPRIGHT*
+◘grass-upright.anim○
+<192><72> <146><1>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grass2.PNG]
+!GRASSCOL|
+§UPLEFT*
+◘grass_col-upleft.anim○
+<47><49> <2><1>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grass2.PNG]
+!GRASSCOL|
+§UPCENTER*
+◘grass_col-upcenter.anim○
+<45><96> <4><49>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grass2.PNG]
+!GRASSCOL|
+§UPRIGHT*
+◘grass_col-upright.anim○
+<45><144> <4><97>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\desert.PNG]
+!DESERTTREE|
+§UPLEFT*
+◘desert_tree-upleft.anim○
+<92><312> <3><249>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\desert.PNG]
+!DESERTTREE|
+§UPCENTER*
+◘desert_tree-upcenter.anim○
+<54><348> <42><313>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\desert.PNG]
+!DESERTTREE|
+§UPRIGHT*
+◘desert_tree-upright.anim○
+<55><383> <42><349>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\Wii U - Super Mario Maker - Items NSMBU.png]
+!MUSHROOM|
+§UPLEFT*
+◘mushroom-upleft.anim○
+<99><93> <13><9>
+<203><94> <118><7>
+<311><93> <227><5>
+<418><93> <333><5>
+<527><92> <440><6>
+<631><93> <547><7>
+<738><91> <653><8>
+<847><92> <757><8>
+<98><189> <8><103>
+<207><188> <117><107>
+<317><188> <223><104>
+<421><189> <331><106>
+<527><189> <438><108>
+<636><190> <546><107>
+<741><188> <654><103>
+<849><188> <760><102>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\special\SSW2_Auras.png]
+!AURA|
+§UPLEFT*
+◘aura-upleft.anim○
+<81><171> <5><78>
+<180><167> <94><77>
+<290><169> <191><58>
+<396><169> <303><58>
+<528><172> <405><46>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\tiles.png]
+!UNLOCKED|
+§UPLEFT*
+◘unlocked-upleft.anim○
+<390><74> <327><11>
 

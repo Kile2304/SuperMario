@@ -104,7 +104,7 @@ public class TypeMulti extends javax.swing.JFrame {
     private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
         //LOCALE
         new SelectLevel(false).reset();
-        main.start(Joystick.lastUpdate.length);
+        main.start(2);
     }//GEN-LAST:event_jToggleButton3ActionPerformed
 
 

@@ -3,7 +3,7 @@ package mario.rm.sprite.enemy;
 import mario.rm.Animation.Anim;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Move;
-import mario.rm.identifier.Type;
+import mario.rm.identifier.Tipologia;
 
 /**
  *
@@ -18,11 +18,11 @@ public class Tartosso extends Enemy {
 
     private boolean test;
 
-    public Tartosso(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
+    public Tartosso(int x, int y, int width, int height, Handler handler, String type, boolean canDie) {
         super(x, y, width, height, handler, type, canDie);
         test = true;
     }
-    public Tartosso(int x, int y, int width, int height, Handler handler, Type type, boolean canDie, Anim animazione){
+    public Tartosso(int x, int y, int width, int height, Handler handler, String type, boolean canDie, Anim animazione){
         super(x, y, width, height, handler, type, canDie, animazione);
     }
 
@@ -39,7 +39,7 @@ public class Tartosso extends Enemy {
                 test = true;
                 //animazione.getImage(lastMove, lastDirection);
             } else if (animazione.isEndDie(actualMove, ma.getIndex()) && test) {   //CONTINUA L'ANIMAZIONE DI RESSURREZZIONE
-                velX = type.getVelX();
+                velX = Tipologia.getValue(type, "velX");
                 actualMove = Move.WALK;
                 isDie = false;
             }
@@ -58,8 +58,6 @@ public class Tartosso extends Enemy {
             actualMove = Move.DIE;
             isDie = true;
             velX = 0;
-        } else {
-            super.die();
         }
     }
 

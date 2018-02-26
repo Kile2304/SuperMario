@@ -37,6 +37,7 @@ public class MemoriaAC {
     private static ArrayList<Tile> unlockable;
     private static ArrayList<Tile> terreni;
     private static ArrayList<Anim> bullet;
+    private static ArrayList<Tile> special;
 
     private String[] audio = {"nsmb_world3-C.mid", "nsmb_bowser_jr_tower.mid"};
 
@@ -67,6 +68,7 @@ public class MemoriaAC {
         unlockable = new ArrayList<>();     //IMMAGINI CHE SI POSSONO SBLOCCARE
         terreni = new ArrayList<>();
         bullet = new ArrayList<>();
+        special = new ArrayList<>();
 
     }
 
@@ -107,6 +109,11 @@ public class MemoriaAC {
         t[5] = new Thread(() -> {
             String path = indirizzo + "enemy/missile";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
             getAnim(path, bullet);
+        });
+        t[5].start();
+        t[5] = new Thread(() -> {
+            String path = indirizzo + "tile/special";    //CARICO IN MEMORIA LE IMMAGINI KOOMPA
+            getAnim(path, special);
         });
         t[5].start();
 
@@ -253,6 +260,9 @@ public class MemoriaAC {
     public ArrayList<Anim> getBullet() {
         return bullet;
     }
+    public ArrayList<Tile> getSpecial() {
+        return special;
+    }
 
     public void clean() {
         enemy.clear();
@@ -261,5 +271,30 @@ public class MemoriaAC {
         terreni.clear();
         unlockable.clear();
         bullet.clear();
+        special.clear();
+    }
+
+    public void adaptImage(int width, int height) {
+        for (Anim anim : enemy) {
+            anim.adapt(width, height);
+        }
+        for (Anim anim : player) {
+            anim.adapt(width, height);
+        }
+        for (Anim anim : bullet) {
+            anim.adapt(width, height);
+        }
+        for (Tile anim : tiles) {
+            anim.adapt(width, height);
+        }
+        for (Tile anim : terreni) {
+            anim.adapt(width, height);
+        }
+        for (Tile anim : unlockable) {
+            anim.adapt(width, height);
+        }
+        for (Tile anim : special) {
+            anim.adapt(width, height);
+        }
     }
 }

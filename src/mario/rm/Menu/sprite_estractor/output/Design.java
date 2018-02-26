@@ -9,7 +9,6 @@ import mario.MainComponent;
 import mario.rm.Menu.sprite_estractor.union.Union;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
-import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
@@ -49,9 +48,9 @@ public class Design {
                             break;
                         case '|':
                             if (lista.get(lista.size() - 1).getType() == null) {
-                                lista.get(lista.size() - 1).setType(Type.valueOf(val));
+                                lista.get(lista.size() - 1).setType(val);
                             }else{
-                                lista.get(lista.size() - 1).setUnlock(Type.valueOf(val));
+                                lista.get(lista.size() - 1).setUnlock(val);
                             }
                             break;
                         case '}':

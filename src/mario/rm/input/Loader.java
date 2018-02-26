@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import mario.MainComponent;
-import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -26,22 +25,9 @@ public class Loader {
     public static final BufferedImage LoadImage(String path) {    //MEMORIZZA NEL BUFFERIMAGE L'IMMAGINE
         BufferedImage img = null;
         try {
-            Log.append(path, DefaultFont.DEBUG);
-            //if (MainComponent.jar != null && MainComponent.jar.isFile()) {
-                img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
-            /*}else{
-                File f = null;
-                if(!path.substring(0, 4).equals("src/")){
-                    f = new File("src/"+path);
-                    img = ImageIO.read(f);
-                }else{
-                    f = new File(path);
-                    img = ImageIO.read(f);
-                }
-                Log.append(f.getAbsolutePath(), DefaultFont.INFORMATION);
-            }*/
+            Log.append(path, DefaultFont.INFORMATION);
+            img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
         } catch (IOException ex) {
-            //System.out.println("Immagine alla posizione: " + (path) + " non caricata correttamente!");
             Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return img;
@@ -55,34 +41,22 @@ public class Loader {
     public static final BufferedImage LoadImageCompletePath(String path) {
         BufferedImage img = null;
         try {
-            //if (MainComponent.jar != null && MainComponent.jar.isFile()) {
-                //path = path.substring(path.indexOf("mario/"));
-                Log.append(path,DefaultFont.INFORMATION);
-                img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
-            //}else{
-                //File f = new File(path);
-                /*if(f.exists()){
-                    System.out.println("porco dio");
-                }*/
-                //img = ImageIO.read(new File(path));
-                //Log.append(f.getAbsolutePath(), DefaultFont.INFORMATION);
-            //}
+            Log.append(path, DefaultFont.INFORMATION);
+            img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
         } catch (IOException ex) {
-            //System.out.println("Immagine alla posizione: " + new File(path).getAbsoluteFile() + " non caricata correttamente!");
             Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }
         return img;
     }
-    
+
     /**
-     * 
+     *
      * @param path: percorso del file contenente il livello
      * @param read: metodo creaLivello
      * @return se ritorna falso, vuol dire che il percorso non e' valido
      */
     public static final boolean convertTextInMap(String path, Reader read) {
-        Log.append("4)CREO IL LIVELLO",DefaultFont.INFORMATION);
-
+        Log.append("4)CREO IL LIVELLO", DefaultFont.INFORMATION);
 
         if (path.equals("")) {
             return false;
@@ -92,30 +66,33 @@ public class Loader {
             /*if(MainComponent.jar.isFile()){
                 path = path.replace("src/", "");
                 Log.append(path);*/
-            System.out.println(""+path);
-                fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
+            System.out.println("" + path);
+            fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
             /*}else{
                 fr = new FileReader(path);
             }*/
             Log.append(path);
             BufferedReader br = new BufferedReader((java.io.Reader) fr);
 
-            String line = "";
+            /* String line = "";
             ArrayList<Integer> punto = new ArrayList<>();
-            Type type = null;
-            Type unlockable = null;
-            
+            String type = null;
+            String unlockable = null;
+
             while ((line = br.readLine()) != null) {  //da modificare, in modo che rimanga solo int x, int y e Type, dopo diche fare for che scorre tutti gli anim...
                 String word = "";
                 type = null;
                 unlockable = null;
                 String tile = "";
+                int numero = -1;
                 punto.clear();
                 for (int i = 0; i < line.length(); i++) {
                     switch (line.charAt(i)) {
                         case '{':
                         case '[':
                         case '|':
+                        case '◄':
+                        case '←':
                         case '<':
                             word = "";
                             break;
@@ -127,12 +104,8 @@ public class Loader {
                         case ']':
                             //System.out.println(""+word);
                             if (type == null) {
-                                Log.append("refactor: "+word, DefaultFont.INFORMATION);
-                                type = Type.valueOf(word);
-                            } else {
-                                unlockable = type;
-                                String t = type.name();
-                                type = Type.valueOf(t.substring(0, t.lastIndexOf("_")));
+                                Log.append("refactor: " + word, DefaultFont.INFORMATION);
+                                type = word;
                             }
                             word = "";
                             break;
@@ -141,6 +114,13 @@ public class Loader {
                             tile = word;
                             word = "";
                             break;
+
+                        case '►':
+                            unlockable = word;
+                            break;
+                        case '→':
+                            numero = Integer.parseInt(word);
+                            break;
                         default:
                             word += line.charAt(i);
                             break;
@@ -148,7 +128,33 @@ public class Loader {
                 }
                 int x0 = punto.get(0);
                 int y0 = punto.get(1);
-                read.creaLivello(x0, y0, type, unlockable, tile);
+                read.creaLivello(x0, y0, type, unlockable, tile, numero);
+            }*/
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                String[] complete = line.split("/");
+                String[] first = complete[0].split(" ");
+                int x0 = Integer.parseInt(first[0]);
+                int y0 = Integer.parseInt(first[1]);
+                String type = first[2];
+                String partTile = first.length == 4
+                        ? first[3]
+                        : "";
+                String unlockType = "";
+                int unlockQuantity = 0;
+
+                String movement = "";
+                for (int i = 1; i < complete.length; i++) {
+                    String[] second = complete[i].split(" ");
+                    if (second[0].equals("U")) {
+                        unlockType = second[1];
+                        unlockQuantity = Integer.parseInt(second[2]);
+                    } else {
+                        movement = complete[i];
+                    }
+                }
+                SpriteLoad sl = new SpriteLoad(x0, y0, type, partTile, unlockType, unlockQuantity, movement);
+                read.creaLivello(sl);
             }
 
         } catch (FileNotFoundException ex) {

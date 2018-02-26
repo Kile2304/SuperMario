@@ -92,18 +92,6 @@ public class Selezione implements MouseListener, ActionListener, MouseMotionList
             case "Load":
                 g.load();
                 break;
-            case "↑":
-                g.setY(-spostamento);
-                break;
-            case "↓":
-                g.setY(spostamento);
-                break;
-            case "→":
-                g.setX(spostamento);
-                break;
-            case "←":
-                g.setX(-spostamento);
-                break;
             case "+":
                 g.increasePixel();
                 break;

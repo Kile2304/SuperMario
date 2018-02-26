@@ -11,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -19,8 +18,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import mario.MainComponent;
+import static mario.MainComponent.memoryUsed;
 import mario.rm.Menu.Componenti.Checkable;
 import mario.rm.Menu.Componenti.Scrollable;
+import mario.rm.Menu.level_editor.Script;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
@@ -32,7 +33,7 @@ import mario.rm.utility.Punto;
 public class Griglia extends JPanel {
 
     private static Preview livello;
-    private Scrollable ed;
+    private JFrame ed;
 
     private int moveX;
     private int moveY;
@@ -48,24 +49,21 @@ public class Griglia extends JPanel {
     private BufferedImage img;
 
     private boolean col;
+    private boolean attach;
 
     private Font f;
 
-    private ArrayList<String> attach;
-
     private boolean isEraser;
 
-    public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel) {
+    public Griglia(int WIDTH, int HEIGHT, JFrame ed, int pixel) {
         super();
-
-        attach = new ArrayList<>();
-
         this.pixel = pixel;
 
-        this.ed = (Scrollable) ed;
+        this.ed = ed;
 
-        livello = new Preview(WIDTH / pixel, HEIGHT / pixel);
+        livello = new Preview(WIDTH / pixel, HEIGHT / pixel, false);
 
+        System.out.println("debug griglia: "+memoryUsed());
         Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
 
         setPreferredSize(size);
@@ -77,17 +75,18 @@ public class Griglia extends JPanel {
         col = false;
 
         isEraser = false;
+        attach = false;
 
     }
 
-    public Griglia(int WIDTH, int HEIGHT, Scrollable ed, int pixel, boolean grid) {
+    public Griglia(int WIDTH, int HEIGHT, JFrame ed, int pixel, boolean grid) {
         super();
 
         this.pixel = pixel;
 
-        this.ed = (Scrollable) ed;
+        this.ed = ed;
 
-        livello = new Preview(WIDTH / pixel, HEIGHT / pixel);
+        livello = new Preview(WIDTH / pixel, HEIGHT / pixel, true);
 
         Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
 
@@ -100,13 +99,14 @@ public class Griglia extends JPanel {
         col = false;
 
         isEraser = false;
+        attach = false;
 
     }
 
     public Griglia(JFrame ed, String path, int pixel) {
         super();
 
-        this.ed = (Scrollable) ed;
+        this.ed = ed;
 
         grid = false;
 
@@ -125,6 +125,7 @@ public class Griglia extends JPanel {
         col = false;
 
         isEraser = false;
+        attach = false;
 
     }
 
@@ -161,11 +162,16 @@ public class Griglia extends JPanel {
                     int x = (i * pixel) - (moveX * pixel);
                     int y = (k * pixel) - (moveY * pixel);
                     g.drawImage(elenco[i][k].getImg(), x, y, pixel, pixel, null);
-                    if (col && elenco[i][k].getCollider() == true) {
-                        g.setColor(Color.red);
-                        f = new Font("TimesRoman", Font.BOLD, pixel);
-                        g.setFont(f);
-                        g.drawString("1", x + pixel / 2, y + pixel);
+                    if (col && elenco[i][k].getCollider() == true || attach && !elenco[i][k].getScript().equals("")) {
+                        //f = new Font("TimesRoman", Font.BOLD, pixel);
+                        //g.setFont(f);
+                        if (col) {
+                            g.setColor(Color.RED);
+                            g.drawString("1", x + pixel / 2, y + pixel);
+                        } else {
+                            g.setColor(Color.BLUE);
+                            g.drawString("2", x + pixel / 2, y + pixel);
+                        }
                     }
                 }
             }
@@ -183,13 +189,17 @@ public class Griglia extends JPanel {
 
     public void setItem(int colonna, int riga) {
         Specifiche s = pannello.getChecked();
-        if (!col) {
+        if (!col && !attach) {
             if (s == null && !isEraser) {
                 return;
             }
             livello.addElement(colonna, riga, s);
         } else if (livello.getMappa()[colonna][riga] != null) {
-            livello.getMappa()[colonna][riga].changeCollider();
+            if (col) {
+                livello.getMappa()[colonna][riga].changeCollider();
+            } else if (attach) {
+                new Script(this);
+            }
         }
     }
 
@@ -201,7 +211,11 @@ public class Griglia extends JPanel {
 
             livello.addElement(colonna, riga, s);
         } else if (livello.getMappa()[colonna][riga] != null) {
-            livello.getMappa()[colonna][riga].changeCollider();
+            if (col) {
+                livello.getMappa()[colonna][riga].changeCollider();
+            } else if (attach) {
+                new Script(this);
+            }
         }
     }
 
@@ -213,8 +227,16 @@ public class Griglia extends JPanel {
             loadCollider(s);
             Cell[][] temp = livello.getMappa();
             setPreferredSize(new Dimension(temp.length * pixel, temp[0].length * pixel));
-            ed.changeState();
+            ed.repaint();
         }
+    }
+    
+    public boolean isAttach(){
+        return attach;
+    }
+
+    public void changeAttach() {
+        attach = Boolean.logicalXor(attach, true);
     }
 
     public void load(String path) {
@@ -224,13 +246,8 @@ public class Griglia extends JPanel {
 
             livello.load(path);
 
-            /*try {
-                normalState();
-            } catch (NullPointerException ex) {
-
-            }*/
             setPreferredSize(new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel));
-            ed.changeState();
+            ed.repaint();
         }
 
     }
@@ -252,15 +269,8 @@ public class Griglia extends JPanel {
             Cell[][] temp = livello.getMappa();
             setPreferredSize(new Dimension(temp.length * pixel, temp[0].length * pixel));
         }
-        //normalState();
     }
 
-    /*private void normalState() {
-        ed.changeStateOrizontal(1);
-        ed.changeStateOrizontal(-2);
-        ed.changeStateVertical(1);
-        ed.changeStateVertical(-2);
-    }*/
     private void saveAll(String path) {
 
         if (!path.equals("")) {
@@ -314,18 +324,14 @@ public class Griglia extends JPanel {
     }
 
     private String processSave(int i, int j, Cell[][] cl) {
-        String str = "{<" + i + ">" + "<" + j + ">" + "[" + cl[i][j].getType().name() + "]";
-        String unlock = cl[i][j].getType().name();
-        if (unlock.lastIndexOf("_") + 1 != 0) {
-            unlock = unlock.substring(unlock.lastIndexOf("_") + 1, unlock.length());
-            str += "[" + unlock + "]";
+        String str = i + " " + j + " " + cl[i][j].getType();
+        str += ((!cl[i][j].getPartTil().equals("")) 
+                ? " " + cl[i][j].getPartTil() 
+                : "") 
+                + "/";
+        if (cl[i][j].getScript() != null && !cl[i][j].equals("")) {
+            str += cl[i][j].getScript();
         }
-        //System.out.println("" + cl[i][j].getPartTil());
-        if (!cl[i][j].getPartTil().equals("")) {
-            str += "|" + cl[i][j].getPartTil() + "!";
-        }
-
-        str += "}";
 
         return str;
     }
@@ -386,7 +392,11 @@ public class Griglia extends JPanel {
             // String f = MainComponent.jarPath.getAbsolutePath().substring(0, MainComponent.jarPath.getAbsolutePath().lastIndexOf("\\"));
             c = new JFileChooser(new File("src/mario/res/Immagini/livelli"));
         }*/
-        c = new JFileChooser(new File(MainComponent.class.getClassLoader().getResource("Immagini/livelli").getFile()));
+        if (MainComponent.jar.isFile()) {
+            c = new JFileChooser(new File(MainComponent.class.getClassLoader().getResource("Immagini/livelli").getFile()));
+        } else {
+            c = new JFileChooser(new File("res/Immagini/livelli"));
+        }
 
         int valid = c.showSaveDialog(null);
 
@@ -473,7 +483,7 @@ public class Griglia extends JPanel {
         }
     }
 
-    public void setX(int x) {
+    /*public void setX(int x) {
         Cell[][] elenco = livello.getMappa();
         int width = 1511 / pixel;
         if (width + this.moveX + x < elenco.length && (this.moveX + x) >= 0) {
@@ -490,13 +500,13 @@ public class Griglia extends JPanel {
             ed.changeStateOrizontal(2);
         }
 
-    }
+    }*/
 
     public int getPixel() {
         return pixel;
     }
 
-    public void setY(int y) {
+    /*public void setY(int y) {
         Cell[][] elenco = livello.getMappa();
         int height = 1050 / pixel;
         if (height + this.moveY + y < elenco[0].length && (this.moveY + y) >= 0) {
@@ -513,7 +523,7 @@ public class Griglia extends JPanel {
         } else {
             ed.changeStateVertical(2);
         }
-    }
+    }*/
 
     public void setPanel(Checkable pannello) {
         this.pannello = pannello;
@@ -545,12 +555,9 @@ public class Griglia extends JPanel {
     }
 
     public void newPage(int x, int y) {
-        livello = new Preview(y, x);
-        if (attach != null) {
-            attach.clear();
-        }
+        livello = new Preview(y, x, false);
         setPreferredSize(new Dimension(y * pixel, x * pixel));
-        ed.changeState();
+        ed.repaint();
         img = null;
 
     }
@@ -565,6 +572,12 @@ public class Griglia extends JPanel {
             }
         }
 
+    }
+    
+    public void normal(){
+        attach = false;
+        col = false;
+        isEraser = false;
     }
 
     public void addRow(int val) {

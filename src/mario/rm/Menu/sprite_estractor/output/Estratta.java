@@ -12,7 +12,6 @@ import mario.MainComponent;
 import mario.rm.Animation.Cut;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
-import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
@@ -27,13 +26,13 @@ public class Estratta {
 
     private LinkedList<Punto> coord;
 
-    private Type type;
+    private String type;
     private Move move;
     private Direction direction;
     private String nomeFile;
     private String transformation;
     private String tile;
-    private Type unlock;
+    private String unlock;
 
     public Estratta() {
         coord = new LinkedList<>();
@@ -43,7 +42,7 @@ public class Estratta {
         this.path = path;
     }
 
-    public void setType(Type type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -72,11 +71,11 @@ public class Estratta {
         this.tile = tile;
     }
 
-    public void setUnlock(Type unlock) {
+    public void setUnlock(String unlock) {
         this.unlock = unlock;
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 

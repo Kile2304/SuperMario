@@ -13,22 +13,18 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import mario.rm.Menu.Componenti.ScrollButton;
-import mario.rm.Menu.Componenti.Scrollable;
+import static mario.MainComponent.memoryUsed;
 import mario.rm.Menu.Griglia;
 
 /**
  *
  * @author LENOVO
  */
-public class SpriteEstractor extends JFrame implements Scrollable {
+public class SpriteEstractor extends JFrame {
 
     private static int WIDTH;
     private int HEIGHT;
     private static final String TITLE = "Sprite Estractor";
-
-    private ScrollButton orizontal;
-    private ScrollButton vertical;
 
     private static Selezione s;
 
@@ -65,10 +61,10 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         adaptedWidth = adaptWidth(250);
         
         final int adaptedHeight = adaptHeight(250);
-
+System.out.println("pre Griglie: "+memoryUsed());
         Griglia g = new Griglia(WIDTH + adaptedWidth, HEIGHT + adaptedHeight, this, PIXEL);
         g.setLayout(new GridLayout());
-
+System.out.println("dopo griglia: "+memoryUsed());
         gri = new JScrollPane(g);
         gri.setPreferredSize(new Dimension(WIDTH - adaptedWidth, HEIGHT));
 
@@ -115,6 +111,8 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         //setResizable(false);
         
         setVisible(true);
+        //System.gc();
+        System.out.println("Fine costruzione estrattore: "+memoryUsed());
 
     }
 
@@ -171,32 +169,8 @@ public class SpriteEstractor extends JFrame implements Scrollable {
         return s;
     }
 
-    public ScrollButton getScrollHorizontal() {
-        return orizontal;
-    }
-
-    public ScrollButton getScrollVertical() {
-        return vertical;
-    }
-
-    @Override
-    public void changeStateOrizontal(int stato) {
-        orizontal.changeState(stato);
-    }
-
-    @Override
-    public void changeStateVertical(int stato) {
-        vertical.changeState(stato);
-    }
-
     public static void main(String[] args) {
         new SpriteEstractor();
-    }
-
-    @Override
-    public void changeState() {
-        gri.repaint();
-        gri.revalidate();
     }
 
     public static int adaptWidth(int val) {

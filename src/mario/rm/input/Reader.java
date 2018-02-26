@@ -5,7 +5,6 @@
  */
 package mario.rm.input;
 
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -13,6 +12,6 @@ import mario.rm.identifier.Type;
  */
 public interface Reader {
     
-    void creaLivello(int x0, int y0, Type type, Type unlockable, String tile);
+    void creaLivello(SpriteLoad loaded);
     
 }

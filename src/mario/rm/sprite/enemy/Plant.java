@@ -3,7 +3,6 @@ package mario.rm.sprite.enemy;
 import java.util.ArrayList;
 import mario.rm.Animation.Cut;
 import mario.rm.handler.Handler;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -18,7 +17,7 @@ public class Plant extends Enemy {
     long before;
     private static final int stop = 2000;
 
-    public Plant(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
+    public Plant(int x, int y, int width, int height, Handler handler, String type, boolean canDie) {
         super(x, y, width, height, handler, type, canDie);
         direzioneY = y;
         this.y += height;

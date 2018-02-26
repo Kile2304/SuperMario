@@ -29,7 +29,6 @@ import mario.rm.Menu.Griglia;
 import mario.rm.Menu.Specifiche;
 import mario.rm.Menu.home.Home;
 import mario.rm.Menu.sprite_estractor.output.Design;
-import mario.rm.identifier.Type;
 import mario.rm.input.Loader;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
@@ -49,31 +48,20 @@ public class Selezione implements MouseListener, MouseMotionListener {
 
     private int type;
 
-    //private Cursor cur1;
-    //private Cursor cur2;
     private boolean isDefaultCursor;
 
-    private static final Specifiche delete = new Specifiche("");
+    private final Specifiche delete = new Specifiche("");
 
     public Selezione(Griglia g, JFrame fr) {
         this.g = g;
         this.fr = fr;
         cl = new Collegamenti();
-        /*Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = toolkit.getImage("src/mario/res/Immagini/cursor/tool.png");
-        
-        cur1 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");
-        image = toolkit.getImage("src/mario/res/Immagini/cursor/pencil.png");
-        
-        cur2 = toolkit.createCustomCursor(image, new Point(fr.getX(), fr.getY()), "img");*/
         isDefaultCursor = true;
 
     }
 
     private void load() {
 
-        //JFileChooser c = new JFileChooser(new File("src/mario/res/Immagini/extract").getAbsolutePath());
-        //System.out.println(""+MainComponent.class.getClassLoader().getResource("Immagini/extract").getPath());
         JFileChooser c = new JFileChooser(MainComponent.class.getClassLoader().getResource("Immagini/extract").getPath());
 
         int valid = c.showOpenDialog(fr);
@@ -125,6 +113,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
                 g.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 isDefaultCursor = true;
                 //type = 0;
+                Log.append("estrazione", DefaultFont.DEBUG);
                 cl.estrazione();
                 break;
             case "CREATE POINT":
@@ -184,6 +173,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
                         JOptionPane.INFORMATION_MESSAGE);
                 break;
             case "toAcFile":
+                Log.append("toAcFile", DefaultFont.DEBUG);
                 new Thread() {
                     @Override
                     public void run() {

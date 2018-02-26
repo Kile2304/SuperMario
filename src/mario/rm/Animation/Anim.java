@@ -1,5 +1,6 @@
 package mario.rm.Animation;
 
+import java.awt.Graphics2D;
 import mario.rm.identifier.Move;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -8,15 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import static java.lang.Thread.sleep;
 import java.lang.reflect.Field;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import mario.rm.SuperMario;
 import mario.rm.identifier.Direction;
-import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -33,7 +28,7 @@ public class Anim implements Serializable, Animated {
     transient private BufferedImage[] stand;
     private Anim transformation;
 
-    private final Type type;
+    private final String type;
 
     private final String path;
 
@@ -41,7 +36,7 @@ public class Anim implements Serializable, Animated {
 
     transient private long delay;
 
-    public Anim(Type type, String path) {
+    public Anim(String type, String path) {
         this.type = type;
         this.path = path;
     }
@@ -90,12 +85,15 @@ public class Anim implements Serializable, Animated {
     }
 
     /**
-     * metodo usato nel caso ci siano piu' istanze che utilizzano lo stesso oggetto
-     * @param move  movimento corrente
-     * @param dir   direzione corrente
-     * @param lastMove  ultimo movimento effettuato
+     * metodo usato nel caso ci siano piu' istanze che utilizzano lo stesso
+     * oggetto
+     *
+     * @param move movimento corrente
+     * @param dir direzione corrente
+     * @param lastMove ultimo movimento effettuato
      * @param lastDirection ultima direzione che ha avuto
-     * @param ma variabile che contiene l'indice attuale e il tempo dello sprite corrente
+     * @param ma variabile che contiene l'indice attuale e il tempo dello sprite
+     * corrente
      * @return ritorna un oggetto con immagine indice e tempo
      */
     public MultiAnim getImage(Move move, Direction dir, Move lastMove, Direction lastDirection, MultiAnim ma) {
@@ -138,7 +136,7 @@ public class Anim implements Serializable, Animated {
     }
 
     @Override
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
@@ -228,9 +226,11 @@ public class Anim implements Serializable, Animated {
                 }
             }
         }
+        fields = null;
         if (find == null) {
             return false;
         }
+        find = null;
         return index >= find.length / 4 - 1;
     }
 
@@ -249,6 +249,59 @@ public class Anim implements Serializable, Animated {
         }
 
         return getImage(m, Direction.RIGHT, Move.WALK, Direction.LEFT);
+    }
+
+    public void adapt(int width, int height) {
+        if (run != null) {
+            for (int i = 0; i < run.length; i++) {
+                if (run[i] != null) {
+                    BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = resized.createGraphics();
+                    g2d.drawImage(run[i], 0, 0, width, height, null);
+                    run[i] = resized;
+                }
+            }
+        }
+        if (die != null) {
+            for (int i = 0; i < die.length; i++) {
+                if (die[i] != null) {
+                    BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = resized.createGraphics();
+                    g2d.drawImage(die[i], 0, 0, width, height, null);
+                    die[i] = resized;
+                }
+            }
+        }
+        if (jump != null) {
+            for (int i = 0; i < jump.length; i++) {
+                if (jump[i] != null) {
+                    BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = resized.createGraphics();
+                    g2d.drawImage(jump[i], 0, 0, width, height, null);
+                    jump[i] = resized;
+                }
+            }
+        }
+        if (walk != null) {
+            for (int i = 0; i < walk.length; i++) {
+                if (walk[i] != null) {
+                    BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = resized.createGraphics();
+                    g2d.drawImage(walk[i], 0, 0, width, height, null);
+                    walk[i] = resized;
+                }
+            }
+        }
+        if (stand != null) {
+            for (int i = 0; i < stand.length; i++) {
+                if (stand[i] != null) {
+                    BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2d = resized.createGraphics();
+                    g2d.drawImage(stand[i], 0, 0, width, height, null);
+                    stand[i] = resized;
+                }
+            }
+        }
     }
 
 }

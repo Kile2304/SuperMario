@@ -1,11 +1,12 @@
 package mario.rm.sprite.tiles;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mario.rm.Animation.Tile;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.TilePart;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -13,8 +14,7 @@ import mario.rm.identifier.Type;
  */
 /**
  *
- * @return CLASSE CHE INDICA UN QUALCHE OGGETTO CHE COLPENDOLO TIRERA' FUORI UN
- * ITEM
+ * CLASSE CHE INDICA UN QUALCHE OGGETTO CHE COLPENDOLO TIRERA' FUORI UN ITEM
  */
 public class CoinBlock extends Tiles {
 
@@ -22,35 +22,56 @@ public class CoinBlock extends Tiles {
      *
      * @return TIPO DI ITEM CHE VERRA' RILASCIATO
      */
-    private final Type unlock;
+    private final String unlock;
 
-    public CoinBlock(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Tile> anim, Type unlock, boolean collide, String part) {
-        super(x, y, width, height, handler, type, anim, collide, part, false);
+    private int numero;
+
+    private long timeForReUnlock;
+
+    public CoinBlock(int x, int y, int width, int height, Handler handler, String type, ArrayList<Tile> anim, String unlock, boolean collide, String part, int numero, String script) {
+        super(x, y, width, height, handler, type, anim, collide, part, false, script);
         this.unlock = unlock;
-    }
-
-    @Override
-    public void tick() {
-
+        this.numero = numero;
     }
 
     /**
-     *
-     * @return RILASCIA L'ITEM E TRASFORMA IL BLOCCO ATTUALE IN UN BLOCCO
-     * DIVERSO
+     * Sblocco item nascosto nel tile
      */
     @Override
     public void unlockable() {
-        handler.addTiles(new Solid(x, y - 64, SuperMario.standardWidth, SuperMario.standardHeight, handler, unlock, handler.getMemoria().getUnlockable(), true, TilePart.UPLEFT.name(), false)); //AGGIUNGE UNA MONETA
-        type = Type.SOLIDFIRE;
+        if (timeForReUnlock + 500 < System.currentTimeMillis()) {
+            System.out.println("" + unlock);
+            timeForReUnlock = System.currentTimeMillis();
+            if (unlock.equals("MUSHROOM") || unlock.equals("UP1")) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        int i = 0;
+                        while (i < SuperMario.playerNumber) {
+                            handler.addTiles(new GravityTile(x, y - SuperMario.standardHeight, SuperMario.standardWidth, SuperMario.standardHeight, handler, unlock, handler.getMemoria().getUnlockable(), true, TilePart.UPLEFT.name(), false)); //AGGIUNGE UNA MONETA
+                            i++;
+                            try {
+                                sleep(500);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(CoinBlock.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        numero = 1;
+                    }
+                }.start();
+            } else {
+                handler.addTiles(new Solid(x, y - SuperMario.standardHeight, SuperMario.standardWidth, SuperMario.standardHeight, handler, unlock, handler.getMemoria().getUnlockable(), true, TilePart.UPLEFT.name(), false, "")); //AGGIUNGE UNA MONETA
+            }
+            if (numero == 1) {
+                type = "UNLOCKED";
 
-        /*handler.getMemoria().getUnlockable().stream().filter((animazione) -> (animazione.getType() == type && animazione.getMove() == Move.WALK)).forEach((animazione) -> {
-            this.anim = new Animazione(animazione);
-        });*/
-        ArrayList<Tile> tempo = handler.getMemoria().getUnlockable();
-        tempo.stream().filter((tile1) -> (tile1.getType() == unlock)).forEach((tile1) -> {
-            temp = tile1.getImage(TilePart.valueOf(type.name()));
-        });
+                ArrayList<Tile> tempo = handler.getMemoria().getUnlockable();
+                tempo.stream().filter((tile1) -> (tile1.getType().equals(type))).forEach((tile1) -> {
+                    temp = tile1.getImage(TilePart.UPLEFT);
+                });
+            }
+            numero--;
+        }
     }
 
 }

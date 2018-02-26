@@ -83,6 +83,7 @@ public class Memoria {
     }
 
     public void carica() {
+        clean();
         Thread[] t = new Thread[3];
         Log.append("5)CARICO LE ANIMAZIONI IN MEMORIA", DefaultFont.INFORMATION);
 
@@ -133,6 +134,7 @@ public class Memoria {
             getAnim(path + "Tile/other", tiles);
             getAnim(path + "Tile/unlockable", tiles);
             getAnim(path + "Tile/terrain", terreni);
+            getAnim(path + "Tile/special", terreni);
         });
         t[2].start();
         /*t[7] = new Thread(new Runnable() {

@@ -107,8 +107,9 @@ public class Visualizzatore extends JFrame implements Scrollable, ActionListener
         switch (e.getActionCommand()) {
             case "INIZIA":
                 dispose();
-                String current = livelli.getCurrent().substring(0, livelli.getCurrent().lastIndexOf("."))+ ".bmp";
-                current = current.substring(current.lastIndexOf("mario\\res\\Immagini"), current.length());
+                String current = livelli.getCurrent().substring(0, livelli.getCurrent().lastIndexOf("."))+ ".png";
+                System.out.println("asdas: "+current);
+                //current = current.substring(current.lastIndexOf("\\Immagini"), current.length());
                 home.inizia(current);
                 break;
             case "HOME":

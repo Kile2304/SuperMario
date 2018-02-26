@@ -39,6 +39,8 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     private Handler handler;
 
     protected SuperMario mario;
+    
+    private long[] shoot;
 
     //public static boolean cheatJump = false;
     public Movement(int velX, double jump, Handler handler, SuperMario mario) {
@@ -48,6 +50,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         this.handler = handler;
         this.mario = mario;
         Log.append("JUMP: " + jump, DefaultFont.INFORMATION);
+        shoot = new long[SuperMario.playerNumber];
     }
 
     @Override
@@ -65,6 +68,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         int keyCode = e.getKeyCode();   //NON STRETTAMENTE NECCESSARIO
         for (Player sp : handler.getPlayer()) {
             switch (keyCode) {
+                case KeyEvent.VK_A:id = SuperMario.playerNumber-1;
                 case KeyEvent.VK_LEFT:  //SE VIENE PREMUTO IL TATO SINISTRO
                     if (!handler.getPlayer().get(id).isFalling()) {   //SE STA TOCCANDO IL TEERRENO
                         //sp.setDirezione(-1);    //IMPOSTO A STA CORRENDO SPECCHIATO
@@ -77,6 +81,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     move[0] = true;
                     handler.getPlayer().get(id).setWalking(true);  //STA CAMMINANDO
                     break;
+                case KeyEvent.VK_D:id = SuperMario.playerNumber-1;
                 case KeyEvent.VK_RIGHT: //SE VIENE PREMUTO IL TASTO DESTRO
                     if (!handler.getPlayer().get(id).isFalling()) {   //SE STA TOCCANDO IL PAVIMENTO
                         //sp.setDirezione(1); //IMPOSTO A STA' CORRENDO
@@ -89,6 +94,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     move[1] = true;
                     handler.getPlayer().get(id).setWalking(true);  //STA CAMMINANDO
                     break;
+                case KeyEvent.VK_W:id = SuperMario.playerNumber-1;
                 case KeyEvent.VK_UP:
                     if (!handler.getPlayer().get(id).isJumping() && !handler.getPlayer().get(id).isFalling() || handler.getPlayer().get(id).getInfiniteJump()) {    //SE NON STAVA GIA SALTANDO PRIMA
                         if (salto.getCurrentFrame() != 0) {
@@ -102,6 +108,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         handler.getPlayer().get(id).setLastMovement(handler.getPlayer().get(id).getLastDirection(), Move.JUMP);
                     }
                     break;
+                case KeyEvent.VK_S:id = SuperMario.playerNumber-1;
                 case KeyEvent.VK_DOWN:
                     if (!handler.getPlayer().get(id).isFalling()) {
                         handler.getPlayer().get(id).setTeleport();
@@ -137,12 +144,14 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
         int keyCode = e.getKeyCode();   //PALESE
         for (Sprite sp : handler.getPlayer()) {
             switch (keyCode) {
+                case KeyEvent.VK_A: id = SuperMario.playerNumber-1;  //SE VIENE PREMUTO IL TATO SINISTRO
                 case KeyEvent.VK_LEFT:  //SE VIENE PREMUTO IL TATO SINISTRO
                     move[0] = false;
                     if (!move[0] && !move[1]) {
                         handler.getPlayer().get(id).setWalking(false); //NON STA PIU CAMMINANDO
                     }
                     break;
+                case KeyEvent.VK_D: id = SuperMario.playerNumber-1; //SE VIENE PREMUTO IL TASTO DESTRO
                 case KeyEvent.VK_RIGHT: //SE VIENE PREMUTO IL TASTO DESTRO
                     move[1] = false;
                     if (!move[0] && !move[1]) {
@@ -150,6 +159,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     }
                     //NON STA PIU CAMMINANDO
                     break;
+                case KeyEvent.VK_W:id = SuperMario.playerNumber-1;
                 case KeyEvent.VK_UP:
                     if (handler.getPlayer().get(id).isJumping() && handler.getPlayer().get(id).getGravity() <= 1) {
                         handler.getPlayer().get(id).setFalling(true);  //STA CADENDO
@@ -165,7 +175,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     }
                     break;
 
-                case KeyEvent.VK_Z:
+                /*case KeyEvent.VK_Z:
                     BufferedImage image;
                     try {
                         Toolkit tk = Toolkit.getDefaultToolkit(); //Toolkit class                         returns the default toolkit
@@ -185,6 +195,13 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         ImageIO.write(img, "png", f);
                     } catch (AWTException | IOException ex) {
                         Logger.getLogger(Movement.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;*/
+                case KeyEvent.VK_V:id = SuperMario.playerNumber-1;
+                case KeyEvent.VK_CONTROL: //shoot if he have a power-up
+                    if (handler.getPlayer().get(id).isPowerUp() && shoot[id] + 1000 < System.currentTimeMillis()) {
+                        handler.getPlayer().get(id).shoot();
+                        shoot[id] = System.currentTimeMillis();
                     }
                     break;
                 default:

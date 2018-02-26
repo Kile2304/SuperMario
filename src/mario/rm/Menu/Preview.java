@@ -12,10 +12,10 @@ import mario.rm.Animation.Tile;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.TilePart;
-import mario.rm.identifier.Type;
 import mario.rm.input.Loader;
 import mario.rm.input.MemoriaAC;
 import mario.rm.input.Reader;
+import mario.rm.input.SpriteLoad;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
@@ -30,10 +30,12 @@ public class Preview {
 
     private MemoriaAC memoria;
 
-    public Preview(int width, int height) {
+    public Preview(int width, int height, boolean carica) {
         mappa = new Cell[width][height];
-        memoria = new MemoriaAC();
-        memoria.carica();
+        if (carica) {
+            memoria = new MemoriaAC();
+            memoria.carica();
+        }
     }
 
     public Preview() {
@@ -92,12 +94,12 @@ public class Preview {
 
         EditLoad ed = new EditLoad();
 
-        try{
+        try {
             path = path.substring(path.lastIndexOf("Immagini\\"));
-        } catch(StringIndexOutOfBoundsException e){
-            
+        } catch (StringIndexOutOfBoundsException e) {
+
         }
-        
+
         Loader.convertTextInMap(path, ed);
 
         ArrayList<Cell> cl = ed.getCell();
@@ -167,7 +169,13 @@ public class Preview {
         }
 
         @Override
-        public void creaLivello(int x0, int y0, Type type, Type unlockable, String tile) {
+        public void creaLivello(SpriteLoad loaded) {
+
+            int x0 = loaded.getX();
+            int y0 = loaded.getY();
+            String type = loaded.getType();
+            String unlockable = loaded.getUnlockableType();
+            String partTile = loaded.getPartTile();
 
             boolean stop = false;
             boolean terreno = false;
@@ -182,7 +190,7 @@ public class Preview {
 
             for (Iterator<Anim> it = player.iterator(); it.hasNext();) {
                 Anim a = it.next();
-                if (a.getType() == unlockable) {
+                if (a.getType() == type) {
                     ob = a;
                     stop = true;
                     break;
@@ -201,7 +209,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Tile> it = tiles.iterator(); it.hasNext();) {
                     Tile a = it.next();
-                    if (a.getType() == type || a.getType() == unlockable) {
+                    if (a.getType() == type) {
                         ob = a;
                         stop = true;
                         break;
@@ -211,7 +219,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Tile> it = unlock.iterator(); it.hasNext();) {
                     Tile a = it.next();
-                    if (a.getType() == type || a.getType() == unlockable) {
+                    if (a.getType() == type) {
                         ob = a;
                         stop = true;
                         break;
@@ -221,7 +229,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Tile> it = terreni.iterator(); it.hasNext();) {
                     Tile a = it.next();
-                    if (a.getType() == type || a.getType() == unlockable) {
+                    if (a.getType() == type) {
                         ob = a;
                         terreno = true;
                         stop = true;
@@ -230,17 +238,22 @@ public class Preview {
                 }
             }
             coord.add(new Punto(x0, y0));
-            if (!tile.equals("")) {
+            if (!partTile.equals("") || unlockable != null && unlockable.equals("TERREIN")) {
                 Tile ti = (Tile) ob;
-                TilePart part = TilePart.valueOf(tile);
+                TilePart part = null;
+                if (partTile == null || partTile.equals("")) {
+                    part = TilePart.UPLEFT;
+                } else {
+                    part = TilePart.valueOf(partTile);
+                }
                 BufferedImage[] bg = ti.getImage(part);
                 if (bg != null) {
-                    cl.add(new Cell(type, bg[0], tile));
-                    if(terreno){
+                    cl.add(new Cell(type, bg[0], partTile));
+                    if (terreno) {
                         cl.get(cl.size() - 1).setTerrain(true);
                     }
                 }
-            } else if (type == Type.VOID) {
+            } else if (type.equals("VOID")) {
                 cl.add(new Cell(type, img, ""));
             } else {
                 Anim an = (Anim) ob;
@@ -261,8 +274,8 @@ public class Preview {
         }
 
     }
-    
-    public MemoriaAC getMemoria(){
+
+    public MemoriaAC getMemoria() {
         return memoria;
     }
 

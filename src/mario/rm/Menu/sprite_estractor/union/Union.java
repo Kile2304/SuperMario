@@ -56,7 +56,7 @@ public class Union {
             if (cut.getTile() != null && !cut.getTile().equals("")) {
                 boolean isJustAdded = false;
                 for (Tile tile1 : tile) {
-                    if (cut.getType() == tile1.getType()) {
+                    if (cut.getType().equals(tile1.getType())) {
                         tile1.addAnimation(cut.getNormal(), TilePart.valueOf(cut.getTile()));
                         isJustAdded = true;
                     }
@@ -70,7 +70,7 @@ public class Union {
                 }
             } else {
                 for (Anim a : anim) {
-                    if (cut.getType() == a.getType()) {
+                    if (cut.getType().equals(a.getType())) {
                         nuovo = false;
                         if (cut.getTransformation().equals("normal")) {
                             a.addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());

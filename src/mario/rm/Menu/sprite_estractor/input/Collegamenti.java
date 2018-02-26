@@ -5,14 +5,17 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import mario.rm.Menu.Griglia;
-import mario.rm.identifier.Type;
+import mario.rm.identifier.Tipologia;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -204,7 +207,7 @@ public class Collegamenti {
         if (!file.equals("")) {
             try { //se file e' == a "", vuol dire che non e' stata caricata alcuna immagine, ed estrarre un immagine da nulla non e' possibile
 
-                FileWriter file = new FileWriter("src/mario/res/Animazioni/list.txt", true);
+                FileWriter file = new FileWriter("res/Animazioni/list.txt", true);
                 BufferedWriter br = new BufferedWriter(file);
 
                 br.append("+[" + this.file + "]\n");
@@ -233,12 +236,9 @@ public class Collegamenti {
 
                 br.close();
 
-                String type = Setting.type.getText().toUpperCase() + " (0, 0, 0, 0, 0)";    //questa e' la nuova stringa da aggiungere al file type, nel caso fosse un nuovo type
-                try {
-                    Type.valueOf(Setting.type.getText().toUpperCase());   //controllo se il type inserito e' in elenco
-                } catch (IllegalArgumentException e) {
-                    File f = new File("src/mario/rm/identifier/Type.java");
-                    overrideJavaFile(f, "src/mario/rm/identifier/Type.java", type, "private", true);    //override file type
+                String type = Setting.type.getText();    //questa e' la nuova stringa da aggiungere al file type, nel caso fosse un nuovo type
+                if (!Tipologia.getValue(type)) {
+                    Tipologia.createNewType(type);
                 }
 
             } catch (IOException ex) {
@@ -250,45 +250,33 @@ public class Collegamenti {
         }
     }
 
-    private boolean overrideJavaFile(File in, String nomeFile, String type, String confronto, boolean punteggiatura) {  //scrive sui file java
-
+    public boolean checkFile(String file, String type) {
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(in);
+            File in = new File(file);
+            fis = new FileInputStream(in);
             InputStreamReader isr = new InputStreamReader(fis);
-
             BufferedReader br = new BufferedReader(isr);
-
-            boolean overwrite = false;
-            String temp = "";
-            StringBuilder nuovoType = new StringBuilder();
-            while ((temp = br.readLine()) != null) {
-                String word = "";
-                for (int i = 0; i < temp.length(); i++) {
-                    if (temp.charAt(i) == ';' && temp.charAt(i - 1) == ')' && !overwrite) {
-                        //nuovoType.append(",\n\t" + type + "\n");
-                        word += (",\n    " + type);
-                        overwrite = true;
-                    }
-                    word += temp.charAt(i);
+            String next = "";
+            while ((next = br.readLine()) != null) {
+                String[] scompact = next.split(" ");
+                if (scompact.length > 0 && scompact[0].equals(type)) {
+                    fis.close();
+                    return true;
                 }
-                nuovoType.append(word + "\n");
             }
-            Log.append(nuovoType.toString(), DefaultFont.INFORMATION);
-
-            br.close();
-            isr.close();
-            fis.close();
-
-            FileWriter file = new FileWriter(nomeFile);
-            BufferedWriter printout = new BufferedWriter(file);
-
-            printout.append(nuovoType.toString());
-
-            printout.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Collegamenti.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
+            Logger.getLogger(Collegamenti.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Collegamenti.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        return true;
+        return false;
     }
 
     public static void resetDone() {

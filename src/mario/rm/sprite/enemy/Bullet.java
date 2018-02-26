@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import mario.rm.Animation.Anim;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -14,12 +13,12 @@ public class Bullet extends Enemy{
     
     public static ArrayList<Anim> bullet;
     
-    public Bullet(Type type, int x, int y, int width, int height, Handler handler, boolean canDie, Direction dir){
+    public Bullet(String type, int x, int y, int width, int height, Handler handler, boolean canDie, Direction dir){
         super(x, y, width, height, handler, type, canDie, null);
         if(dir == Direction.LEFT){
             x -= width;
         }
-        bullet.stream().filter((anim) -> (anim.getType() == type)).forEach((anim) -> {
+        bullet.stream().filter((anim) -> (anim.getType().equals(type))).forEach((anim) -> {
             this.animazione = anim;
         });
         this.lastDirection = dir;

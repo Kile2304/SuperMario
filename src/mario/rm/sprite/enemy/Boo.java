@@ -3,8 +3,8 @@ package mario.rm.sprite.enemy;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
+import mario.rm.identifier.Tipologia;
 import mario.rm.sprite.Player;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -23,15 +23,17 @@ public class Boo extends Enemy {
      */
     private static Player p;
 
-    public Boo(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
+    public Boo(int x, int y, int width, int height, Handler handler, String type, boolean canDie) {
         super(x, y, width, height, handler, type, canDie);
-        velY = Type.BOO.getVelY();
-        velX = Type.BOO.getVelX();
+        velX = Tipologia.getValue(type, "velX");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        velY = Tipologia.getValue(type, "velY");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
     }
 
     public static void setPlayer(Player p) {
         Boo.p = p;
     }
+    
+    public void die(){}
 
     /**
      *

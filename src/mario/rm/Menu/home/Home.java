@@ -11,9 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -27,15 +25,20 @@ import javax.swing.JRootPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.xml.bind.DatatypeConverter;
 import mario.MainComponent;
+import mario.rm.Menu.Componenti.Impostazioni;
 import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.Menu.Componenti.Visualizzatore;
-import mario.rm.Menu.editor.Editor;
+import mario.rm.Menu.level_editor.Editor;
+import mario.rm.Menu.opzioni.MenuHome;
 import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.handler.SelectLevel;
 import mario.rm.input.Loader;
 import mario.rm.multigiocatore.TypeMulti;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
+import mario.rm.utility.Video;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 /**
  *
@@ -50,12 +53,17 @@ public class Home extends JFrame implements ActionListener {
 
     private static MainComponent main;
 
-    protected BufferedImage background = Loader.LoadImage("Immagini/menu.png");
+    protected BufferedImage background = Loader.LoadImage("Immagini/menu2.jpg");
 
     private Dimension dim = getToolkit().getScreenSize();
-    
+
     private final ArrayList<TranslucentButton> list;
-    
+
+    private JPanel all;
+    private Impostazioni menuHome;
+
+    Video video;
+
     /**
      * Creates new form Home
      *
@@ -63,43 +71,87 @@ public class Home extends JFrame implements ActionListener {
      */
     public Home() {
         super(TITLE);
-        
-        
+
         this.list = new ArrayList<>();
 
         setLayout(new GridLayout());    //layout per avere un pannello a pieno schermo e disegnarmi il background
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        //this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        setSize(dim.width / 2, dim.height / 2);
-        setLocationRelativeTo(null);
-        JPanel panel = new JPanel() {   //pannello per disegnarmi lo sfondo
-            public void paintComponent(Graphics g) {
-                g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-            }
-        };
-        panel.setLayout(new GridBagLayout());   //layout per accentrarmi i bottoni
-        panel.add(bottoni(), gbc);
-        add(panel);
-        //add(bottoni(), BorderLayout.NORTH);
-        
-        /*for (Entry<Long, String> keyboard : GlobalKeyboardHook.listKeyboards().entrySet()) {
-            System.out.format("%d: %s\n", keyboard.getKey(), keyboard.getValue());
-        }*/
+        sizer();
 
         setIconImage(Loader.LoadImage("Immagini/Luma-Yellow-icon.png"));
 
         setUndecorated(true);   //tolgo barre x _ ed il resto
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-
+        if (MainComponent.VLC) {
+            intro();
+        } else {
+            home();
+        }
         setVisible(true);
 
+        
+
+    }
+
+    public void play(String file){
+        video.play(file);
+    }
+    
+    private void sizer() {
+        boolean fullscreen = Boolean.parseBoolean(MainComponent.settings.getValue("fullscreen"));
+        int scale = Integer.parseInt(MainComponent.settings.getValue("scale"));
+        if (fullscreen) {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            scale = 1;
+        }
+        setSize(dim.width / scale, dim.height / scale);
+        setLocationRelativeTo(null);
+    }
+
+    private void intro() {
+
+        add((video = new Video(this)));
+        video.getPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+            @Override
+            public void finished(MediaPlayer mediaPlayer) {
+                home();
+            }
+        });
+        int volume = Boolean.parseBoolean(MainComponent.settings.getValue("sound"))
+                ? Integer.parseInt(MainComponent.settings.getValue("volume"))
+                : 0;
+        //System.out.println(""+volume);
+        video.getPlayer().setVolume(volume);
+    }
+
+    public void home() {
+        if(video != null) remove(video);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        all = new JPanel() {   //pannello per disegnarmi lo sfondo
+            public void paintComponent(Graphics g) {
+                g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+            }
+        };
+        all.setLayout(new GridBagLayout());   //layout per accentrarmi i bottoni
+        all.add(bottoni(), gbc);
+        add(all);
+        revalidate();
+        repaint();
+    }
+
+    public void reset() {
+        remove(menuHome);
+        add(all);
+        sizer();
+        revalidate();
+        repaint();
     }
 
     public void setMainComponent(MainComponent main) {
@@ -126,14 +178,7 @@ public class Home extends JFrame implements ActionListener {
     private void ringraziamenti() {
         FileInputStream fis = null;
         //System.out.println(""+(this.getClass().getResource("../")));
-        try {
-            Log.append("Path:" + (new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath()), DefaultFont.INFORMATION);
-            fis = new FileInputStream(new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath());
-        } catch (FileNotFoundException ex) {
-            //System.out.println("Errore in caricare in memoria il file: " + new File(MainComponent.jarPath.getAbsolutePath() + "/res/crediti/ringraziamenti.txt").getAbsolutePath());
-            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
-        }
-        InputStreamReader isr = new InputStreamReader(fis);
+        InputStreamReader isr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream("crediti\\crediti.txt"));
         BufferedReader br = new BufferedReader(isr);
 
         String line = "";
@@ -265,9 +310,13 @@ public class Home extends JFrame implements ActionListener {
         for (int i = 0; i < bottonList.length; i++) {
             TranslucentButton b = new TranslucentButton(bottonList[i]);
 
-            b.setBgCol(Color.WHITE);
+            b.setBgCol(new Color(42, 82, 190));
+            b.setBgCol(new Color(18, 10, 143)); //background
+
             b.setBgColro(Color.GRAY);
-            b.setFgCol(Color.BLACK);
+
+            b.setFgCol(new Color(127, 255, 212));   //bordi e scritte
+
             b.setFgColsel(Color.BLACK);
 
             b.addActionListener(this);
@@ -296,9 +345,12 @@ public class Home extends JFrame implements ActionListener {
                 spriteEstractor();
                 break;
             case "OPZIONI":
-
+                this.remove(all);
+                this.add((menuHome = new MenuHome(this)));
+                repaint();
+                revalidate();
                 break;
-            case "RIGRAZIAMENTI":
+            case "RINGRAZIAMENTI":
                 ringraziamenti();
                 break;
             case "ESCI":

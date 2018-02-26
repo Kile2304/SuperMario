@@ -18,6 +18,8 @@ public class MultiAnim {
         this.delay = delay;
     }
 
+    public MultiAnim() {}
+
     public BufferedImage getImg() {
         return img;
     }
@@ -28,6 +30,14 @@ public class MultiAnim {
     
     public long getDelay(){
         return delay;
+    }
+
+    public void setImg(BufferedImage img) {
+        this.img = img;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
     
     public void initialize(MultiAnim ma){

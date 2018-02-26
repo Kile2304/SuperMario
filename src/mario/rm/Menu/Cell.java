@@ -1,7 +1,6 @@
 package mario.rm.Menu;
 
 import java.awt.image.BufferedImage;
-import mario.rm.identifier.Type;
 import mario.rm.utility.RGB;
 
 /**
@@ -10,21 +9,23 @@ import mario.rm.utility.RGB;
  */
 public class Cell {
 
-    protected Type type;
+    protected String type;
     protected BufferedImage img;
     
     protected boolean collider;
     protected boolean terrain;
     
     protected String partTile;
-    protected Type unlockable;
+    //protected Type unlockable;
+    protected String script;
 
-    public Cell(Type id, BufferedImage img, String title) {
+    public Cell(String id, BufferedImage img, String title) {
         this.type = id;
         this.img = img;
         collider = false;
         terrain = false;
         partTile = title;
+        script = "";
     }
 
     public Cell() {
@@ -34,7 +35,7 @@ public class Cell {
         return img;
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
@@ -54,12 +55,20 @@ public class Cell {
         return terrain;
     }
     
-    public void setUnlockable(Type type){
+    /*public void setUnlockable(Type type){
         unlockable = type;
     }
     
     public Type getUnlockable(){
         return unlockable;
+    }*/
+    
+    public String getScript(){
+        return script;
+    }
+    
+    public void setScript(String script){
+        this.script = script;
     }
 
     public String getPartTil() {

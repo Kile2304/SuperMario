@@ -1,5 +1,6 @@
 package mario.rm.Animation;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import mario.rm.identifier.TilePart;
-import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -30,13 +30,13 @@ public class Tile implements Serializable, Animated {
 
     private String path;
 
-    private Type type;
+    private String type;
 
-    private Type unlock;
+    private String unlock;
 
     private int index;
 
-    public Tile(BufferedImage[] image, String tile, String path, Type type) {
+    public Tile(BufferedImage[] image, String tile, String path, String type) {
         this.image = new HashMap<>();
         this.tile = tile;
         this.image.put(image, tile);
@@ -46,7 +46,7 @@ public class Tile implements Serializable, Animated {
         index = -1;
     }
 
-    public Tile(BufferedImage[] image, String tile, String path, Type type, Type unlock) {
+    public Tile(BufferedImage[] image, String tile, String path, String type, String unlock) {
         this.image = new HashMap<>();
         this.tile = tile;
         this.image.put(image, tile);
@@ -69,6 +69,20 @@ public class Tile implements Serializable, Animated {
         return image.entrySet();
     }
 
+    public MultiAnim getImage(MultiAnim index) {
+        Set<Entry<BufferedImage[], String>> s = image.entrySet();
+        for (Entry<BufferedImage[], String> entry : s) {
+            if (entry.getValue().equals(TilePart.UPLEFT.name())) {
+                if (!(entry.getKey().length > index.getIndex())) {
+                    index.setIndex(0);
+                }
+                index.setImg(entry.getKey()[index.getIndex()]);
+                index.setIndex(index.getIndex() + 1);
+            }
+        }
+        return index;
+    }
+
     public BufferedImage[] getImage(TilePart ti) {
         /*if (index < image.length) {
             index++;
@@ -76,8 +90,7 @@ public class Tile implements Serializable, Animated {
             index = 0;
         }
         return image[index];*/
-        
-        
+
         Set<Entry<BufferedImage[], String>> s = image.entrySet();
         for (Entry<BufferedImage[], String> entry : s) {
             if (entry.getValue().equals(ti.name())) {
@@ -91,7 +104,7 @@ public class Tile implements Serializable, Animated {
         return path;
     }
 
-    public Type getUnlock() {
+    public String getUnlock() {
         return unlock;
     }
 
@@ -129,7 +142,7 @@ public class Tile implements Serializable, Animated {
             Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
         }
         //System.out.println("finito");
-        
+
         //System.out.println("finito");
     }
 
@@ -161,7 +174,7 @@ public class Tile implements Serializable, Animated {
         }
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
@@ -173,6 +186,20 @@ public class Tile implements Serializable, Animated {
         } else {
             return null;
         }
+    }
+
+    public void adapt(int width, int height) {
+        Set<Entry<BufferedImage[], String>> s = image.entrySet();
+        for (Entry<BufferedImage[], String> entry : s) {
+            BufferedImage[] img = entry.getKey();
+            for (int i = 0; i < img.length; i++) {
+                BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = resized.createGraphics();
+                g2d.drawImage(img[i], 0, 0, width, height, null);
+                img[i] = resized;
+            }
+        }
+        s = null;
     }
 
 }

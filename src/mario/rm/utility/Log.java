@@ -3,15 +3,24 @@ package mario.rm.utility;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.UIDefaults;
 import javax.swing.border.Border;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
@@ -32,7 +41,7 @@ public class Log extends JFrame implements KeyListener {
 
     private static final String TITLE = "LOG CONSOLE";
 
-    public static JTextPane logConsole; //zona per visualizzare l'output
+    public static LogConsole logConsole; //zona per visualizzare l'output
 
     private static final String DEFAULT = "Salve, benvenuto sulla console di Super Mario, questo gioco e' ancora in beta, quindi puo incorrere in errore.\n\n";
 
@@ -41,9 +50,12 @@ public class Log extends JFrame implements KeyListener {
     private final JTextArea logCommand;   //zona per inserire i comandi
 
     private final MainComponent main;
+    
+    private static File f = new File("log.txt");
 
     /**
      * <b>viene utilizzato, per inizializzare la schermata di log</b>
+     *
      * @param main questa classe deve contenere l'attributo SuperMario
      */
     public Log(MainComponent main) {
@@ -60,25 +72,15 @@ public class Log extends JFrame implements KeyListener {
 
         setSize(width, height);
 
-        logConsole = new JTextPane();
-        logConsole.setCaretPosition(0);
+        logConsole = new LogConsole();
+        logConsole.setBackground(Color.BLACK);
+
         //logConsole.setLineWrap(true);
         //logConsole.setLineWrap(true);
         //logConsole.setPreferredSize(new Dimension(width, height / 10 * 9));
-        logConsole.setEditable(false);  //NON CI SI PUO SCRIVERE
-
-        DefaultCaret caret = (DefaultCaret) logConsole.getCaret();   //set Autoscroll
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);  //position ever update
-
         doc = logConsole.getStyledDocument();   //VARIABILE PER SCRIVERE SULLA CONSOLE
-
-        append(DEFAULT, DefaultFont.STANDARD);  //STRINGA DELLA CONSOLE INIZIALE
-
-        logConsole.setBorder(BorderFactory.createMatteBorder( //SETTO IL BORDO
-                1, 0, 0, 0, Color.BLACK));
-        logConsole.setAutoscrolls(true);    //SCORRE VERSO IL BASSO AUTOMATICAMENTE
         
-        logConsole.setBackground(Color.BLACK);
+        append(DEFAULT, DefaultFont.STANDARD);  //STRINGA DELLA CONSOLE INIZIALE
 
         logCommand = new JTextArea();
         logCommand.setCaretPosition(0); //LO FACCIO COMINCIARE DALL'INIZIO
@@ -92,7 +94,6 @@ public class Log extends JFrame implements KeyListener {
         scrollLog.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         Border border = BorderFactory.createLineBorder(Color.BLACK);
-        //logCommand.setPreferredSize(new Dimension(width, height - height / 10 * 9));
         logCommand.setBorder(BorderFactory.createCompoundBorder(border,
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
@@ -116,12 +117,15 @@ public class Log extends JFrame implements KeyListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
-        
+
         setVisible(true);
 
     }
 
-    public static final void append(String text) {
+    /*public static final void append(String text) {
+        if (logConsole == null) {
+            return;
+        }
         try {
             Style style = logConsole.addStyle("Arial", null);   //INIZIALIZZO LO STILE
             StyleConstants.setForeground(style, Color.BLACK);   //SETTO IL COLORE NELLO STILE
@@ -134,14 +138,17 @@ public class Log extends JFrame implements KeyListener {
         } catch (BadLocationException ex) {
             append(stackTraceToString(ex), DefaultFont.ERROR);
         }
-    }
+    }*/
 
     /**
      *
      * @param text Testo da aggiungere al log
      * @param defFont font da usare (colore, stile, dimensione...)
      */
-    public static final void append(String text, DefaultFont defFont) { //UGUALE ALL'ALTRO APPEND MA LO STYLE SI BASA SU UN FONT PERSONALIZZATO
+    /*public static final void append(String text, DefaultFont defFont) { //UGUALE ALL'ALTRO APPEND MA LO STYLE SI BASA SU UN FONT PERSONALIZZATO
+        if (logConsole == null) {
+            return;
+        }
         try {
             Style style = logConsole.addStyle(defFont.getFont().getFontName(), null);
 
@@ -159,12 +166,38 @@ public class Log extends JFrame implements KeyListener {
         } catch (BadLocationException ex) {
             append(stackTraceToString(ex), DefaultFont.ERROR);
         }
+    }*/
+    public static final void append(String text){
+        write(text);
+    }
+    
+    public static final void write(String text){
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(f, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.append(text+"\n");
+            bw.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public static final void append(String text, DefaultFont defFont){
+        write(text);
     }
 
     /**
      *
      * @param e eccezione creata dall'errore
-     * @return ritorna una stringa dettagliata sull'errore e sui richiami delle funzioni
+     * @return ritorna una stringa dettagliata sull'errore e sui richiami delle
+     * funzioni
      */
     public static final String stackTraceToString(Throwable e) {    //INSERISCE IN UNA STRINGA GLI ERRORI
         StringBuilder sb = new StringBuilder();
@@ -189,7 +222,7 @@ public class Log extends JFrame implements KeyListener {
         boolean errore = false;
         SuperMario mario = main.getSuperMario();
         Handler handler = null;
-        if(mario != null){
+        if (mario != null) {
             handler = mario.getHandler();
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import mario.rm.Animation.Cut;
 import mario.rm.handler.Handler;
 import mario.rm.sprite.Player;
-import mario.rm.identifier.Type;
 import mario.rm.sprite.tiles.Tiles;
 
 /**
@@ -24,7 +23,7 @@ public class Boss extends Enemy {
 
     private int life;
 
-    public Boss(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
+    public Boss(int x, int y, int width, int height, Handler handler, String type, boolean canDie) {
         super(x, y, width, height, handler, type, canDie);
         time = System.currentTimeMillis();
         force = false;
@@ -69,7 +68,7 @@ public class Boss extends Enemy {
         LinkedList<Tiles> tile = handler.getTiles();
         for (int i = 0; i < handler.getTiles().size(); i++) {
             if (getBounds().intersects(tile.get(i).getBounds())) {
-                if (tile.get(i).getType() != Type.MUSHROOM || tile.get(i).getType() != Type.COIN) {
+                if (tile.get(i).getType().equals("MUSHROOM") || tile.get(i).getType().equals("COIN")) {
                     if (getBoundsBottom().intersects(tile.get(i).getBounds())) { //INTERSEZIONE PARTE BASSA
                         y = tile.get(i).getY() - height + 1;//LA SUA POSIZIONE DIVIENE POSIZIONE TILE (Y) MENO L'ALTEZZA
 

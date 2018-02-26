@@ -6,7 +6,6 @@
 package mario.rm.Animation;
 
 import java.awt.image.BufferedImage;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -14,7 +13,7 @@ import mario.rm.identifier.Type;
  */
 public interface Animated {
     
-    Type getType();
+    String getType();
     
     String getTile();
     

@@ -1,21 +1,26 @@
 package mario.rm.sprite;
 
-import mario.rm.identifier.Type;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import static java.lang.Thread.sleep;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import mario.MainComponent;
 import mario.rm.utility.Size;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.MultiAnim;
+import mario.rm.Animation.Tile;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
+import mario.rm.identifier.TilePart;
 
 /**
  *
@@ -46,7 +51,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
     protected boolean jumping;  //SALTARE
     protected boolean walking;  //CAMMINARE
 
-    protected Type type;    //TIPO DI SPRIT
+    protected String type;    //TIPO DI SPRIT
 
     protected int direzione;    //USATO PER INDICARE L'IMMAGINE DA DISEGNARE E LA DIREZONE IN CUI SI MUOVE
 
@@ -60,7 +65,13 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
 
     protected MultiAnim ma;
 
-    public Sprite(int x, int y, int width, int height, Handler handler, Type type, ArrayList<Anim> elenco) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
+    private BufferedImage[] aura;
+
+    int tempIndex;
+
+    public Sprite(int x, int y, int width, int height, Handler handler, String type, ArrayList<Anim> elenco) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
+        System.gc();
+        System.out.println("after: "+MainComponent.memoryUsed());
         this.x = x; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE X
         this.y = y; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE Y
         this.width = width; //LARGHEZZA
@@ -79,13 +90,22 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         if (handler != null) {
             for (Iterator<Anim> it = elenco.iterator(); it.hasNext();) {
                 Anim animazione = it.next();
-                if (animazione.getType() == type) {
+                if (animazione.getType().equals(type)) {
                     this.animazione = animazione;   //DA CAMBIARE (PROBABILMENTE COSTRUTTORE CHE CREA COPIA)
                 }
             }
         }
+        if (handler != null) {
+            for (Iterator<Tile> it = handler.getMemoria().getUnlockable().iterator(); it.hasNext();) {
+                Tile animazione = it.next();
+                if (animazione.getType().equals("AURA")) {
+                    aura = animazione.getImage(TilePart.UPLEFT);
+                }
+            }
+        }
+        tempIndex = -1;
 
-        ma = new MultiAnim(null, 0, 0);
+        //ma = new MultiAnim(null, 0, 0);
 
         /*handler.getMemoria().getTiles().stream().filter((t) -> (t.getType() == Type.KI)).forEach((t) -> {
             ti = t.getImage(TilePart.UPLEFT);
@@ -122,6 +142,8 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         return false;
     }
 
+    long time;
+
     /**
      *
      * @param g
@@ -132,19 +154,22 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         } catch (InterruptedException ex) {
             Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        MultiAnim t = animazione.getImage(actualMove, actualDirection, lastMove, lastDirection, ma);
-        if (t != null) {
-            ma.initialize(t);
-        }
-        //System.out.println("Get: "+type+" "+ma.getIndex()+" delay: "+ma.getDelay());
-        temp = ma.getImg();
-        lastMove = actualMove;
-        lastDirection = actualDirection;
-        //if(type == Type.MISSILE)System.out.println(""+ma.getIndex());
-        if (temp != null) {
-            g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
-        }
+        if (animazione != null) {
+            MultiAnim t = animazione.getImage(actualMove, actualDirection, lastMove, lastDirection, ma);
+            if (t != null) {
+                ma.initialize(t);
+            }
+            //System.out.println("Get: "+type+" "+ma.getIndex()+" delay: "+ma.getDelay());
+            temp = ma.getImg();
+            lastMove = actualMove;
+            lastDirection = actualDirection;
 
+            if (temp != null) {
+                g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
+            }
+            
+            t = null;
+        }
     }
 
     public void setLastMovement(Direction dir, Move move) {
@@ -278,7 +303,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
      *
      * @return RITORNA DI CHE TIPO E' LO SPRITE, ES: PLAYER, SOLID, TARTOSSO...
      */
-    public Type getType() {
+    public String getType() {
         return type;
     }
 

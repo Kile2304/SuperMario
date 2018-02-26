@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import mario.rm.Menu.Componenti.Checkable;
 import static mario.rm.Menu.Componenti.Checkable.elenco;
 import mario.rm.Menu.Specifiche;
-import mario.rm.identifier.Type;
 
 /**
  *
@@ -31,7 +30,7 @@ public class Strumenti extends JPanel implements ActionListener, Checkable {
             }
         }
 
-        Specifiche righello = new Specifiche("Righello", img, Type.VOID);
+        Specifiche righello = new Specifiche("Righello", img, "VOID", true);
         elenco.add(righello);
         righello.getButton().addActionListener(this);
         add(righello.getButton());

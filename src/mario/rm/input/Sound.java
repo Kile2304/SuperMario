@@ -15,6 +15,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import mario.MainComponent;
 import mario.rm.utility.DefaultFont;
+import mario.rm.utility.Ini;
 import mario.rm.utility.Log;
 
 /**
@@ -22,13 +23,14 @@ import mario.rm.utility.Log;
  * @author LENOVO
  */
 public class Sound {
-
+    
     private static ArrayList<FloatControl> control = new ArrayList<>();
     
     private Clip clip;
-
-    public static boolean soundON = false;
-
+    
+    public static boolean soundON;
+    public static int volume;
+    
     public Sound(String path) {
         try {
             if (!MainComponent.jar.isFile()) {
@@ -44,40 +46,39 @@ public class Sound {
             }
             FloatControl gainControl
                     = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            Log.append("gainControl: "+gainControl, DefaultFont.INFORMATION);
-            float value = 80.0f;
-            float range = Math.abs(gainControl.getMinimum()) + Math.abs(gainControl.getMaximum());
-            float temp = (float) (((value / 100.0) * range) - Math.abs(gainControl.getMinimum()));
+            Log.append("gainControl: " + gainControl, DefaultFont.INFORMATION);
+            int range = (int) Math.sqrt(Math.pow((gainControl.getMaximum() - gainControl.getMinimum()), 2));
+            float temp = gainControl.getMinimum() + ((range * volume) / 100);
             gainControl.setValue(temp);
             control.add(gainControl);
         } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
             Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
         }
     }
-
+    
     public void start() {
         if (soundON) {
             clip.start();
         }
     }
-
+    
     public void stop() {
         if (soundON) {
             clip.setFramePosition(0);
             clip.stop();
         }
     }
-
+    
     public void loop() {
         if (soundON) {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
-
+    
     public int getCurrentFrame() {
         return (int) clip.getLongFramePosition();
     }
-
+    
     public void isRunning() {
         if (soundON) {
             long time = 0;
@@ -93,15 +94,26 @@ public class Sound {
             }
         }
     }
-
-    public static FloatControl getVolume(){
+    
+    public static FloatControl getVolume() {
         return control.get(0);
     }
     
-    public static void setVolume(float volume) {
-        for (int i = 0; i < control.size(); i++) {
-            control.get(i).setValue(volume);
+    public static void setVolume(int volume) {
+        try {
+            int range = (int) Math.sqrt(Math.pow((control.get(0).getMaximum() - control.get(0).getMinimum()), 2));
+            float temp = control.get(0).getMinimum() + ((range * volume) / 100);
+            for (int i = 0; i < control.size(); i++) {
+                control.get(i).setValue(temp);
+            }
+        } catch (Exception e) {
         }
     }
-
+    
+    public static void setSound() {
+        Ini ini = new Ini(System.getProperty("user.home") + "/Luigi/settings.ini");
+        soundON = Boolean.parseBoolean(ini.getValue("sound"));
+        volume = Integer.parseInt(ini.getValue("volume"));
+    }
+    
 }

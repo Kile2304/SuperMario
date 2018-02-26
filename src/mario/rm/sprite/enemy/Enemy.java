@@ -11,8 +11,8 @@ import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
+import mario.rm.identifier.Tipologia;
 import mario.rm.sprite.Sprite;
-import mario.rm.identifier.Type;
 import mario.rm.sprite.tiles.Tiles;
 
 /**
@@ -42,10 +42,10 @@ public class Enemy extends Sprite {
      * @param type tipologia di personaggio
      * @param canDie se puo morire 
      */
-    public Enemy(int x, int y, int width, int height, Handler handler, Type type, boolean canDie) {
+    public Enemy(int x, int y, int width, int height, Handler handler, String type, boolean canDie) {
         super(x, y, width, height, handler, type, handler.getMemoria().getEnemy());
-        velX = type.getVelX();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
-        velY = type.getVelY();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        velX = Tipologia.getValue(type, "velX");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        velY = Tipologia.getValue(type, "velY");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
 
         isDie = false;  //IMPOSTO A NON MORTO
 
@@ -61,15 +61,15 @@ public class Enemy extends Sprite {
 
     }
 
-    public Enemy(int x, int y, int width, int height, Handler handler, Type type, boolean canDie, Anim animazione) {
+    public Enemy(int x, int y, int width, int height, Handler handler, String type, boolean canDie, Anim animazione) {
         super(x, y, width, height, null, type, null);
         this.handler = handler;
         if (animazione != null) {
             this.animazione = animazione;
         }
 
-        velX = type.getVelX();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
-        velY = type.getVelY();  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        velX = Tipologia.getValue(type, "velX");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        velY = Tipologia.getValue(type, "velY");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
 
         isDie = false;  //IMPOSTO A NON MORTO
 
@@ -117,11 +117,11 @@ public class Enemy extends Sprite {
             LinkedList<Tiles> tile = handler.getTiles();
             for (int i = 0; i < handler.getTiles().size(); i++) {
                 if (getBounds().intersects(tile.get(i).getBounds())) {
-                    if (tile.get(i).getType() == Type.VOID) {
+                    if (tile.get(i).getType().equals("VOID")) {
                         canDie = true;
                         isDie = true;
                         die();
-                    } else if (tile.get(i).getType() != Type.MUSHROOM || tile.get(i).getType() != Type.COIN) {
+                    } else if (!tile.get(i).getType().equals("MUSHROOM") || !tile.get(i).getType().equals("COIN")) {
                         if (getBoundsBottom().intersects(tile.get(i).getBounds())) { //INTERSEZIONE PARTE BASSA
                             y = tile.get(i).getY() - height + 1;//LA SUA POSIZIONE DIVIENE POSIZIONE TILE (Y) MENO L'ALTEZZA
 
@@ -190,7 +190,7 @@ public class Enemy extends Sprite {
     @Deprecated
     @Override
     public Enemy clone() {
-        Enemy e = new Enemy(x, y, width, height, handler, type, canDie, animazione);
+        /*Enemy e = new Enemy(x, y, width, height, handler, type, canDie, animazione);
         Class<?> clazz = null;
         try {
             clazz = Class.forName("mario.rm.sprite.enemy.Tartosso");
@@ -212,7 +212,8 @@ public class Enemy extends Sprite {
         } catch (InvocationTargetException ex) {
             Logger.getLogger(Enemy.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return e;
+        return e;*/
+        return null;
     }
 
     public boolean canHurt(){

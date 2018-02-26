@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
-import mario.rm.identifier.Type;
 import mario.rm.utility.RGB;
 
 /**
@@ -19,7 +18,7 @@ public class Specifiche extends Cell {
 
     private JButton button;
 
-    public Specifiche(Type id, BufferedImage img, String title) {
+    public Specifiche(String id, BufferedImage img, String title) {
         super(id, img, title);
 
         button = new JButton();
@@ -37,7 +36,7 @@ public class Specifiche extends Cell {
         button.setText(s);
     }
 
-    public Specifiche(String s, BufferedImage img, Type id) {
+    public Specifiche(String s, BufferedImage img, String id, boolean b) {
         button = initColor();
         button.setText(s);
         this.img = img;

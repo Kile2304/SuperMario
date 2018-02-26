@@ -16,7 +16,6 @@ import mario.rm.identifier.Move;
 import mario.rm.utility.Punto;
 import mario.rm.input.Loader;
 import mario.rm.identifier.Direction;
-import mario.rm.identifier.Type;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -34,7 +33,7 @@ public class Cut implements Serializable {
     private int numeroDiImmagini;
 
     private Move move;
-    private Type type;
+    private String type;
     private Direction dir;
 
     private String path;
@@ -42,7 +41,7 @@ public class Cut implements Serializable {
 
     private String tile;
 
-    private Type unlockable;
+    private String unlockable;
 
     private boolean errore;
 
@@ -51,7 +50,7 @@ public class Cut implements Serializable {
     *   COSTRUTTORE PER IMMAGINI CON LO STESSO NUMERO DI FIGURE PER 1 RIGA
     *
      */
-    public Cut(BufferedImage original, int x, int y, int width, int height, int numeroDiImmagini, int xOffset, int yOffset, Move move, Type type, Direction dir) {
+    public Cut(BufferedImage original, int x, int y, int width, int height, int numeroDiImmagini, int xOffset, int yOffset, Move move, String type, Direction dir) {
 
         this.move = move;
         this.type = type;
@@ -90,7 +89,7 @@ public class Cut implements Serializable {
         }
     }
 
-    public Cut(String path, LinkedList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation) {
+    public Cut(String path, LinkedList<Punto> punti, Move move, String type, Direction dir, String cart, String transformation) {
 
         errore = false;
 
@@ -172,7 +171,7 @@ public class Cut implements Serializable {
     *   COSTRUTTORE PER IMMAGINI CON LO STESSO NUMERO DI FIGURE PER 1 O PIU' RIGHE
     *
      */
-    public Cut(BufferedImage original, int x, int y, int width, int height, int numeroDiImmaginiX, int numeroDiImmaginiY, int xOffset, int yOffset, Move move, Type type, Direction dir) {
+    public Cut(BufferedImage original, int x, int y, int width, int height, int numeroDiImmaginiX, int numeroDiImmaginiY, int xOffset, int yOffset, Move move, String type, Direction dir) {
         this.move = move;
         this.type = type;
         this.dir = dir;
@@ -211,7 +210,7 @@ public class Cut implements Serializable {
         }
     }
 
-    public Cut(BufferedImage original, int x, int y, int width, int height, int[] numeroDiImmaginiX, int numeroDiImmaginiY, int xOffset, int yOffset, Move move, Type type, Direction dir) {    //SPECIALE
+    public Cut(BufferedImage original, int x, int y, int width, int height, int[] numeroDiImmaginiX, int numeroDiImmaginiY, int xOffset, int yOffset, Move move, String type, Direction dir) {    //SPECIALE
         this.move = move;
         this.type = type;
         this.dir = dir;
@@ -251,7 +250,7 @@ public class Cut implements Serializable {
         }
     }
 
-    public Cut(BufferedImage original, int x, int y, int width, int height, int numeroDiImmaginiX, int numeroDiImmaginiY, int xOffset, int yOffset, Move move, Type type, int jump, Direction dir) {    //SPECIALE
+    public Cut(BufferedImage original, int x, int y, int width, int height, int numeroDiImmaginiX, int numeroDiImmaginiY, int xOffset, int yOffset, Move move, String type, int jump, Direction dir) {    //SPECIALE
         this.move = move;
         this.type = type;
         this.dir = dir;
@@ -298,11 +297,11 @@ public class Cut implements Serializable {
         }
     }
 
-    public Cut(String path, ArrayList<Punto> coord, Move move, Type type) { //da visionare
+    public Cut(String path, ArrayList<Punto> coord, Move move, String type) { //da visionare
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Cut(String path, LinkedList<Punto> punti, Move move, Type type, Direction dir, String cart, String transformation, Type unlockable) {
+    public Cut(String path, LinkedList<Punto> punti, Move move, String type, Direction dir, String cart, String transformation, String unlockable) {
 
         errore = false;
         //System.out.println(""+path);
@@ -377,7 +376,7 @@ public class Cut implements Serializable {
         return move;
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
@@ -409,7 +408,7 @@ public class Cut implements Serializable {
         return tile;
     }
 
-    public Type getUnlockable() {
+    public String getUnlockable() {
         return unlockable;
     }
 

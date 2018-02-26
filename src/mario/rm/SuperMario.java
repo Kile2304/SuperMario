@@ -1,12 +1,16 @@
 package mario.rm;
 
 import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.lang.management.ManagementFactory;
+import javax.swing.JFrame;
 import mario.MainComponent;
+import mario.rm.Menu.Componenti.Impostazioni;
 import mario.rm.Menu.opzioni.Menu;
 import mario.rm.camera.Camera;
 import mario.rm.handler.Handler;
@@ -37,7 +41,6 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public static int standardHeight;    //TEMPORANEA PER HEIGHT DEGLI SPRITE
 
     private BufferedImage bg;    //SFONDO
-    private BufferedImage bgB;    //SFONDO
     private static final BufferedImage coin = (Loader.LoadImage("Immagini/tiles.png").getSubimage(64 * 7 + 8, 10, 64, 64)); //FOTO DELLA MONETA ritagliata
     //private BufferedImage life;
 
@@ -53,15 +56,12 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
     public static Frame frame;
 
-    //private static boolean video = false;
-
     public static ControllerListener movement;
 
-    private Menu option;
+    private Impostazioni option;
     
     public static int playerNumber;
 
-    //private Thread t;
     //
     public SuperMario(int player) {
         Log.append("" + ManagementFactory.getRuntimeMXBean().getName(), DefaultFont.INFORMATION);
@@ -108,11 +108,17 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         Log.append("2)CREO LA FINESTRA", DefaultFont.INFORMATION);
 
         frame = new Frame(TITOLO);  // NUOVA FINESRTRA
-        //device.setFullScreenWindow(frame);
         //WIDTH = device.getFullScreenWindow().getWidth() / 2;    //OTTENGO LA LARGHEZZA MASSIMA DELLA FINESTRA
         //HEIGHT = device.getFullScreenWindow().getHeight() / 2;  //OTTENGO LA ALTEZZA MASSIMA DELLA FINESTRA
-        WIDTH = 1920 / 2;    //OTTENGO LA LARGHEZZA MASSIMA DELLA FINESTRA
-        HEIGHT = 1080 / 2;  //OTTENGO LA ALTEZZA MASSIMA DELLA FINESTRA
+        boolean fullscreen = Boolean.parseBoolean(MainComponent.settings.getValue("fullscreen"));
+        int scale = Integer.parseInt(MainComponent.settings.getValue("scale"));
+        if(fullscreen){
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            scale = 1;
+        }
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = dim.width / scale;    //OTTENGO LA LARGHEZZA MASSIMA DELLA FINESTRA
+        HEIGHT = dim.height / scale;  //OTTENGO LA ALTEZZA MASSIMA DELLA FINESTRA
 
         frame.inizializza(WIDTH, HEIGHT);
 
@@ -135,7 +141,6 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         next = handler.getLevel();
         next = next.substring(0, next.lastIndexOf(".")) + ".png";
         Log.append("Bg image: " + next, DefaultFont.INFORMATION);
-        bgB = Loader.LoadImage("Immagini/bg.png");
         bg = Loader.LoadImage(next); //CARICO IN MEMORIA LO SFONDO
 
         cam = new Camera(handler.getPlayer().get(0));    //SERVE PER ACCENTRARE SUL PLAYER LA TELECAMERA
@@ -149,7 +154,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
             if (!menu) {
                 BufferStrategy strategy = getBufferStrategy(); //MI INDICA QUANTI BUFFER CI SONO
                 if (strategy == null) {   //SE NON CI SONO BUFFER
-                    createBufferStrategy(3);    //CREA 3 BUFFER
+                    createBufferStrategy(4);    //CREA 3 BUFFER
                     Log.append("9)HO CREATO I BUFFER", DefaultFont.INFORMATION);
                     return;
                 }
@@ -162,7 +167,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     g.translate(cam.getX(), cam.getY());    //SPOSTA IL CENTRAMENTO DELLA FINESTRA
 
                     //g.drawImage(bg, 0, 0, bg.getWidth() / 64 * standardWidth, bg.getHeight() / 64 * standardHeight, null);
-                    int pix = 64;
+                    /*int pix = 64;
                     int dstx1 = handler.getPlayer().get(0).getX() - WIDTH / 2;
                     int dsty1 = handler.getPlayer().get(0).getY() - HEIGHT / 2 + standardHeight;
                     int dstx2 = WIDTH + dstx1;
@@ -171,11 +176,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     int srcx1 = dstx1 * pix / standardWidth;
                     int srcy1 = dsty1 * pix / standardHeight;
                     int srcx2 = srcx1 + WIDTH * pix / standardWidth;
-                    int srcy2 = srcy1 + HEIGHT * pix / standardHeight;
+                    int srcy2 = srcy1 + HEIGHT * pix / standardHeight;*/
 
                     
-                    g.drawImage(bgB, -cam.getX(), -cam.getY(), WIDTH, HEIGHT, frame);
-                    g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
+                    //g.drawImage(bgB, -cam.getX(), -cam.getY(), WIDTH, HEIGHT, frame);
+                    //g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
                     handler.render(g);  //DISEGNA TUTTO
 
                     g.drawImage(coin, -cam.getX(), -cam.getY() + (standardHeight / 2), standardWidth, standardHeight, null);
@@ -216,6 +221,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
         while (gameLoop) {
 
+            
             if (!menu) {
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
@@ -231,7 +237,9 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     ticks++;
                     delta--;
                 }
+                //long temp = System.currentTimeMillis();
                 render();
+                //System.out.println("Total time: "+(System.currentTimeMillis() - temp));
                 frames++;
 
                 if (System.currentTimeMillis() - timer > 1000) {
@@ -240,6 +248,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     FPS = ticks;
                     frames = 0;
                     ticks = 0;
+                    System.gc();
                 }
             }
         }
@@ -284,19 +293,19 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public static int adaptWidth(int val) { //RIADATTO LA LARGHEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
-        return (int) ((double) val / 1200 * WIDTH);
+        return (int) ((double) val / 1200.0 * WIDTH);
     }
 
     public static int adaptHeight(int val) {    //RIADATTA LA ALTEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
-        return (int) ((double) val / 900 * HEIGHT);
+        return (int) ((double) val / 900.0 * HEIGHT);
     }
 
     public static double adaptWidth(double val) {   //UGUALE AD INT
-        return ((double) val / 1200 * WIDTH);
+        return (double)( val * WIDTH / 1200.0);
     }
 
     public static double adaptHeight(double val) {  //UGUALE AD INT
-        return ((double) val / 900 * HEIGHT);
+        return (double)(val * HEIGHT / 900.0);
     }
 
     public static void stopGame() {
