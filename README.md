@@ -29,6 +29,6 @@ been downloaded from the network, then I will put in a copyright.
 the multyplayer mode does not work yet
 
 a little screenshot for the actual gameplay
-![alt text](https://lh3.googleusercontent.com/z5b-S2f8SsDwubW_eerXQ1AGCLNTtjc9Yy1bXy9vRHupksnNmG9MN5Lc4iVUVI58AjDnffC8xt5TrYlyqkar=w1920-h997-rw)
+![alt text](https://lh4.googleusercontent.com/4BvnqAGx2cmgXzeyGwLEsxXoeaPycCErJ-JrFBMaj9YlkzUwFhEomvrtX8eZMdQjQwUqU86fqGQw8ut6DyaC=w1920-h997-rw)
 
 Program not yet complete
