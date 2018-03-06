@@ -235,10 +235,10 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         elenco.stream().forEach((specifiche) -> {
             add(specifiche.getButton());
         });
-        System.out.println("" + 2 + elenco.size() / 2 + " " + 2 + (elenco.size() / 2) + " " + elenco.size());
+        //System.out.println("" + 2 + elenco.size() / 2 + " " + 2 + (elenco.size() / 2) + " " + elenco.size());
         resize((elenco.size()) / 2 + elenco.size() % 2);
 
-        System.out.println("" + getPreferredSize().toString());
+        //System.out.println("" + getPreferredSize().toString());
 
         ed.repaint();
         ed.revalidate();
@@ -283,7 +283,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         gbc.gridy = 0;
         ArrayList temp = new ArrayList<>();
         temp = memoria.getAnim("Animazioni" + path, temp);
-        System.out.println("" + path);
+        //System.out.println("" + path);
         addButton(temp);
         try {
             path.lastIndexOf("_col");
@@ -296,9 +296,9 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
             });
         }
         //System.out.println("asdasd" + elenco.size());
-        System.out.println("" + 1 + elenco.size() / 2 + " " + 1 + (elenco.size() / 2));
+        //System.out.println("" + 1 + elenco.size() / 2 + " " + 1 + (elenco.size() / 2));
         resize((elenco.size()) / 2 + elenco.size() % 2);
-        System.out.println("" + getPreferredSize().toString());
+        //System.out.println("" + getPreferredSize().toString());
     }
 
     private void item() {

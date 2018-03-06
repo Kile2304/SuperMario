@@ -12,7 +12,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import mario.rm.Menu.Componenti.ScrollButton;
 import mario.rm.Menu.Componenti.Scrollable;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
@@ -27,9 +26,6 @@ public class Editor extends JFrame implements Scrollable {
 
     private int HEIGHT;
     private int WIDTH;
-
-    private ScrollButton orizontal;
-    private ScrollButton vertical;
 
     private static Selezione s;
     
@@ -50,12 +46,13 @@ public class Editor extends JFrame implements Scrollable {
         
         
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        WIDTH = d.width / 1;
-        HEIGHT = d.height / 1;
+        WIDTH = d.width / 2;
+        HEIGHT = d.height / 2;
         
         setSize(WIDTH, HEIGHT);
         
         setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
         
         
         adaptedWidth = adaptWidth(240);
@@ -110,7 +107,6 @@ public class Editor extends JFrame implements Scrollable {
 
     @Override
     public void changeStateOrizontal(int stato) {
-        orizontal.changeState(stato);
     }
 
     @Override
@@ -133,6 +129,9 @@ public class Editor extends JFrame implements Scrollable {
         
         JMenu help = new JMenu("Help");
         JMenuItem manuale = new JMenuItem("Manuale");
+        
+        JMenu visualizza = new JMenu("Visualizza");
+        JMenuItem toolTip = new JMenuItem("ToolTip Script");
         
         JMenu opzioni = new JMenu("Opzioni");
         JMenuItem option = new JMenuItem("Opzioni");
@@ -159,6 +158,9 @@ public class Editor extends JFrame implements Scrollable {
             }
         }
         
+        visualizza.add(toolTip);
+        toolTip.addActionListener(p);
+        
         opzioni.add(insert);
         insert.add(row);
         row.addActionListener(p);
@@ -181,6 +183,7 @@ public class Editor extends JFrame implements Scrollable {
         //bg.addActionListener(p);
         
         bar.add(file);
+        bar.add(visualizza);
         bar.add(opzioni);
         bar.add(help);
         

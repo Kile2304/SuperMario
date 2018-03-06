@@ -3,7 +3,10 @@ package mario.rm.Menu.level_editor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import mario.rm.Menu.Componenti.Checkable;
@@ -17,7 +20,7 @@ import mario.rm.utility.Punto;
  *
  * @author LENOVO
  */
-public class Selezione implements MouseListener, MouseMotionListener {
+public class Selezione implements MouseListener, MouseMotionListener, Runnable {
 
     private static Griglia g;
     private final JFrame fr;
@@ -26,7 +29,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
 
     private static final int spostamento = 5;
 
-    private int type;
+    private static int type;
 
     public Selezione(Griglia g, JFrame ed) {
         this.g = g;
@@ -43,6 +46,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
     }
 
     public static void changeAttach() {
+        Selezione.type = 4;
         g.changeAttach();
     }
 
@@ -54,9 +58,13 @@ public class Selezione implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         int colonna = e.getX() / g.getPixel() + g.getMovX();
         int riga = e.getY() / g.getPixel() + g.getMovY();
-        if(punto.isEmpty()) punto.add(new Punto(colonna, riga));
+        if (punto.isEmpty()) {
+            punto.add(new Punto(colonna, riga));
+        }
 
-        if(!g.isAttach())   g.setItem(colonna, riga);
+        if (!g.isAttach()) {
+            g.setItem(colonna, riga);
+        }
     }
 
     @Override
@@ -113,7 +121,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
             case "Clean":
                 g.clean();
                 g.loadImage(null);
-                type = 0;
+                Selezione.type = 0;
                 fr.repaint();
                 fr.revalidate();
                 break;
@@ -155,6 +163,11 @@ public class Selezione implements MouseListener, MouseMotionListener {
                     }
                 }
                 break;
+            case "ToolTip Script":
+                g.normal();
+                g.setToolTip();
+                new Thread(this).start();
+                break;
             case "Row e Column":
                 String valueColumnRow = JOptionPane.showInputDialog(fr, "Inserisci il numero di righe e colonne da aggiungere", "COLUMN=", JOptionPane.DEFAULT_OPTION);
                 if (valueColumnRow != null) {
@@ -162,9 +175,6 @@ public class Selezione implements MouseListener, MouseMotionListener {
                     g.addColumn(val);
                     g.addRow(val);
                 }
-                break;
-            case "SCRIPT":
-                type = 4;
                 break;
             case "Info":
                 break;
@@ -184,7 +194,11 @@ public class Selezione implements MouseListener, MouseMotionListener {
 
         punto.add(new Punto(colonna, riga));
 
-        g.setItem(colonna, riga);
+        if (!g.isAttach()) {
+            g.setItem(colonna, riga);
+        } else {
+            g.setScript(punto.get(punto.size() - 1));
+        }
         fr.repaint();
         fr.revalidate();
     }
@@ -196,6 +210,18 @@ public class Selezione implements MouseListener, MouseMotionListener {
     void checkEraser() {
         if (g.getErase()) {
             g.changeErase();
+        }
+    }
+
+    @Override
+    public void run() {
+        while (g.isToolTip()) {
+            try {
+                sleep(600);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Selezione.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            g.repaint();
         }
     }
 

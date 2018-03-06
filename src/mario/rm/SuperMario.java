@@ -7,7 +7,10 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import static java.lang.Thread.sleep;
 import java.lang.management.ManagementFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import mario.MainComponent;
 import mario.rm.Menu.Componenti.Impostazioni;
@@ -94,7 +97,9 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         }
         gameLoop = true;
         menu = false;
-        new Thread(this).start();
+        Thread loop = new Thread(this);
+        loop.setPriority(Thread.NORM_PRIORITY);
+        loop.start();
     }
 
     public void stop() {
@@ -214,6 +219,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         long lastTime = System.nanoTime();
         final double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
+        //System.out.println(""+ns);
         double delta = 0;
         int ticks = 0;
         int frames = 0;
@@ -226,12 +232,12 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                 long now = System.nanoTime();
                 delta += (now - lastTime) / ns;
                 //System.out.println(""+delta);
-                if(delta > 1){
+                /*if(delta > 1){
                     delta = 1.0f;
-                }
+                }*/
                 //delta = Math.min(delta, 1 / 60);
                 lastTime = now;
-                if (delta >= 1) {
+                if (delta >= 1 && ticks < 60) {
                     //if(delta > 0.00f)
                     tick();
                     ticks++;
@@ -249,6 +255,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     frames = 0;
                     ticks = 0;
                     System.gc();
+                }
+                try {
+                    sleep(10);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

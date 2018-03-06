@@ -34,7 +34,6 @@ public class Script extends JFrame implements ItemListener {
 
     public Script(Griglia g) {
         super("Script");
-
         this.g = g;
 
         typeU = new JComboBox(new String[]{"COIN", "MUSHROOM", "LIFE"});

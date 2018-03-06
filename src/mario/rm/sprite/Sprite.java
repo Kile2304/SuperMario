@@ -105,7 +105,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
         }
         tempIndex = -1;
 
-        //ma = new MultiAnim(null, 0, 0);
+        ma = new MultiAnim(null, 0, 0);
 
         /*handler.getMemoria().getTiles().stream().filter((t) -> (t.getType() == Type.KI)).forEach((t) -> {
             ti = t.getImage(TilePart.UPLEFT);

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,7 +21,7 @@ import javax.swing.JPanel;
 import mario.MainComponent;
 import static mario.MainComponent.memoryUsed;
 import mario.rm.Menu.Componenti.Checkable;
-import mario.rm.Menu.Componenti.Scrollable;
+import mario.rm.Menu.Componenti.ToolTip;
 import mario.rm.Menu.level_editor.Script;
 import mario.rm.utility.DefaultFont;
 import mario.rm.utility.Log;
@@ -55,15 +56,17 @@ public class Griglia extends JPanel {
 
     private boolean isEraser;
 
+    private boolean toolTip;
+
     public Griglia(int WIDTH, int HEIGHT, JFrame ed, int pixel) {
         super();
         this.pixel = pixel;
 
         this.ed = ed;
 
-        livello = new Preview(WIDTH / pixel, HEIGHT / pixel, false);
+        livello = new Preview(WIDTH / pixel, HEIGHT / pixel, true);
 
-        System.out.println("debug griglia: "+memoryUsed());
+        System.out.println("debug griglia: " + memoryUsed());
         Dimension size = new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel);
 
         setPreferredSize(size);
@@ -76,6 +79,7 @@ public class Griglia extends JPanel {
 
         isEraser = false;
         attach = false;
+        toolTip = false;
 
     }
 
@@ -100,6 +104,7 @@ public class Griglia extends JPanel {
 
         isEraser = false;
         attach = false;
+        toolTip = false;
 
     }
 
@@ -126,6 +131,7 @@ public class Griglia extends JPanel {
 
         isEraser = false;
         attach = false;
+        toolTip = false;
 
     }
 
@@ -162,21 +168,41 @@ public class Griglia extends JPanel {
                     int x = (i * pixel) - (moveX * pixel);
                     int y = (k * pixel) - (moveY * pixel);
                     g.drawImage(elenco[i][k].getImg(), x, y, pixel, pixel, null);
-                    if (col && elenco[i][k].getCollider() == true || attach && !elenco[i][k].getScript().equals("")) {
+                    if (col && elenco[i][k].getCollider() || attach && !elenco[i][k].getScript().equals("") || toolTip) {
                         //f = new Font("TimesRoman", Font.BOLD, pixel);
                         //g.setFont(f);
                         if (col) {
                             g.setColor(Color.RED);
                             g.drawString("1", x + pixel / 2, y + pixel);
-                        } else {
+                        } else if (attach) {
                             g.setColor(Color.BLUE);
                             g.drawString("2", x + pixel / 2, y + pixel);
+                        }
+                        if (toolTip) {
+                            try {
+                                Point pos = this.getMousePosition();
+                                int xM = (int) (pos.getX() / pixel);
+                                int yM = (int) (pos.getY() / pixel);
+                                if (elenco[xM][yM] != null && i == xM && yM == k && !elenco[xM][yM].getScript().equals("")) {
+                                    //g.drawString(elenco[xM][yM].getScript(), x, y);
+                                    ToolTip.draw(g, new Punto(xM, yM), pixel, elenco[xM][yM].getScript());
+                                }
+                            } catch (NullPointerException e) {
+                            }
                         }
                     }
                 }
             }
         }
 
+    }
+
+    public boolean isToolTip() {
+        return toolTip;
+    }
+
+    public void setToolTip() {
+        toolTip = Boolean.logicalXor(toolTip, true);
     }
 
     public int getMovX() {
@@ -189,12 +215,13 @@ public class Griglia extends JPanel {
 
     public void setItem(int colonna, int riga) {
         Specifiche s = pannello.getChecked();
+        System.out.println("" + attach);
         if (!col && !attach) {
             if (s == null && !isEraser) {
                 return;
             }
             livello.addElement(colonna, riga, s);
-        } else if (livello.getMappa()[colonna][riga] != null) {
+        } else if (livello.getMappa()[colonna][riga] != null || attach) {
             if (col) {
                 livello.getMappa()[colonna][riga].changeCollider();
             } else if (attach) {
@@ -230,8 +257,8 @@ public class Griglia extends JPanel {
             ed.repaint();
         }
     }
-    
-    public boolean isAttach(){
+
+    public boolean isAttach() {
         return attach;
     }
 
@@ -325,9 +352,9 @@ public class Griglia extends JPanel {
 
     private String processSave(int i, int j, Cell[][] cl) {
         String str = i + " " + j + " " + cl[i][j].getType();
-        str += ((!cl[i][j].getPartTil().equals("")) 
-                ? " " + cl[i][j].getPartTil() 
-                : "") 
+        str += ((!cl[i][j].getPartTil().equals(""))
+                ? " " + cl[i][j].getPartTil()
+                : "")
                 + "/";
         if (cl[i][j].getScript() != null && !cl[i][j].equals("")) {
             str += cl[i][j].getScript();
@@ -501,7 +528,6 @@ public class Griglia extends JPanel {
         }
 
     }*/
-
     public int getPixel() {
         return pixel;
     }
@@ -524,7 +550,6 @@ public class Griglia extends JPanel {
             ed.changeStateVertical(2);
         }
     }*/
-
     public void setPanel(Checkable pannello) {
         this.pannello = pannello;
     }
@@ -573,11 +598,12 @@ public class Griglia extends JPanel {
         }
 
     }
-    
-    public void normal(){
+
+    public void normal() {
         attach = false;
         col = false;
         isEraser = false;
+        toolTip = false;
     }
 
     public void addRow(int val) {
@@ -612,6 +638,10 @@ public class Griglia extends JPanel {
 
     public Preview getPreview() {
         return livello;
+    }
+
+    public void setScript(Punto p) {
+        livello.getMappa()[p.getX()][p.getY()].setScript("A");
     }
 
 }
