@@ -1,7 +1,7 @@
 package mario.rm.Menu.Componenti;
 
 import java.util.ArrayList;
-import mario.rm.Menu.Specifiche;
+import mario.rm.Menu.Componenti.bottoni.Specifiche;
 
 /**
  *

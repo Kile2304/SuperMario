@@ -3,7 +3,7 @@ package mario.rm.handler;
 import java.util.ArrayList;
 import mario.MainComponent;
 import mario.rm.Animation.Memoria;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -14,7 +14,7 @@ public class SelectLevel {
 
     private int index;
 
-    private static final String[] history = {"try.level", "level.level","prova2.level","provaa.level","riprova.level","speedTest.level", "provaBull.level", "provetta.level"};    //livelli da cambiare con .level
+    private static final String[] history = {"try.level"};    //livelli da cambiare con .level
 
     private static final String path = "Immagini/livelli/";
 
@@ -74,8 +74,8 @@ public class SelectLevel {
     public String getCurrent() {
         String s = "";
         if (custom && index < next.length) {
-            //s = next[index];
-            s = "Immagini/livelli/provaa.level";
+            s = next[index];
+            //s = "Immagini/livelli/provaa.level";
         } else if (index < history.length) {
             s = path + history[index];
         } else {

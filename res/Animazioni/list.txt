@@ -181,27 +181,6 @@
 <975><260> <912><197>
 <1040><260> <977><197>
 
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\animazioneTiles.png]
-!SOLID|
-§UPLEFT*
-◘solid-upleft.anim○
-<65><64> <2><3>
-<130><65> <67><3>
-<195><64> <132><3>
-<260><64> <197><3>
-<325><64> <262><3>
-<390><64> <327><3>
-<455><64> <392><3>
-<520><64> <457><3>
-<585><64> <522><3>
-<650><64> <587><3>
-<715><64> <652><3>
-<780><64> <717><3>
-<845><64> <782><3>
-<910><64> <847><3>
-<975><64> <912><3>
-<1040><64> <977><3>
-
 +[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\src\mario\res\Immagini\extract\tile\other\aura dragonball.png]
 !KI|
 §UPLEFT*
@@ -724,45 +703,6 @@
 ◘grass_col-upright.anim○
 <45><144> <4><97>
 
-+[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\desert.PNG]
-!DESERTTREE|
-§UPLEFT*
-◘desert_tree-upleft.anim○
-<92><312> <3><249>
-
-+[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\desert.PNG]
-!DESERTTREE|
-§UPCENTER*
-◘desert_tree-upcenter.anim○
-<54><348> <42><313>
-
-+[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\terrain\desert.PNG]
-!DESERTTREE|
-§UPRIGHT*
-◘desert_tree-upright.anim○
-<55><383> <42><349>
-
-+[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\Wii U - Super Mario Maker - Items NSMBU.png]
-!MUSHROOM|
-§UPLEFT*
-◘mushroom-upleft.anim○
-<99><93> <13><9>
-<203><94> <118><7>
-<311><93> <227><5>
-<418><93> <333><5>
-<527><92> <440><6>
-<631><93> <547><7>
-<738><91> <653><8>
-<847><92> <757><8>
-<98><189> <8><103>
-<207><188> <117><107>
-<317><188> <223><104>
-<421><189> <331><106>
-<527><189> <438><108>
-<636><190> <546><107>
-<741><188> <654><103>
-<849><188> <760><102>
-
 +[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\special\SSW2_Auras.png]
 !AURA|
 §UPLEFT*
@@ -778,4 +718,357 @@
 §UPLEFT*
 ◘unlocked-upleft.anim○
 <390><74> <327><11>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\Wii U - Super Mario Maker - Items NSMBU.png]
+!MUSHROOM|
+§UPLEFT*
+◘mushroom-upleft.anim○
+<102><95> <3><2>
+<213><95> <109><2>
+<313><96> <217><1>
+<423><97> <323><2>
+<531><95> <429><2>
+<637><94> <538><2>
+<745><96> <646><1>
+<851><95> <751><3>
+<105><189> <5><101>
+<211><189> <111><103>
+<316><189> <217><103>
+<424><189> <323><103>
+<532><190> <429><104>
+<639><189> <539><104>
+<746><189> <646><104>
+<857><189> <751><102>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\Wii U - Super Mario Maker - Items NSMBU.png]
+!REDFLOWER|
+§UPLEFT*
+◘flower-upleft.anim○
+<107><345> <2><246>
+<226><345> <123><246>
+<343><346> <234><246>
+<453><346> <351><246>
+<570><345> <461><246>
+<683><343> <577><246>
+<803><343> <691><246>
+<109><451> <3><352>
+<223><452> <119><352>
+<341><453> <231><352>
+<454><450> <348><352>
+<568><448> <463><352>
+<687><452> <577><352>
+<802><451> <692><352>
+<113><557> <2><460>
+<227><557> <120><460>
+<339><557> <236><470>
+<455><557> <346><468>
+<569><558> <461><465>
+<684><557> <574><462>
+<799><558> <690><460>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\Wii U - Super Mario Maker - Items NSMBU.png]
+!LIFE|
+§UPLEFT*
+◘life-upleft.anim○
+<101><764> <4><672>
+<212><766> <105><670>
+<315><764> <217><669>
+<425><763> <322><669>
+<537><763> <431><667>
+<635><763> <543><667>
+<745><762> <643><671>
+<851><763> <753><671>
+<105><857> <6><771>
+<213><858> <114><771>
+<320><857> <220><771>
+<431><858> <326><770>
+<532><858> <439><774>
+<643><858> <539><772>
+<747><858> <648><770>
+<852><858> <755><770>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\other\animazioneTiles.png]
+!SOLID|
+§UPLEFT*
+◘solid-upleft.anim○
+<65><65> <2><2>
+<130><65> <67><2>
+<195><65> <132><2>
+<260><65> <197><2>
+<325><65> <262><2>
+<390><65> <327><2>
+<455><65> <392><2>
+<520><65> <457><2>
+<585><65> <522><2>
+<650><65> <587><2>
+<715><65> <652><2>
+<780><65> <717><2>
+<845><65> <782><2>
+<910><65> <847><2>
+<975><65> <912><2>
+<1040><65> <977><2>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\EndLevel.png]
+!FLAGCOMPLETE|
+§UPLEFT*
+flagcomplete-upleft.anim○
+<164><130> <3><2>
+<322><130> <167><1>
+<484><130> <326><1>
+<644><130> <488><1>
+<805><130> <647><0>
+<161><261> <3><133>
+<323><262> <166><133>
+<484><261> <326><132>
+<644><261> <489><133>
+<805><262> <648><132>
+<162><393> <3><264>
+<322><392> <166><264>
+<484><392> <326><263>
+<644><392> <489><263>
+<805><393> <650><265>
+<161><524> <2><395>
+<323><524> <165><395>
+<483><524> <327><394>
+<644><523> <488><395>
+<805><524> <648><395>
+<161><654> <2><527>
+<322><654> <164><527>
+<484><654> <326><526>
+<645><654> <488><525>
+<805><654> <649><526>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\EndLevel.png]
+!FLAG|
+§UPLEFT*
+flag-upleft.anim○
+<162><785> <2><658>
+<322><785> <166><656>
+<484><785> <326><655>
+<644><785> <490><658>
+<805><786> <650><658>
+<161><916> <3><789>
+<323><917> <166><788>
+<483><916> <328><789>
+<644><916> <491><789>
+<805><916> <649><789>
+<161><1047> <3><918>
+<322><1047> <166><919>
+<483><1047> <328><919>
+<644><1047> <492><920>
+<805><1047> <650><921>
+<161><1178> <4><1051>
+<322><1178> <167><1051>
+<483><1178> <328><1050>
+<644><1178> <492><1052>
+<805><1178> <652><1051>
+<161><1310> <4><1181>
+<322><1309> <168><1182>
+<483><1309> <329><1182>
+<644><1309> <490><1182>
+<805><1309> <651><1181>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\tile\unlockable\EndLevel.png]
+!ROD|
+§UPLEFT*
+◘rod-upleft.anim○
+<434><1660> <425><1313>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\enemy\chain_chomp.png]
+!CHAINCHOMP|
+{WALK}
+♣LEFT♦
+☼normal♪
+◘chainchomp-walk_left.anim○
+<152><153> <5><11>
+<312><150> <164><11>
+<474><149> <321><12>
+<632><149> <481><12>
+<794><152> <644><12>
+<152><310> <5><174>
+<311><311> <162><174>
+<472><311> <322><174>
+<634><311> <482><175>
+<792><309> <641><174>
+<151><472> <9><334>
+<310><474> <170><335>
+<470><473> <333><334>
+<632><472> <498><335>
+<792><474> <655><333>
+<150><634> <10><497>
+<312><635> <165><495>
+<475><634> <332><495>
+<638><634> <493><496>
+<798><635> <655><495>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\player\crash.png]
+!CRASH|
+{WALK}
+♣RIGHT♦
+☼normal♪
+◘crash-walk_right.anim○
+<28><740> <2><691>
+<67><743> <33><691>
+<118><740> <73><688>
+<177><744> <123><684>
+<237><743> <182><696>
+<293><745> <245><697>
+<342><739> <298><692>
+<384><741> <347><692>
+<419><743> <389><694>
+<457><741> <424><695>
+<506><739> <463><693>
+<560><741> <511><689>
+<619><744> <564><686>
+<679><745> <623><686>
+<738><745> <684><695>
+<794><746> <743><692>
+<840><742> <797><691>
+<880><741> <841><691>
+<916><740> <884><692>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\player\crash.png]
+!CRASH|
+{RUN}
+♣LEFT♦
+☼normal♪
+◘crash-run_left.anim○
+<42><789> <1><749>
+<100><792> <46><748>
+<153><790> <104><748>
+<200><792> <159><748>
+<255><792> <205><748>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\player\crash.png]
+!CRASH|
+{JUMP}
+♣RIGHT♦
+☼normal♪
+◘crash-jump_left.anim○
+<27><402> <0><343>
+<69><403> <30><339>
+<109><403> <76><328>
+<154><405> <110><342>
+<197><406> <157><344>
+<230><405> <200><347>
+<264><405> <232><347>
+<299><403> <269><343>
+<337><404> <306><346>
+<373><402> <341><345>
+<409><403> <379><347>
+<442><404> <411><345>
+<483><405> <444><343>
+<530><405> <485><338>
+<568><404> <532><331>
+<601><404> <569><337>
+<635><402> <604><338>
+<670><401> <638><340>
+<706><402> <673><340>
+<741><402> <708><342>
+<775><401> <744><339>
+<810><401> <777><336>
+<840><403> <812><339>
+<874><401> <843><338>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\player\crash.png]
+!CRASH|
+{UP}
+♣LEFT♦
+☼normal♪
+◘crash-spin_left.anim○
+<49><919> <3><875>
+<108><925> <55><877>
+<168><927> <115><879>
+<229><923> <175><881>
+<295><927> <234><881>
+<356><927> <301><880>
+<420><924> <364><879>
+<485><927> <426><881>
+
++[F:\Christian\Java\SuperMario_1\build\classes\Immagini\extract\player\crash.png]
+!CRASH|
+{DIE}
+♣LEFT♦
+☼normal♪
+◘crash-die_left.anim○
+<23><1032> <1><1005>
+<47><1034> <29><1008>
+<72><1033> <50><1010>
+<101><1032> <74><1014>
+<136><1033> <104><1003>
+<164><1035> <138><1010>
+<201><1035> <167><1012>
+<240><1036> <203><1012>
+<279><1032> <244><1013>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\player\crash.png]
+!CRASH|
+{STAND}
+♣RIGHT♦
+☼normal♪
+◘crash-stand_upleft.anim○
+<32><91> <1><41>
+<67><91> <38><41>
+<102><91> <74><43>
+<137><91> <109><43>
+<172><91> <143><45>
+<206><91> <178><44>
+<241><91> <213><42>
+<277><91> <247><42>
+<311><91> <283><41>
+<347><91> <318><41>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§UPLEFT*
+◘mug-upleft.anim○
+<126><223> <3><145>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§UPCENTER*
+◘mug-upcenter.anim○
+<254><223> <127><145>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§UPRIGHT*
+◘mug-upright.anim○
+<381><223> <255><145>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§MIDDLERIGHT*
+◘mug-middleright.anim○
+<381><302> <255><224>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§MIDDLECENTER*
+◘mug-middlecenter.anim○
+<254><302> <127><224>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§MIDDLELEFT*
+◘mug-middleleft.anim○
+<126><302> <3><224>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§DOWNLEFT*
+◘mug-downleft.anim○
+<126><383> <3><303>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§DOWNCENTER*
+◘mug-downcenter.anim○
+<255><383> <127><303>
+
++[C:\Users\LENOVO\Christian\Scuola\supermario\SuperMario_1\build\classes\Immagini\extract\tile\terrain\grassy2.PNG]
+!MUG|
+§DOWNRIGHT*
+◘mug-downright.anim○
+<381><383> <256><303>
 

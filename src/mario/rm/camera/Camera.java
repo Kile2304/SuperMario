@@ -2,7 +2,7 @@ package mario.rm.camera;
 
 import mario.rm.SuperMario;
 import mario.rm.sprite.Sprite;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -24,13 +24,14 @@ public class Camera {   //QUESTA CLASSE SERVE PER L'INQUADRATURA
 
     public void tick(Sprite p) {
         x = -p.getX() + SuperMario.WIDTH / 2;  //MI CENTRA LE COORDINATE X RISPETTO AL PLAYER
-        //y = -p.getY() + SuperMario.HEIGHT - SuperMario.standardHeight * 3 - p.getHeight(); //MI CENTRA LE COORDINATE Y RISPETTO AL PLAYER
-        /*if ((upY - y >= -SuperMario.HEIGHT / 2) && (upY - y) <= SuperMario.standardHeight) {
+        y = -p.getY() + SuperMario.HEIGHT - SuperMario.standardHeight * 3 - p.getHeight(); //MI CENTRA LE COORDINATE Y RISPETTO AL PLAYER
+        if ((upY - y >= -SuperMario.HEIGHT / 2) && (upY - y) <= SuperMario.standardHeight) {
             y = upY;
         } else {
-            y -= SuperMario.HEIGHT / 2 - SuperMario.standardHeight;
-        }*/
-        y = -p.getY() + SuperMario.HEIGHT / 2 - p.getHeight() / 2;
+            //y -= SuperMario.HEIGHT / 2 - SuperMario.standardHeight;
+            y = -p.getY() + SuperMario.HEIGHT / 2;
+        }
+        //y = -p.getY() + SuperMario.HEIGHT / 2 - p.getHeight() / 2;
     }
 
     public static void setUpY(int y) {

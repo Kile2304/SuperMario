@@ -26,11 +26,11 @@ import mario.MainComponent;
 import mario.rm.Animation.Test;
 import mario.rm.Menu.Cell;
 import mario.rm.Menu.Griglia;
-import mario.rm.Menu.Specifiche;
+import mario.rm.Menu.Componenti.bottoni.Specifiche;
 import mario.rm.Menu.home.Home;
 import mario.rm.Menu.sprite_estractor.output.Design;
 import mario.rm.input.Loader;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**

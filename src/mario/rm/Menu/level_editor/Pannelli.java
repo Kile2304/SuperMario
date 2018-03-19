@@ -22,11 +22,11 @@ import mario.rm.identifier.Move;
 import mario.rm.Menu.Componenti.Checkable;
 import static mario.rm.Menu.Componenti.Checkable.elenco;
 import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
-import mario.rm.Menu.Specifiche;
+import mario.rm.Menu.Componenti.bottoni.Specifiche;
 import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Tipologia;
 import mario.rm.input.MemoriaAC;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -54,9 +54,14 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private boolean attach;
 
+    private int row;
+    private int columnMax;
+
     public Pannelli(Editor ed, MemoriaAC memoria, int height) {
         super();
         this.ed = ed;
+
+        row = 0;
 
         this.HEIGHT = height;
 
@@ -188,6 +193,8 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void base() {
 
+        columnMax = 2;
+
         gbc.gridx = 0;
         gbc.gridy = 0;
 
@@ -239,7 +246,6 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         resize((elenco.size()) / 2 + elenco.size() % 2);
 
         //System.out.println("" + getPreferredSize().toString());
-
         ed.repaint();
         ed.revalidate();
     }
@@ -279,17 +285,18 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void terreni(String path, boolean terr) {
         pulisci();
+        if (path.endsWith("_col")) {
+            columnMax = 1;
+        } else {
+            columnMax = 3;
+        }
+        //columnMax = 3;
         gbc.gridx = 0;
         gbc.gridy = 0;
         ArrayList temp = new ArrayList<>();
         temp = memoria.getAnim("Animazioni" + path, temp);
         //System.out.println("" + path);
         addButton(temp);
-        try {
-            path.lastIndexOf("_col");
-        } catch (StringIndexOutOfBoundsException e) {
-
-        }
         if (terr) {
             elenco.stream().filter((spec) -> (spec.getButton().getText().equals(""))).forEach((spec) -> {
                 spec.setTerrain(true);
@@ -303,6 +310,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void item() {
         pulisci();
+        columnMax = 3;
         gbc.gridx = 0;
         gbc.gridy = 0;
         ArrayList temp = memoria.getUnlockable();
@@ -315,6 +323,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void nemici() {
         pulisci();
+        columnMax = 3;
         gbc.gridx = 0;
         gbc.gridy = 0;
         ArrayList temp = memoria.getEnemy();
@@ -325,6 +334,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void player() {
         pulisci();
+        columnMax = 3;
         gbc.gridx = 0;
         gbc.gridy = 0;
         ArrayList temp = memoria.getPlayer();
@@ -389,6 +399,9 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     }
 
     public void pulisci() {
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        row = 1;
         for (int i = 0; i < elenco.size(); i++) {
             content.remove(elenco.get(i).getButton());
         }
@@ -427,8 +440,11 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     @Override
     public Component add(Component c) {
         content.add(c, gbc);
-        gbc.gridx ^= 1;
-        gbc.gridy += (gbc.gridx ^ 1);
+        gbc.gridx = row % columnMax;
+        gbc.gridy += (row / columnMax);
+        //System.out.println("X: " + gbc.gridx + " Y: " + gbc.gridy);
+        row %= (columnMax);
+        row++;
         return null;
     }
 

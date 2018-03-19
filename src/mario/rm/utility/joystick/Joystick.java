@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;

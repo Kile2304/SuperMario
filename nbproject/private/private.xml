@@ -4,9 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/MainComponent.java</file>
-            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/SuperMario.java</file>
-            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/handler/Handler.java</file>
-            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/sprite/Sprite.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/Menu/level_editor/Editor.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/Menu/level_editor/Pannelli.java</file>
         </group>
     </open-files>
 </project-private>

@@ -12,7 +12,7 @@ import mario.MainComponent;
 import mario.rm.Animation.Cut;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 

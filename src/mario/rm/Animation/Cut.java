@@ -16,7 +16,7 @@ import mario.rm.identifier.Move;
 import mario.rm.utility.Punto;
 import mario.rm.input.Loader;
 import mario.rm.identifier.Direction;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**

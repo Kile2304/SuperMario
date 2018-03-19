@@ -2,7 +2,6 @@ package mario.rm.Menu.opzioni;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import mario.rm.Menu.Componenti.Impostazioni;
 import mario.rm.Menu.home.Home;
 
 /**

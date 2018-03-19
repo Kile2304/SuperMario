@@ -1,5 +1,6 @@
 package mario.rm.Menu;
 
+import mario.rm.Menu.Componenti.bottoni.Specifiche;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,9 +22,9 @@ import javax.swing.JPanel;
 import mario.MainComponent;
 import static mario.MainComponent.memoryUsed;
 import mario.rm.Menu.Componenti.Checkable;
-import mario.rm.Menu.Componenti.ToolTip;
+import mario.rm.Menu.Componenti.draw.ToolTip;
 import mario.rm.Menu.level_editor.Script;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 

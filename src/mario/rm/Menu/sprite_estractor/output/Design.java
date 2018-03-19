@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import mario.MainComponent;
-import mario.rm.Menu.sprite_estractor.union.Union;
+import mario.rm.Menu.sprite_estractor.output.union.Union;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 

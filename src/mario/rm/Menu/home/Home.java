@@ -25,7 +25,7 @@ import javax.swing.JRootPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.xml.bind.DatatypeConverter;
 import mario.MainComponent;
-import mario.rm.Menu.Componenti.Impostazioni;
+import mario.rm.Menu.opzioni.Impostazioni;
 import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
 import mario.rm.Menu.Componenti.Visualizzatore;
 import mario.rm.Menu.level_editor.Editor;
@@ -34,7 +34,7 @@ import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.handler.SelectLevel;
 import mario.rm.input.Loader;
 import mario.rm.multigiocatore.TypeMulti;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Video;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -92,14 +92,12 @@ public class Home extends JFrame implements ActionListener {
         }
         setVisible(true);
 
-        
-
     }
 
-    public void play(String file){
+    public void play(String file) {
         video.play(file);
     }
-    
+
     private void sizer() {
         boolean fullscreen = Boolean.parseBoolean(MainComponent.settings.getValue("fullscreen"));
         int scale = Integer.parseInt(MainComponent.settings.getValue("scale"));
@@ -128,8 +126,10 @@ public class Home extends JFrame implements ActionListener {
     }
 
     public void home() {
-        if(video != null) remove(video);
-        
+        if (video != null) {
+            remove(video);
+        }
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -308,20 +308,23 @@ public class Home extends JFrame implements ActionListener {
 
         //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         for (int i = 0; i < bottonList.length; i++) {
-            TranslucentButton b = new TranslucentButton(bottonList[i]);
+            if (!(bottonList[i].equals("SPRITE ESTRACTOR") && MainComponent.isRunningFromJar)
+                    && !(bottonList[i].equals("CREA LIVELLO") && MainComponent.isRunningFromJar)) {
+                TranslucentButton b = new TranslucentButton(bottonList[i]);
 
-            b.setBgCol(new Color(42, 82, 190));
-            b.setBgCol(new Color(18, 10, 143)); //background
+                b.setBgCol(new Color(42, 82, 190));
+                b.setBgCol(new Color(18, 10, 143)); //background
 
-            b.setBgColro(Color.GRAY);
+                b.setBgColro(Color.GRAY);
 
-            b.setFgCol(new Color(127, 255, 212));   //bordi e scritte
+                b.setFgCol(new Color(127, 255, 212));   //bordi e scritte
 
-            b.setFgColsel(Color.BLACK);
+                b.setFgColsel(Color.BLACK);
 
-            b.addActionListener(this);
-            list.add(b);
-            panel.add(b, gbc);
+                b.addActionListener(this);
+                list.add(b);
+                panel.add(b, gbc);
+            }
         }
         return panel;
     }

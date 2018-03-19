@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import mario.rm.Menu.Componenti.Checkable;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 

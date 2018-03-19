@@ -33,7 +33,7 @@ public class Checkpoint extends Tiles {
         ArrayList<Tile> tempo = handler.getMemoria().getUnlockable();
         for (Tile tile1 : tempo) {
             if(tile1.getType().equals(type))
-                temp = tile1.getImage(TilePart.valueOf(type));
+                temp = tile1.getImage(TilePart.UPLEFT);
         }
     }
 

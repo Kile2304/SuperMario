@@ -15,10 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import mario.rm.Menu.Componenti.Impostazioni;
 import mario.rm.SuperMario;
 import mario.rm.input.Sound;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**

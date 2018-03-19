@@ -16,7 +16,7 @@ import mario.rm.input.Loader;
 import mario.rm.input.MemoriaAC;
 import mario.rm.input.Reader;
 import mario.rm.input.SpriteLoad;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.Punto;
 
@@ -187,10 +187,11 @@ public class Preview {
             ArrayList<Tile> tiles = memoria.getTiles();
             ArrayList<Tile> unlock = memoria.getUnlockable();
             ArrayList<Tile> terreni = memoria.getTerreni();
+            //System.out.println("x: "+x0+" y: "+y0+" type: "+type+" unlockable: "+unlockable+" partTile: "+partTile);
 
             for (Iterator<Anim> it = player.iterator(); it.hasNext();) {
                 Anim a = it.next();
-                if (a.getType() == type) {
+                if (a.getType().equals(type)) {
                     ob = a;
                     stop = true;
                     break;
@@ -199,7 +200,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Anim> it = enemy.iterator(); it.hasNext();) {
                     Anim a = it.next();
-                    if (a.getType() == type) {
+                    if (a.getType().equals(type)) {
                         ob = a;
                         stop = true;
                         break;
@@ -209,7 +210,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Tile> it = tiles.iterator(); it.hasNext();) {
                     Tile a = it.next();
-                    if (a.getType() == type) {
+                    if (a.getType().equals(type)) {
                         ob = a;
                         stop = true;
                         break;
@@ -219,7 +220,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Tile> it = unlock.iterator(); it.hasNext();) {
                     Tile a = it.next();
-                    if (a.getType() == type) {
+                    if (a.getType().equals(type)) {
                         ob = a;
                         stop = true;
                         break;
@@ -229,7 +230,7 @@ public class Preview {
             if (!stop) {
                 for (Iterator<Tile> it = terreni.iterator(); it.hasNext();) {
                     Tile a = it.next();
-                    if (a.getType() == type) {
+                    if (a.getType().equals(type)) {
                         ob = a;
                         terreno = true;
                         stop = true;
@@ -238,10 +239,10 @@ public class Preview {
                 }
             }
             coord.add(new Punto(x0, y0));
-            if (!partTile.equals("") || unlockable != null && unlockable.equals("TERREIN")) {
+            if (!partTile.equals("") || !unlockable.equals("")) {
                 Tile ti = (Tile) ob;
                 TilePart part = null;
-                if (partTile == null || partTile.equals("")) {
+                if (partTile.equals("")) {
                     part = TilePart.UPLEFT;
                 } else {
                     part = TilePart.valueOf(partTile);

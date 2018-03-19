@@ -1,16 +1,11 @@
 package mario.rm.sprite;
 
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import mario.MainComponent;
 import mario.rm.utility.Size;
 import mario.rm.SuperMario;
@@ -170,6 +165,14 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
             
             t = null;
         }
+        /*g.setColor(Color.WHITE);
+        g.drawRect(getBoundsTop().x, getBoundsTop().y, getBoundsTop().width, getBoundsTop().height);
+        g.setColor(Color.red);
+        g.drawRect(getBoundsBottom().x, getBoundsBottom().y, getBoundsBottom().width, getBoundsBottom().height);
+        g.setColor(Color.BLACK);
+        g.drawRect(getBoundsLeft().x, getBoundsLeft().y, getBoundsLeft().width, getBoundsLeft().height);
+        g.setColor(Color.GREEN);
+        g.drawRect(getBoundsRight().x, getBoundsRight().y, getBoundsRight().width, getBoundsRight().height);*/
     }
 
     public void setLastMovement(Direction dir, Move move) {

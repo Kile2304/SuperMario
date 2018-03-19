@@ -1,6 +1,7 @@
 package mario.rm;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,19 +10,21 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import static java.lang.Thread.sleep;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import mario.MainComponent;
-import mario.rm.Menu.Componenti.Impostazioni;
+import mario.rm.Menu.opzioni.Impostazioni;
 import mario.rm.Menu.opzioni.Menu;
 import mario.rm.camera.Camera;
 import mario.rm.handler.Handler;
 import mario.rm.input.Loader;
 import mario.rm.sprite.Player;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import mario.rm.utility.joystick.ControllerListener;
+import static mario.rm.handler.HudHandler.*;
 
 /**
  *
@@ -36,22 +39,21 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     private static boolean gameLoop;
 
     //private GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0]; //VARIABILE PER OTTENERE LA LARGHEZZA E ALTEZZA MASSIMA DEL FRAME
-
     public static Handler handler;  //CONTIENE E GESTISCE PLAYER E TILES
     private Camera cam; //NUOVA TELECAMERA
 
     public static int standardWidth; //TEMPORANEA PER WIDTH DEGLI SPRITE
     public static int standardHeight;    //TEMPORANEA PER HEIGHT DEGLI SPRITE
 
-    private BufferedImage bg;    //SFONDO
     private static final BufferedImage coin = (Loader.LoadImage("Immagini/tiles.png").getSubimage(64 * 7 + 8, 10, 64, 64)); //FOTO DELLA MONETA ritagliata
+    private static final BufferedImage face = (Loader.LoadImage("Immagini/face.png").getSubimage(31, 449, 30, 37)); //FOTO DELLA FACCE PER VEDERE IL NUMEERO DI VITE
+    
+    private static final BufferedImage bg = (Loader.LoadImage("Immagini/bg.png")); //SFONDO
     //private BufferedImage life;
 
     private Image load = null;  //GIF PER IL DISEGNO DELLA GIF DI CARICAMENTO
 
     private int FPS;
-
-    private static boolean menu;
 
     private String next;
 
@@ -62,16 +64,28 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public static ControllerListener movement;
 
     private Impostazioni option;
-    
+
     public static int playerNumber;
+
+    private long time;
+    private int timeShow = 346;
+
+    public static boolean[] gameOver;
+    private boolean allDie;
 
     //
     public SuperMario(int player) {
         Log.append("" + ManagementFactory.getRuntimeMXBean().getName(), DefaultFont.INFORMATION);
-        Log.append("Il numero di player e' "+player, DefaultFont.INFORMATION);
+        Log.append("Il numero di player e' " + player, DefaultFont.INFORMATION);
         Log.append("1)INIZIO", DefaultFont.INFORMATION);
-        
+
         playerNumber = player;
+
+        gameOver = new boolean[player];
+        for (int i = 0; i < gameOver.length; i++) {
+            gameOver[i] = false;
+        }
+        allDie = false;
 
         handler = new Handler(this);    //NUOVI ARRAY DI SPRITE (TILE, E PLAYER) QUESTI SARANNO DEFINITI IN BASE AD UN FILE
 
@@ -96,7 +110,6 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
             return;
         }
         gameLoop = true;
-        menu = false;
         Thread loop = new Thread(this);
         loop.setPriority(Thread.NORM_PRIORITY);
         loop.start();
@@ -117,7 +130,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         //HEIGHT = device.getFullScreenWindow().getHeight() / 2;  //OTTENGO LA ALTEZZA MASSIMA DELLA FINESTRA
         boolean fullscreen = Boolean.parseBoolean(MainComponent.settings.getValue("fullscreen"));
         int scale = Integer.parseInt(MainComponent.settings.getValue("scale"));
-        if(fullscreen){
+        if (fullscreen) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scale = 1;
         }
@@ -146,7 +159,7 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         next = handler.getLevel();
         next = next.substring(0, next.lastIndexOf(".")) + ".png";
         Log.append("Bg image: " + next, DefaultFont.INFORMATION);
-        bg = Loader.LoadImage(next); //CARICO IN MEMORIA LO SFONDO
+        //bg = Loader.LoadImage(next); //CARICO IN MEMORIA LO SFONDO
 
         cam = new Camera(handler.getPlayer().get(0));    //SERVE PER ACCENTRARE SUL PLAYER LA TELECAMERA
 
@@ -156,23 +169,24 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     public void render() {
         //long time = System.currentTimeMillis();
         try {
-            if (!menu) {
-                BufferStrategy strategy = getBufferStrategy(); //MI INDICA QUANTI BUFFER CI SONO
-                if (strategy == null) {   //SE NON CI SONO BUFFER
-                    createBufferStrategy(4);    //CREA 3 BUFFER
-                    Log.append("9)HO CREATO I BUFFER", DefaultFont.INFORMATION);
-                    return;
-                }
-                Graphics g = strategy.getDrawGraphics();    //INIZIALIZZO LA VARIABILE CHE DISEGNA
+            BufferStrategy strategy = getBufferStrategy(); //MI INDICA QUANTI BUFFER CI SONO
+            if (strategy == null) {   //SE NON CI SONO BUFFER
+                createBufferStrategy(4);    //CREA 3 BUFFER
+                Log.append("9)HO CREATO I BUFFER", DefaultFont.INFORMATION);
+                return;
+            }
+            Graphics g = strategy.getDrawGraphics();    //INIZIALIZZO LA VARIABILE CHE DISEGNA
 
-                g.clearRect(0, 0, WIDTH, HEIGHT);   //PULISCE LO SCHERMO
+            g.clearRect(0, 0, WIDTH, HEIGHT);   //PULISCE LO SCHERMO
 
-                if (isLoad) {
+            if (isLoad && !allDie) {
 
-                    g.translate(cam.getX(), cam.getY());    //SPOSTA IL CENTRAMENTO DELLA FINESTRA
+                g.translate(cam.getX(), cam.getY());    //SPOSTA IL CENTRAMENTO DELLA FINESTRA
 
-                    //g.drawImage(bg, 0, 0, bg.getWidth() / 64 * standardWidth, bg.getHeight() / 64 * standardHeight, null);
-                    /*int pix = 64;
+                g.drawImage(bg, -cam.getX(), -cam.getY(), WIDTH, HEIGHT, null);
+
+                //g.drawImage(bg, 0, 0, bg.getWidth() / 64 * standardWidth, bg.getHeight() / 64 * standardHeight, null);
+                /*int pix = 64;
                     int dstx1 = handler.getPlayer().get(0).getX() - WIDTH / 2;
                     int dsty1 = handler.getPlayer().get(0).getY() - HEIGHT / 2 + standardHeight;
                     int dstx2 = WIDTH + dstx1;
@@ -182,23 +196,75 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     int srcy1 = dsty1 * pix / standardHeight;
                     int srcx2 = srcx1 + WIDTH * pix / standardWidth;
                     int srcy2 = srcy1 + HEIGHT * pix / standardHeight;*/
+                //g.drawImage(bgB, -cam.getX(), -cam.getY(), WIDTH, HEIGHT, frame);
+                //g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
+                handler.render(g);  //DISEGNA TUTTO
 
-                    
-                    //g.drawImage(bgB, -cam.getX(), -cam.getY(), WIDTH, HEIGHT, frame);
-                    //g.drawImage(bg, dstx1, dsty1, dstx2, dsty2, srcx1, srcy1, srcx2, srcy2, frame);
-                    handler.render(g);  //DISEGNA TUTTO
-
-                    g.drawImage(coin, -cam.getX(), -cam.getY() + (standardHeight / 2), standardWidth, standardHeight, null);
-                    g.drawString("" + Player.MONETE, -cam.getX() + (standardWidth / 2) - adaptWidth(3), -cam.getY() + adaptHeight(4) + standardHeight); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
-                    g.drawString("PUNTEGGIO: " + Player.PUNTEGGIO, -cam.getX() + adaptWidth(150), -cam.getY() + standardHeight); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
-                    g.drawString("FPS: " + FPS, -cam.getX() + WIDTH - adaptWidth(150), -cam.getY() + standardHeight); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
-                } else {
-                    g.translate(0, 0);  //AZZERO LE COORDINATE I DISEGNO DEL FRAME
-                    //g.drawImage(load, 0, 0, WIDTH, HEIGHT, null); //DISEGNO LA GIF CHE INDICA IL CARICAMENTO
+                BufferedImage[] toHud = toHud(Player.PUNTEGGIO);
+                for (int i = 0; i < toHud.length; i++) {
+                    g.drawImage(toHud[i], -cam.getX() - adaptWidth(200 + i * 16) + WIDTH, -cam.getY() + standardHeight / 4 * 3, adaptWidth(10), adaptHeight(25), null); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
                 }
-                //g.dispose();
-                strategy.show();
+
+                toHud = toHud(timeShow);    //tempo rimanente
+                for (int i = 0; i < toHud.length; i++) {
+                    g.drawImage(toHud[i],
+                            -cam.getX() - adaptWidth(30 + i * 16) + WIDTH,
+                            -cam.getY() + standardHeight / 4 * 3, adaptWidth(10),
+                            adaptHeight(25),
+                            null); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
+                }
+                int x = -cam.getX();
+                for (int j = 0; j < handler.getPlayer().size(); j++) {  //life
+
+                    g.drawImage(face, x, -cam.getY() + (standardHeight / 2), standardWidth, standardHeight, null);    //icona volto
+                    x += standardWidth;
+                    g.drawImage(hud.getSubimage(91, 10, 7, 7), //x
+                            x,
+                            -cam.getY() + (standardHeight + adaptHeight(5)),
+                            standardWidth / 4,
+                            standardHeight / 3, null);
+                    toHud = toHud(handler.getPlayer().get(j).getLife());
+                    //System.out.println(""+handler.getPlayer().get(j).getLife()+" "+toHud.length);
+                    for (int i = toHud.length - 1; i > -1; i--) {    //numero di vite
+                        x += standardWidth / 3;
+                        g.drawImage(toHud[i],
+                                x,
+                                -cam.getY() + (standardHeight / 2) + standardWidth / 3,
+                                standardWidth / 3,
+                                standardHeight / 2,
+                                null); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
+                    }
+                    x += standardWidth / 3;
+                }
+
+                g.drawImage(coin, -cam.getX(), -cam.getY() + (standardHeight + standardHeight / 2), standardWidth, standardHeight, null);
+                toHud = toHud(Player.MONETE);
+                x = -cam.getX() + standardWidth;
+                for (int i = toHud.length - 1; i > -1; i--) {
+                    g.drawImage(toHud[i],
+                            x,
+                            -cam.getY() + (standardHeight * 2),
+                            standardWidth / 3,
+                            standardHeight / 3,
+                            null);
+                    x += standardWidth / 3;
+                }
+                //g.drawString("" + Player.MONETE, -cam.getX() + (standardWidth / 2) - adaptWidth(3), -cam.getY() + adaptHeight(4) + standardHeight); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
+                //g.drawString("PUNTEGGIO: " + Player.PUNTEGGIO, -cam.getX() + adaptWidth(150), -cam.getY() + standardHeight); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
+                g.drawString("FPS: " + FPS, -cam.getX() + WIDTH - adaptWidth(150), -cam.getY() + standardHeight); //TIPO COSI, MA DA RIPOSIZIONARE, CENTRARE E OVVIAMENTE MODIFICARE FONT
+            } else {
+                g.translate(0, 0);  //AZZERO LE COORDINATE I DISEGNO DEL FRAME
+                g.setColor(Color.BLACK);
+                g.fillRect(0, 0, WIDTH, HEIGHT);
+                g.setColor(Color.YELLOW);
+                g.drawString("GAME OVER", WIDTH / 2, HEIGHT / 2);
+                if (timeShow == -6) {
+                    stopGame();
+                }
+                //g.drawImage(load, 0, 0, WIDTH, HEIGHT, null); //DISEGNO LA GIF CHE INDICA IL CARICAMENTO
             }
+            //g.dispose();
+            strategy.show();
         } catch (NullPointerException e) {
             Log.append("errore", DefaultFont.ERROR);
         }
@@ -206,11 +272,13 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public void tick() {
-        if (isLoad && !menu) {
+        if (isLoad && gameLoop && !allDie) {
             handler.tick(); //SI OCCUPA DEL MOVIMENTO DI TUTTI GLI SPRITE E DELLE VARIE OPZIONI DI OGNI PLAYER, TILE ED ENEMIES
             cam.tick(handler.getPlayer().get(0));    //AGGIORNA IL CENTRO DEL FRAME
         }
     }
+
+    
 
     @Override
     public void run() { //THREAD
@@ -227,80 +295,80 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
 
         while (gameLoop) {
 
-            
-            if (!menu) {
-                long now = System.nanoTime();
-                delta += (now - lastTime) / ns;
-                //System.out.println(""+delta);
-                /*if(delta > 1){
+            long now = System.nanoTime();
+            if (time + 1000000000.0 < now) {
+                timeShow -= time != 0 ? ((int) (((now - time) / 1000000000.0))) : 0;
+                //System.out.println(""+((int) ((now - time) / 1000000000.0)));
+                time = now;
+                if (timeShow == -1) {
+                    for (int i = 0; i < gameOver.length; i++) {
+                        gameOver[i] = true;
+                    }
+                    allDie = true;
+                }
+            }
+            delta += (now - lastTime) / ns;
+            //System.out.println(""+delta);
+            /*if(delta > 1){
                     delta = 1.0f;
                 }*/
-                //delta = Math.min(delta, 1 / 60);
-                lastTime = now;
-                if (delta >= 1 && ticks < 60) {
-                    //if(delta > 0.00f)
-                    tick();
-                    ticks++;
-                    delta--;
-                }
-                //long temp = System.currentTimeMillis();
-                render();
-                //System.out.println("Total time: "+(System.currentTimeMillis() - temp));
-                frames++;
+            //delta = Math.min(delta, 1 / 60);
+            lastTime = now;
+            if (delta >= 1 && ticks < amountOfTicks) {
+                //if(delta > 0.00f)
+                tick();
+                ticks++;
+                delta--;
+            }
+            //long temp = System.currentTimeMillis();
+            render();
+            //System.out.println("Total time: "+(System.currentTimeMillis() - temp));
+            frames++;
 
-                if (System.currentTimeMillis() - timer > 1000) {
-                    timer += 1000;
-                    //System.out.println("FPS : " + frames + " Ticks : " + ticks);
-                    FPS = ticks;
-                    frames = 0;
-                    ticks = 0;
-                    System.gc();
-                }
-                try {
-                    sleep(10);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                //System.out.println("FPS : " + frames + " Ticks : " + ticks);
+                FPS = ticks;
+                frames = 0;
+                ticks = 0;
+                System.gc();
+            }
+            try {
+                sleep(10);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public synchronized void addOption() {
-        if (!menu) {
-            this.setVisible(false);
+        this.setVisible(false);
+        gameLoop = false;
 
-            menu = true;
+        handler.getSound().stop();
 
-            handler.getSound().stop();
+        frame.add((option = new Menu(this)));
+        frame.removeKeyListener(movement);
 
-            frame.add((option = new Menu(this)));
-            frame.removeKeyListener(movement);
+        frame.revalidate();
+        frame.repaint();
 
-            frame.revalidate();
-            frame.repaint();
-        } else {
-            removeOption();
-        }
+        System.gc();
     }
 
     public void removeOption() {
-        if (menu) {
-            frame.remove(option);
+        frame.remove(option);
+        gameLoop = true;
 
-            this.setVisible(true);
+        this.setVisible(true);
 
-            handler.getSound().loop();
-            frame.addKeyListener(movement);
+        handler.getSound().loop();
+        frame.addKeyListener(movement);
 
-            menu = false;
-
-            frame.revalidate();
-            frame.repaint();
-            revalidate();
-            repaint();
-            //t.notify();
-            new Thread(this).start();
-        }
+        frame.revalidate();
+        frame.repaint();
+        System.gc();
+        new Thread(this).start();
     }
 
     public static int adaptWidth(int val) { //RIADATTO LA LARGHEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
@@ -312,11 +380,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public static double adaptWidth(double val) {   //UGUALE AD INT
-        return (double)( val * WIDTH / 1200.0);
+        return (double) (val * WIDTH / 1200.0);
     }
 
     public static double adaptHeight(double val) {  //UGUALE AD INT
-        return (double)(val * HEIGHT / 900.0);
+        return (double) (val * HEIGHT / 900.0);
     }
 
     public static void stopGame() {
@@ -330,12 +398,12 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         return frame;
     }
 
-    public boolean getMenu(){
-        return menu;
-    }
-    
-    public Handler getHandler(){
+    public Handler getHandler() {
         return handler;
+    }
+
+    public boolean getGameLoop(){
+        return gameLoop;
     }
     
 }

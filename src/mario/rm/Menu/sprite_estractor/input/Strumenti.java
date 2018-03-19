@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import mario.rm.Menu.Componenti.Checkable;
 import static mario.rm.Menu.Componenti.Checkable.elenco;
-import mario.rm.Menu.Specifiche;
+import mario.rm.Menu.Componenti.bottoni.Specifiche;
 
 /**
  *

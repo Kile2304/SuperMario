@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 import mario.MainComponent;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Tile;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**

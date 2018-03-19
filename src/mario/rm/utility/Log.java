@@ -1,5 +1,6 @@
 package mario.rm.utility;
 
+import mario.rm.other.DefaultFont;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

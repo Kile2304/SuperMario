@@ -1,7 +1,11 @@
 package mario.rm.handler;
 
 import java.awt.Graphics;
+import static java.lang.Thread.sleep;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.SuperMario;
 import mario.rm.input.Sound;
@@ -22,7 +26,7 @@ import mario.rm.sprite.tiles.CoinBlock;
 import mario.rm.sprite.tiles.GravityTile;
 import mario.rm.sprite.tiles.Solid;
 import mario.rm.sprite.tiles.Tiles;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -59,6 +63,10 @@ public class Handler implements Reader {
 
     private final boolean checkpoint;
 
+    private ArrayList<int[]> tilesCollision;
+
+    private ArrayList<Tiles> position;
+
     public Handler(SuperMario mario) {
         player = new LinkedList<>();    //ELENCO PLAYER IN CAMPO
         tiles = new LinkedList<>(); //ELENCO TILES IN CAMPO
@@ -66,6 +74,8 @@ public class Handler implements Reader {
 
         tilesClone = new LinkedList<>(); //ELENCO TILES IN CAMPO
         enemyClone = new LinkedList<>(); //ELENCO NEMICI IN CAMPO
+        tilesCollision = new ArrayList<>();
+        position = new ArrayList<>();
 
         level = new SelectLevel(false);
 
@@ -160,19 +170,54 @@ public class Handler implements Reader {
                 tiles.tick();
             }
         });*/
-        for (int i = 0; i < tiles.size(); i++) {
-            tiles.get(i).tick();
-        }
-        player.stream().forEach((sprite) -> {   //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL TICK DEI PLAYER
-            sprite.tick();
-        });
-        int t = (int) (player.get(0).getX() + SuperMario.WIDTH / 1.5);
-        int c = (int) (player.get(0).getX() - SuperMario.WIDTH / 1.5);
-        if (enemy.size() > 0) { //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL TICK DEGLI ENEMY
-            for (int i = 0; i < enemy.size(); i++) {
-                if (enemy.get(i).getX() <= t && enemy.get(i).getX() >= c) {
-                    enemy.get(i).tick();
+
+        Thread[] thread = new Thread[3];
+
+        thread[1] = new Thread() {
+            @Override
+            public void run() {
+                player.stream().forEach((sprite) -> {   //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL TICK DEI PLAYER
+                    sprite.tick();
+                });
+            }
+        };
+        thread[1].start();
+        int xMax = (int) (player.get(0).getX() + SuperMario.WIDTH / 1.5);
+        int xMin = (int) (player.get(0).getX() - SuperMario.WIDTH / 1.5);
+        thread[2] = new Thread() {
+            @Override
+            public void run() {
+                if (enemy.size() > 0) { //SEMPLICE FOR MA CON I SUGGERIMENTI DI NETBEANS PER IL TICK DEGLI ENEMY
+                    for (int i = 0; i < enemy.size(); i++) {
+                        if (enemy.get(i).getX() <= xMax && enemy.get(i).getX() >= xMin) {
+                            enemy.get(i).tick();
+                        }
+                    }
                 }
+            }
+        };
+        thread[2].start();
+        int yMax = (int) (player.get(0).getY() + SuperMario.HEIGHT / 1.5);
+        int yMin = (int) (player.get(0).getY() - SuperMario.HEIGHT);
+        thread[0] = new Thread() {
+            @Override
+            public void run() {
+                for (int i = 0; i < position.size(); i++) {
+                    if (position.get(i).getX() <= xMax
+                            && position.get(i).getX() >= xMin
+                            && position.get(i).getY() >= yMin
+                            && position.get(i).getY() <= yMax) {
+                        position.get(i).tick();
+                    }
+                }
+            }
+        };
+        thread[0].start();
+        for (int i = 0; i < thread.length; i++) {
+            try {
+                thread[i].join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Handler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         if (next) {   //SE IL PLAYER HA FATTO DIVENTARE TRUE NEXT
@@ -219,19 +264,20 @@ public class Handler implements Reader {
         Log.append("Migliorato del: " + ((double) 100 / temp * (temp - tiles.size())), DefaultFont.INFORMATION); //CALCOLO DI QUANTO E' MIGLIORATO IL LIVELLO (%)
 
         //cloneCurrentStatus();
-        memoria.nextSound();
+        if (!current) {
+            memoria.nextSound();
+        }
         while (sound) {
-            /*try {
+            try {
                 sleep(10);
             } catch (InterruptedException ex) {
-                Logger.getLogger(Handler.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+            }
         }
         memoria.getSound().loop();
-        
+
         System.gc();
-        System.out.println("level created: "+MainComponent.memoryUsed());
-        
+        System.out.println("level created: " + MainComponent.memoryUsed());
+
         return true;
     }
 
@@ -294,15 +340,17 @@ public class Handler implements Reader {
         int numero = loaded.getUnlockableQuantity();
 
         String movement = loaded.getMovement();
-
         //System.out.println(""+type.name());
         if (type != null) //IN BASE AD UNA IMMAGINE, SCANSIONA PIXEL PER PIXEL IL SUO CONTENUTO, E NE CREA UNA, CON LE INDICAZIONI DATOGLI DALL'IMMAGINE
         {
             if (unlockable.equals("")) {
                 switch (type) {
-                    case "SOLID":
                     case "UNLOCKED":
+                        tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this,
+                                type, memoria.getUnlockable(), true, tile, false, movement));   //SE E NERO E' NORMALE SOLIDO
+                        break;
                     case "UNLOCKABLE":
+                    case "SOLID":
                         tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this,
                                 type, memoria.getTiles(), true, tile, false, movement));   //SE E NERO E' NORMALE SOLIDO
                         break;
@@ -311,9 +359,9 @@ public class Handler implements Reader {
                     //break;
                     case "PLAYER_LUIGI":
                         long memoryUsed = MainComponent.memoryUsed();
-                        System.out.println("pre: "+memoryUsed);
+                        System.out.println("pre: " + memoryUsed);
                         for (int i = 0; i < SuperMario.playerNumber; i++) {
-                            player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type));   //SE PIXEL BLU è UN PLAYER
+                            player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, "CRASH", i));   //SE PIXEL BLU è UN PLAYER
                         }
                         break;
                     case "COIN":
@@ -352,7 +400,7 @@ public class Handler implements Reader {
                         break;
                     case "CHECKPOINT":
                         tiles.add(new Checkpoint(x0, y0 - SuperMario.standardHeight, SuperMario.standardWidth * 2, SuperMario.standardHeight * 2,
-                                this, type, memoria.getTiles(), false, tile, movement));   //SE E NERO E' NORMALE SOLIDO
+                                this, type, memoria.getUnlockable(), false, tile, movement));   //SE E NERO E' NORMALE SOLIDO
                         break;
                     case "VOID":
                         tiles.add(new Checkpoint(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this,
@@ -368,12 +416,12 @@ public class Handler implements Reader {
                         break;
                     case "FLAG":
                         tiles.add(new Checkpoint(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this,
-                                type, memoria.getTiles(), false, tile, movement));   //SE E NERO E' NORMALE SOLIDO
+                                type, memoria.getUnlockable(), false, tile, movement));   //SE E NERO E' NORMALE SOLIDO
                         break;
                     case "ROD":
-                        int x1 = (int) (SuperMario.standardWidth - (SuperMario.standardWidth / SuperMario.adaptWidth(2.1)));
-                        tiles.add(new Checkpoint(x0 + x1, y0 * SuperMario.standardHeight, SuperMario.standardWidth / 2, SuperMario.standardHeight,
-                                this, type, memoria.getTiles(), false, tile, movement));   //SE E NERO E' NORMALE SOLIDO
+                        int x1 = (int) (SuperMario.standardWidth - SuperMario.standardWidth / SuperMario.adaptWidth(10)) + SuperMario.adaptWidth(2);
+                        tiles.add(new Checkpoint(x0 + x1, y0, SuperMario.standardWidth / SuperMario.adaptWidth(10), SuperMario.standardHeight,
+                                this, type, memoria.getUnlockable(), false, tile, movement));   //SE E NERO E' NORMALE SOLIDO
                         break;
                     case "DARK":
                     case "SNOW":
@@ -396,6 +444,9 @@ public class Handler implements Reader {
                         break;
                     default:
                         break;
+                }
+                if (!movement.equals("")) {
+                    position.add(tiles.getLast());
                 }
             } else {
                 //tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, true, tile, tile)); //SE E ROSSO E' UN FUNGO
@@ -467,10 +518,11 @@ public class Handler implements Reader {
                 if (tiles.get(i) instanceof CoinBlock || tiles.get(i) instanceof GravityTile || tiles.get(i).getType().equals("SOLID")) {
                     continue;
                 }
-                if (tiles.get(i).getType().equals(tiles.get(j).getType()) 
+                if (tiles.get(i).getType().equals(tiles.get(j).getType())
                         && tiles.get(i).getX() + (tiles.get(i).getWidth() * tiles.get(i).getSerie()) == tiles.get(j).getX()
                         && tiles.get(i).getY() == tiles.get(j).getY()
-                        && tiles.get(i).getTile().equals(tiles.get(j).getTile())) {
+                        && tiles.get(i).getTile().equals(tiles.get(j).getTile())
+                        && tiles.get(i).getScript().equals(tiles.get(j).getScript())) {
                     tiles.get(i).moreSerie();
                     tiles.remove(j);
                 }
@@ -479,6 +531,10 @@ public class Handler implements Reader {
 
     }
 
+    public void addScript(){
+        position.add(tiles.getFirst());
+    }
+    
     /**
      *
      */

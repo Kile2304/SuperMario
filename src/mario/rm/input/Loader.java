@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import mario.MainComponent;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -73,63 +73,6 @@ public class Loader {
             }*/
             Log.append(path);
             BufferedReader br = new BufferedReader((java.io.Reader) fr);
-
-            /* String line = "";
-            ArrayList<Integer> punto = new ArrayList<>();
-            String type = null;
-            String unlockable = null;
-
-            while ((line = br.readLine()) != null) {  //da modificare, in modo che rimanga solo int x, int y e Type, dopo diche fare for che scorre tutti gli anim...
-                String word = "";
-                type = null;
-                unlockable = null;
-                String tile = "";
-                int numero = -1;
-                punto.clear();
-                for (int i = 0; i < line.length(); i++) {
-                    switch (line.charAt(i)) {
-                        case '{':
-                        case '[':
-                        case '|':
-                        case '◄':
-                        case '←':
-                        case '<':
-                            word = "";
-                            break;
-                        case '>':
-                            //System.out.println(""+word);
-                            punto.add(Integer.parseInt(word));
-                            word = "";
-                            break;
-                        case ']':
-                            //System.out.println(""+word);
-                            if (type == null) {
-                                Log.append("refactor: " + word, DefaultFont.INFORMATION);
-                                type = word;
-                            }
-                            word = "";
-                            break;
-                        case '!':
-                            //System.out.println(""+word);
-                            tile = word;
-                            word = "";
-                            break;
-
-                        case '►':
-                            unlockable = word;
-                            break;
-                        case '→':
-                            numero = Integer.parseInt(word);
-                            break;
-                        default:
-                            word += line.charAt(i);
-                            break;
-                    }
-                }
-                int x0 = punto.get(0);
-                int y0 = punto.get(1);
-                read.creaLivello(x0, y0, type, unlockable, tile, numero);
-            }*/
             String line = "";
             while ((line = br.readLine()) != null) {
                 String[] complete = line.split("/");

@@ -30,7 +30,7 @@ import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.TilePart;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**

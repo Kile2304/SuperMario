@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import mario.rm.SuperMario;
 import mario.rm.handler.Handler;
 import mario.rm.input.Movement;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;

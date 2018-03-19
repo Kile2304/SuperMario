@@ -34,7 +34,6 @@ public class Energy extends Tiles {
     public void tick() {
         x += velX * direzione;
         y += velY * direzioneY;
-
         //System.out.println("" + x);
         falling = true;
         LinkedList<Tiles> tile = handler.getTiles();

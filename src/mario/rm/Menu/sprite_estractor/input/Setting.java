@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import mario.rm.Menu.Componenti.Checkable;
-import mario.rm.Menu.Specifiche;
+import mario.rm.Menu.Componenti.bottoni.Specifiche;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.TilePart;

@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import javax.imageio.ImageIO;
 import mario.rm.identifier.Direction;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -230,7 +230,6 @@ public class Anim implements Serializable, Animated {
         if (find == null) {
             return false;
         }
-        find = null;
         return index >= find.length / 4 - 1;
     }
 

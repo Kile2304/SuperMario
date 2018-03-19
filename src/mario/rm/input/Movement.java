@@ -20,7 +20,7 @@ import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.sprite.Player;
 import mario.rm.sprite.Sprite;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -117,12 +117,12 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                 case KeyEvent.VK_TAB:
                     if (mario.getFrame().isFocused()) {
                         MainComponent.log.toFront();
-                        if (!mario.getMenu()) {
+                        if (mario.getGameLoop()) {
                             mario.addOption();
                         }
                     } else {
                         mario.getFrame().toFront();
-                        if (mario.getMenu()) {
+                        if (!mario.getGameLoop()) {
                             mario.removeOption();
                         }
                     }

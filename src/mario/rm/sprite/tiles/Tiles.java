@@ -15,9 +15,11 @@ import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Tipologia;
-import mario.rm.sprite.Azione;
-import mario.rm.sprite.Linear;
+import mario.rm.sprite.tiles.movement.Azione;
+import mario.rm.sprite.tiles.movement.Linear;
 import mario.rm.sprite.Player;
+import mario.rm.sprite.tiles.movement.Disappear;
+import mario.rm.sprite.tiles.movement.OnCollide;
 import mario.rm.utility.MoveAttrib;
 import mario.rm.utility.Punto;
 
@@ -75,6 +77,8 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
     protected MoveAttrib att;
     protected int moveType;
     private Azione azione;
+    
+    private String script;
 
     public Tiles(int x, int y, int width, int height, Handler handler, String type, ArrayList<Tile> anim, boolean collide, String part, boolean damage, String script) {
         this.x = x;
@@ -94,13 +98,18 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
                 this.temp = tile.getImage(TilePart.valueOf(part));
             });
         }
-
+        if(type.equals("CHECKPOINT"))System.out.println("x: "+x+" y: "+y/SuperMario.standardHeight);
+        if(type.equals("ROD")){
+            System.out.println("width: "+width+" height: "+height+" x: "+x+" y: "+y/SuperMario.standardHeight);
+        }
         numImma = temp != null ? temp.length : 0;
-
+        
         this.numSerieX = 1;
         this.collide = collide;
+        
+        this.script = script;
 
-        script(script);
+        script();
 
     }
 
@@ -124,6 +133,7 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
 
         this.numSerieX = 1;
         this.collide = collide;
+        this.handler = handler;
     }
 
     public Tiles(int x, int y, int width, int height, Handler handler, String type, boolean collide, String part, String script) {
@@ -141,10 +151,13 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
         this.collide = collide;
         this.partTile = part;
 
-        script(script);
+        this.script = script;
+        
+        script();
+        
     }
 
-    private void script(String script) {
+    private void script() {
         att = new MoveAttrib(new Punto(x, y));
         att.setLast(new Punto(x, y));
         att.setDir(new Direction[]{Direction.LEFT, Direction.LEFT});
@@ -153,6 +166,12 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
                 case "normal":
                     moveType = 0;
                     azione = new Linear(script);
+                    break;
+                case "onCollide":
+                    azione = new OnCollide(script, this);
+                    break;
+                case "disappear":
+                    azione = new Disappear(script, this);
                     break;
             }
         } else {
@@ -330,6 +349,10 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
         }
         return s;
     }
+    
+    public void setCollide(boolean collide){
+        this.collide = collide;
+    }
 
     public Azione getAzione() {
         return azione;
@@ -337,6 +360,10 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
 
     public MoveAttrib getAtt() {
         return att;
+    }
+    
+    public String getScript(){
+         return script;
     }
 
 }

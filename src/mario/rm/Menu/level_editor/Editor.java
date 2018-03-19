@@ -15,7 +15,7 @@ import javax.swing.JScrollPane;
 import mario.rm.Menu.Componenti.Scrollable;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
-import mario.rm.utility.DefaultFont;
+import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
 /**
@@ -46,8 +46,10 @@ public class Editor extends JFrame implements Scrollable {
         
         
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        WIDTH = d.width / 2;
-        HEIGHT = d.height / 2;
+        /*WIDTH = d.width / 4 * 3;
+        HEIGHT = d.height / 4 * 3;*/
+        WIDTH = d.width;
+        HEIGHT = d.height;
         
         setSize(WIDTH, HEIGHT);
         
