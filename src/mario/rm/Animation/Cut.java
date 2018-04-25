@@ -5,6 +5,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -89,13 +90,15 @@ public class Cut implements Serializable {
         }
     }
 
-    public Cut(String path, LinkedList<Punto> punti, Move move, String type, Direction dir, String cart, String transformation) {
+    public Cut(String path, LinkedList<Punto> punti, Move move, String type, Direction dir, String cart, String transformation, boolean jarNeeded) {
 
         errore = false;
 
         BufferedImage original = null;
         //System.out.println(""+path.substring(path.lastIndexOf("\\Immagini\\")));
-        original = new Loader().LoadImageCompletePath(path);
+        original = new Loader().LoadImageChange(path, jarNeeded);
+        //System.out.println(""+path);
+        //System.out.println(""+new File(path).getAbsolutePath());
         this.type = type;
 
         this.move = move;
@@ -301,13 +304,13 @@ public class Cut implements Serializable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Cut(String path, LinkedList<Punto> punti, Move move, String type, Direction dir, String cart, String transformation, String unlockable) {
+    public Cut(String path, LinkedList<Punto> punti, Move move, String type, Direction dir, String cart, String transformation, String unlockable, boolean jarNeeded) {
 
         errore = false;
         //System.out.println(""+path);
         //System.out.println(""+path.substring(path.lastIndexOf("\\Immagini\\")));
         BufferedImage original = null;
-        original = new Loader().LoadImageCompletePath(path);
+        original = new Loader().LoadImageChange(path, jarNeeded);
         this.type = type;
 
         this.unlockable = unlockable;

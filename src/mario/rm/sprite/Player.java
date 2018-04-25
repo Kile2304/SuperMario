@@ -25,14 +25,16 @@ import mario.rm.sprite.tiles.Tiles;
 import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 import static mario.rm.utility.Size.crescita;
+import static mario.rm.SuperMario.adaptHeight;
 
 /**
  *
  * @author LENOVO
  */
-public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA CLASSE)
+public class Player extends Sprite {
 
-    public static int MONETE = 99;
+    public static int MONETE = 0;
+
     private boolean grow;
 
     private boolean immortal;   //VARIABILE CHE GESTISCE L'IMMORTALITA' TEMPORANEA DEL PLAYER
@@ -49,10 +51,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
 
     private static final double STACCO = adaptHeight(0.17); //COSTANTE VARIABILE IN BASE ALLA RISOLUZIONE DELLO SCHERMO, PER IL SALTO 
 
-    private static final Sound[] sound = new Sound[]{
-        new Sound("Sound/nsmb_death.wav"),
-        new Sound("Sound/nsmb_power-up.wav"),
-        new Sound("Sound/nsmb_coin.wav")};   //SUONE DELLA MORTEM DEL POWER UP E DEL COIN
+    private static Sound[] sound;   //SUONE DELLA MORTEM DEL POWER UP E DEL COIN
 
     //cheat
     private boolean godMode = false;
@@ -90,6 +89,13 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
         this.playerNumber = playerNumber;
     }
 
+    public static void initSound(){
+        sound = new Sound[]{
+        new Sound("Sound/nsmb_death.wav"),
+        new Sound("Sound/nsmb_power-up.wav"),
+        new Sound("Sound/nsmb_coin.wav")};
+    }
+    
     /**
      *
      * IMOSTA A POSSO USARE IL TUBO
@@ -154,7 +160,7 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
                         Rectangle bounds = tile.get(i).getBounds();
 
                         if (getBounds().intersects(bounds)) {
-                            if (tileType.equals("ROD") || tile.get(i).getType().equals("FLAGCOMPLETE")) {
+                            if (tileType.equals("ROD") || tileType.equals("FLAG")) {
                                 handler.next(); //SE COLPISCE LA BANDIERA DI FINE LIVELLO LO CAMBIA
                             } else if (tileType.equals("COIN")) {
                                 tile.get(i).die(); //LA MONETA VIENE RIMOSSA
@@ -533,5 +539,5 @@ public class Player extends Sprite {    //PLAYER(DA ESTENDERE SU UN'ALTRA FUTURA
     public void changeIsDie() {
         isDie = false;
     }
-
+    
 }

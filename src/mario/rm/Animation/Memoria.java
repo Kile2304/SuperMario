@@ -3,9 +3,11 @@ package mario.rm.Animation;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -39,23 +41,15 @@ public class Memoria {
 
     private Sound level;
 
-    private static File jarFile = null;
 
     public Memoria(boolean temp) {
-        if (jarFile == null) {
-            jarFile = MainComponent.jar;
-        }
     }
 
     public Memoria() {
 
-        if (jarFile == null) {
-            jarFile = MainComponent.jar;
-        }
-
         Thread[] t = new Thread[1];
 
-        indirizzo = "Animazioni/";
+        indirizzo = "Animation/";
 
         //System.out.println(""+indirizzo);
         enemy = new ArrayList<>();  //ELENCO IMMAGINI NEMICI
@@ -66,7 +60,7 @@ public class Memoria {
 
         //long time = System.currentTimeMillis();
         t[0] = new Thread(() -> {
-            String path = indirizzo + "Tile/unlockable";    // CARICO IN MEMORIA LE IMMAGINI TILES
+            String path = indirizzo + "tile/unlockable";    // CARICO IN MEMORIA LE IMMAGINI TILES
             getAnim(path, unlockable);
         });
         t[0].start();
@@ -122,7 +116,6 @@ public class Memoria {
             getAnim(path, enemy);
         });
         t[4].start();*/
-
         t[1] = new Thread(() -> {
             String path = indirizzo + "player/";   //CARICO IN MEMORIA LE IMMAGINI DEL PLAYER
             getAnim(path, player);
@@ -131,10 +124,10 @@ public class Memoria {
 
         t[2] = new Thread(() -> {
             String path = indirizzo;    // CARICO IN MEMORIA LE IMMAGINI TILES
-            getAnim(path + "Tile/other", tiles);
-            getAnim(path + "Tile/unlockable", tiles);
-            getAnim(path + "Tile/terrain", terreni);
-            getAnim(path + "Tile/special", terreni);
+            getAnim(path + "tile/other", tiles);
+            getAnim(path + "tile/unlockable", tiles);
+            getAnim(path + "tile/terrain", terreni);
+            getAnim(path + "tile/special", terreni);
         });
         t[2].start();
         /*t[7] = new Thread(new Runnable() {
@@ -201,57 +194,27 @@ public class Memoria {
     public ArrayList<Cut> getAnim(String path, ArrayList<Cut> list) {
         ArrayList<String> Files = new ArrayList<>();
 
-        if (jarFile.isFile()) {
-            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
-            ZipInputStream zip = null;
-            try {
-                URL jar = src.getLocation();
-                zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null) {
-                        break;
-                    }
-                    String name = e.getName();
-                    if (name.startsWith(path + "/")) {
-                        /* Do something with this entry. */
-                        //System.out.println("" + name);
-                        if (name.charAt(name.length() - 1) != '/') {
-                            Files.add(name);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    zip.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            LinkedList<String> Dir = new LinkedList<>();
-            String pat = "res/" + path;
-            File f = new File(pat);
-            Dir.add(f.getAbsolutePath());
+        LinkedList<String> Dir = new LinkedList<>();
+        String pat = MainComponent.filePath + "/Luigi/" + path;
+        File f = new File(pat);
+        Dir.add(f.getAbsolutePath());
+        System.out.println("cart: " + f.getAbsolutePath());
+        while (!Dir.isEmpty()) {
+            //System.out.println("" +f.getAbsolutePath());
+            f = new File(Dir.pop());
             //System.out.println(""+f.getAbsolutePath());
-            while (!Dir.isEmpty()) {
-                //System.out.println("" +f.getAbsolutePath());
-                f = new File(Dir.pop());
-                //System.out.println(""+f.getAbsolutePath());
-                if (f.isFile()) {
-                    Files.add(f.getAbsolutePath());
-                } else {
-                    String arr[] = f.list();
-                    try {
-                        for (int i = 0; i < arr.length; i++) {
-                            Dir.add(f.getAbsolutePath() + "/" + arr[i]);
-                            //System.out.println(""+Dir.get(i));
-                        }
-                    } catch (NullPointerException exp) {
-                        Dir.remove(f.getAbsoluteFile());
+            if (f.isFile()) {
+                Files.add(f.getAbsolutePath());
+            } else {
+                String arr[] = f.list();
+                try {
+                    for (int i = 0; i < arr.length; i++) {
+                        Dir.add(f.getAbsolutePath() + "/" + arr[i]);
+                        //System.out.println("file: "+f.getAbsolutePath());
+                        //System.out.println(""+Dir.get(i));
                     }
+                } catch (NullPointerException exp) {
+                    Dir.remove(f.getAbsoluteFile());
                 }
             }
         }
@@ -263,15 +226,7 @@ public class Memoria {
         try {
             for (String string : Files) {
                 Object ob = null;
-                if (jarFile.isFile()) {
-                    //InputStream in = MainComponent.class.getClassLoader().getResourceAsStream("mario/Animazioni/enemy/boo/boo-stand.anim");
-                    InputStream in = new BufferedInputStream(MainComponent.class.getClassLoader().get‌​ResourceAsStream(string));
-                    ob = new ObjectInputStream(in).readObject();
-
-                    in.close();
-                } else {
-                    ob = new ObjectInputStream(new FileInputStream(string)).readObject();
-                }
+                ob = new ObjectInputStream(new FileInputStream(string)).readObject();
                 if (ob instanceof Cut) {
                     list.add((Cut) ob);
                 } else {
@@ -288,11 +243,11 @@ public class Memoria {
         ArrayList<String> Files = new ArrayList<>();
         Log.append(path, DefaultFont.ERROR);
 
-        if (jarFile.isFile()) {
+        if (MainComponent.isRunningFromJar) {
             CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
             ZipInputStream zip = null;
             try {
-                URL jar = src.getLocation();
+                URL jar = new URL(path);
                 zip = new ZipInputStream(jar.openStream());
                 while (true) {
                     ZipEntry e = zip.getNextEntry();
@@ -320,8 +275,7 @@ public class Memoria {
             }
         } else {
             LinkedList<String> Dir = new LinkedList<>();
-            String pat = "res/" + path;
-            File f = new File(pat);
+            File f = new File(path);
             Dir.add(f.getAbsolutePath());
             //System.out.println(""+f.getAbsolutePath());
             while (!Dir.isEmpty()) {
@@ -375,10 +329,10 @@ public class Memoria {
         return elenco;
     }
 
-    public static String[] getDirectory(String path){
+    public static String[] getDirectory(String path) {
         ArrayList<String> Files = new ArrayList<>();
 
-        if (MainComponent.jar.isFile()) {
+        if (MainComponent.isRunningFromJar) {
             CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
             ZipInputStream zip = null;
             try {
@@ -436,11 +390,11 @@ public class Memoria {
 
         for (int i = 0; i < Files.size(); i++) {
             elenco[i] = Files.get(i);
-            System.out.println(""+elenco[i]);
+            System.out.println("" + elenco[i]);
         }
         return elenco;
     }
-    
+
     public ArrayList<Cut> getEnemy() {
         return enemy;
     }
@@ -461,16 +415,52 @@ public class Memoria {
         return terreni;
     }
 
-    public void clean(){
+    public void clean() {
         enemy.clear();
         player.clear();
         tiles.clear();
         terreni.clear();
         unlockable.clear();
     }
-    
-    public static final void setJarFile(File jarFile){
-        Memoria.jarFile = jarFile;
+
+    /**
+     * Export a resource embedded into a Jar file to the local file path.
+     *
+     * @param resourceName ie.: "/SmartLibrary.dll"
+     * @return The path to the exported resource
+     * @throws Exception
+     */
+    static public String ExportResource(String resourceName, String newName) throws Exception {
+        InputStream stream = null;
+        OutputStream resStreamOut = null;
+        String jarFolder;
+        try {
+            stream = MainComponent.isRunningFromJar
+                    ? MainComponent.class.getResourceAsStream(resourceName)
+                    : new FileInputStream(MainComponent.filePath + resourceName);//note that each / is a directory down in the "jar tree" been the jar the root of the tree
+            if (stream == null) {
+                throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+            }
+
+            int readBytes;
+            byte[] buffer = new byte[4096];
+            jarFolder = MainComponent.isRunningFromJar
+                    ? new File(MainComponent.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath().replace('\\', '/')
+                    : MainComponent.filePath;
+            File f = new File(jarFolder + newName);
+            if (!f.isFile()) {
+                f.createNewFile();
+            }
+
+            resStreamOut = new FileOutputStream(jarFolder + newName);
+            while ((readBytes = stream.read(buffer)) > 0) {
+                resStreamOut.write(buffer, 0, readBytes);
+            }
+        } catch (Exception ex) {
+            throw ex;
+        }
+
+        return jarFolder + newName;
     }
-    
+
 }

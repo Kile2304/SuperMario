@@ -420,11 +420,13 @@ public class Griglia extends JPanel {
             // String f = MainComponent.jarPath.getAbsolutePath().substring(0, MainComponent.jarPath.getAbsolutePath().lastIndexOf("\\"));
             c = new JFileChooser(new File("src/mario/res/Immagini/livelli"));
         }*/
-        if (MainComponent.jar.isFile()) {
+        /*if (MainComponent.jar.isFile()) {
             c = new JFileChooser(new File(MainComponent.class.getClassLoader().getResource("Immagini/livelli").getFile()));
         } else {
             c = new JFileChooser(new File("res/Immagini/livelli"));
-        }
+        }*/
+        
+        c = new JFileChooser(new File(MainComponent.filePath+"/Luigi/Level"));
 
         int valid = c.showSaveDialog(null);
 
@@ -463,7 +465,7 @@ public class Griglia extends JPanel {
 
             saveAll(path);
 
-            Graphics2D g = image.createGraphics();
+            /*Graphics2D g = image.createGraphics();
 
             //Color color = new Color(255, 255, 255);
             for (int i = min.getY(); i < max.getY(); i++) {
@@ -507,7 +509,7 @@ public class Griglia extends JPanel {
                 Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
             }
 
-            Log.append("Immagine creata", DefaultFont.INFORMATION);
+            Log.append("Immagine creata", DefaultFont.INFORMATION);*/
         }
     }
 

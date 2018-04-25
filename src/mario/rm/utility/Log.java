@@ -4,11 +4,9 @@ import mario.rm.other.DefaultFont;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,13 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.UIDefaults;
 import javax.swing.border.Border;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import mario.MainComponent;
 import mario.rm.SuperMario;
@@ -117,7 +109,7 @@ public class Log extends JFrame implements KeyListener {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
+        setIconImage(Loader.LoadImage("Immagini/Luma-Yellow-icon.png"));
 
         setVisible(true);
 
@@ -283,7 +275,7 @@ public class Log extends JFrame implements KeyListener {
                     }
                     break;
                 case "home":
-                    SuperMario.stopGame();
+                    main.getSuperMario().stopGame();
                     break;
                 case "quit":
                     System.exit(0);

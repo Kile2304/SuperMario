@@ -1,9 +1,13 @@
 package mario.rm.Menu.sprite_estractor.output;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import mario.MainComponent;
 import mario.rm.Menu.sprite_estractor.output.union.Union;
@@ -22,7 +26,11 @@ public class Design {
     public Design(JFrame fr) {
         BufferedReader br = null;
         ArrayList<Estratta> lista = new ArrayList<>();
-        br = new BufferedReader(new InputStreamReader((MainComponent.class.getClassLoader().getResourceAsStream("Animazioni/list.txt"))));
+        try {
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(MainComponent.filePath + "/Luigi/Animation/anim.txt")));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Design.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             String temp = "";
             ArrayList<Integer> punto = new ArrayList<>();
@@ -37,8 +45,8 @@ public class Design {
                         case '{':
                         case '!':
                         case '<':
-                        case '♣':
-                        case '◘':
+                        case '?':
+                        case '=':
                         case '☼':
                         case '§':
                             val = "";
@@ -63,10 +71,10 @@ public class Design {
                                 punto.clear();
                             }
                             break;
-                        case '♦':
+                        case '%':
                             lista.get(lista.size() - 1).setDirection(Direction.valueOf(val));
                             break;
-                        case '○':
+                        case '&':
                             lista.get(lista.size() - 1).setNomeFile(val);
                             break;
                         case '♪':

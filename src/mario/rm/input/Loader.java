@@ -2,6 +2,8 @@ package mario.rm.input;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,17 +34,43 @@ public class Loader {
         }
         return img;
     }
+    
+    public static BufferedImage LoadImageChange(String path, boolean jarNeeded){
+        BufferedImage img = null;
+        try {
+            Log.append(path, DefaultFont.INFORMATION);
+            img = ImageIO.read(jarNeeded
+                    ? MainComponent.class.getClassLoader().getResourceAsStream(path.replace('\\', '/'))
+                    : new FileInputStream(new File(path)));
+        } catch (IOException ex) {
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
+        }
+        return img;
+    }
+    
+    public static final BufferedImage LoadImageNormal(String path) {
+        BufferedImage img = null;
+        try {
+            Log.append(path, DefaultFont.INFORMATION);
+            img = ImageIO.read(new FileInputStream(new File(path)));
+        } catch (IOException ex) {
+            Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
+        }
+        return img;
+    }
 
     /**
      *
-     * @param path: path completa ell'immagine da caricare in memoria
+     * @param path: path completa dell'immagine da caricare in memoria
      * @return immagine caricata in memoria
      */
     public static final BufferedImage LoadImageCompletePath(String path) {
         BufferedImage img = null;
         try {
             Log.append(path, DefaultFont.INFORMATION);
-            img = ImageIO.read(MainComponent.class.getClassLoader().getResourceAsStream(path));
+            img = ImageIO.read(MainComponent.isRunningFromJar 
+                    ? MainComponent.class.getClassLoader().getResourceAsStream(path.replace('\\', '/'))
+                    : new FileInputStream(new File(path)));
         } catch (IOException ex) {
             Log.append(Log.stackTraceToString(ex), DefaultFont.ERROR);
         }

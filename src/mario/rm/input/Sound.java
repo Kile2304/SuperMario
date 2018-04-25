@@ -33,7 +33,7 @@ public class Sound {
     
     public Sound(String path) {
         try {
-            if (!MainComponent.jar.isFile()) {
+            if (!MainComponent.isRunningFromJar) {
                 AudioInputStream ais = AudioSystem.getAudioInputStream(MainComponent.class.getClassLoader().getResourceAsStream(path));
                 clip = AudioSystem.getClip();
                 clip.open(ais);
@@ -111,9 +111,13 @@ public class Sound {
     }
     
     public static void setSound() {
-        Ini ini = new Ini(System.getProperty("user.home") + "/Luigi/settings.ini");
+        Ini ini = new Ini(MainComponent.filePath + "/Luigi/settings.ini");
         soundON = Boolean.parseBoolean(ini.getValue("sound"));
         volume = Integer.parseInt(ini.getValue("volume"));
+    }
+ 
+    public static void clean(){
+        control.clear();
     }
     
 }

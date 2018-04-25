@@ -1,11 +1,14 @@
 package mario.rm.Menu.sprite_estractor.input;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import mario.rm.utility.Punto;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +17,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import mario.MainComponent;
 import mario.rm.Menu.Griglia;
 import mario.rm.identifier.Tipologia;
 import mario.rm.other.DefaultFont;
@@ -207,23 +211,23 @@ public class Collegamenti {
         if (!file.equals("")) {
             try { //se file e' == a "", vuol dire che non e' stata caricata alcuna immagine, ed estrarre un immagine da nulla non e' possibile
 
-                FileWriter file = new FileWriter("res/Animazioni/list.txt", true);
+                FileWriter file = new FileWriter(MainComponent.filePath + "/Luigi/Animation/anim.txt", true);
                 BufferedWriter br = new BufferedWriter(file);
 
                 br.append("+[" + this.file + "]\n");
                 br.append("!" + Setting.type.getText().toUpperCase() + "|\n");  //Type
                 if (Setting.isPlayer.isSelected()) { //queste informazioni, sono scritte sul file solo in caso lo sprite sia un player
                     br.append("{" + Setting.move.getSelectedItem().toString() + "}\n");  //scrivo il tipo di movimento
-                    br.append("♣" + Setting.direction.getSelectedItem().toString() + "♦\n"); //scrivo la direzione di movimento
+                    br.append("?" + Setting.direction.getSelectedItem().toString() + "%\n"); //scrivo la direzione di movimento
                     br.append("☼" + Setting.transformation.getSelectedItem().toString() + "♪\n");    //scrivo il tipo di trasformazione
                 } else {    //queste informazioni, sono scritte solo nel caso sia un tile
                     //add tile
-                    br.append("§" + Setting.tile.getSelectedItem().toString() + "*\n");  //tipo di direzione
+                    br.append("£" + Setting.tile.getSelectedItem().toString() + "*\n");  //tipo di direzione
                     if (Setting.isUnlockable.isSelected()) {
                         br.append("!" + Setting.unlockType.getSelectedItem() + "|");
                     }
                 }
-                br.append("◘" + Setting.fileName.getText() + "○\n"); //scrivo il nome del file
+                br.append("=" + Setting.fileName.getText() + "&\n"); //scrivo il nome del file
                 for (Punto[] punto : zone) {    //scrivo i punti che dovranno essere ritagliati
                     if (punto[0].getX() == punto[punto.length - 1].getX() || punto[0].getY() == punto[punto.length - 1].getY()) {
                         continue;
@@ -284,6 +288,22 @@ public class Collegamenti {
             zone.removeLast();
         }
         temp.clear();
+    }
+
+    public static final void createListAnim() throws IOException {
+        File f = new File(MainComponent.filePath + "/Luigi/Animation/anim.txt");
+        f.createNewFile();
+        BufferedInputStream bis = new BufferedInputStream(MainComponent.isRunningFromJar
+                ? MainComponent.class.getClassLoader().getResourceAsStream("list.txt")
+                : new FileInputStream(MainComponent.filePath + "/list.txt"));
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(MainComponent.filePath + "/Luigi/Animation/anim.txt"));
+        int val = 0;
+        while ((val = bis.read()) != -1) {
+            bos.write(val);
+            bos.flush();
+        }
+        bis.close();
+        bos.close();
     }
 
 }

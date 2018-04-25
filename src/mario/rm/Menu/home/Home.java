@@ -1,5 +1,8 @@
 package mario.rm.Menu.home;
 
+import Connessione.Connessione;
+import Connessione.Login;
+import Connessione.Profilo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -18,7 +21,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
@@ -35,10 +40,9 @@ import mario.rm.handler.SelectLevel;
 import mario.rm.input.Loader;
 import mario.rm.multigiocatore.TypeMulti;
 import mario.rm.other.DefaultFont;
+import mario.rm.utility.Font;
+import mario.rm.utility.Font.ColorName;
 import mario.rm.utility.Log;
-import mario.rm.utility.Video;
-import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 /**
  *
@@ -62,8 +66,7 @@ public class Home extends JFrame implements ActionListener {
     private JPanel all;
     private Impostazioni menuHome;
 
-    Video video;
-
+    //Video video;
     /**
      * Creates new form Home
      *
@@ -78,15 +81,15 @@ public class Home extends JFrame implements ActionListener {
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
-
         sizer();
 
         setIconImage(Loader.LoadImage("Immagini/Luma-Yellow-icon.png"));
 
         setUndecorated(true);   //tolgo barre x _ ed il resto
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-        if (MainComponent.VLC) {
-            intro();
+        if (MainComponent.loading) {
+            //intro();
+            loading();
         } else {
             home();
         }
@@ -94,8 +97,12 @@ public class Home extends JFrame implements ActionListener {
 
     }
 
-    public void play(String file) {
-        video.play(file);
+    private void loading() {
+        add(new JPanel() {
+            public void paintComponent(Graphics g) {
+                g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+            }
+        });
     }
 
     private void sizer() {
@@ -109,26 +116,7 @@ public class Home extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
     }
 
-    private void intro() {
-
-        add((video = new Video(this)));
-        video.getPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
-            @Override
-            public void finished(MediaPlayer mediaPlayer) {
-                home();
-            }
-        });
-        int volume = Boolean.parseBoolean(MainComponent.settings.getValue("sound"))
-                ? Integer.parseInt(MainComponent.settings.getValue("volume"))
-                : 0;
-        //System.out.println(""+volume);
-        video.getPlayer().setVolume(volume);
-    }
-
     public void home() {
-        if (video != null) {
-            remove(video);
-        }
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -166,8 +154,10 @@ public class Home extends JFrame implements ActionListener {
     }
 
     private void start() {
+        list.clear();
+        all = null;
         dispose();
-        new SelectLevel(false).reset();
+        SelectLevel.reset();
         main.start(1);
     }
 
@@ -304,27 +294,31 @@ public class Home extends JFrame implements ActionListener {
         int w = (int) (5.0 / 960.0 * getWidth());
         int h = (int) (5.0 / 540.0 * getHeight());
         // System.out.println(""+w+" "+h);
+        Profilo.looged = true;
+        Profilo.username = "carpaccio";
+        panel.add(new JLabel(Profilo.looged ? Font.setHtmlColor("Loggato come: " + Profilo.username, ColorName.GREEN) : Font.setHtmlColor("Nessuno loggato", ColorName.RED)));
+        //JButton bb = new JButton(Profilo.looged ? "LOGOUT" : "LOGIN");
+        JButton bb = new JButton(Profilo.looged ? "LOGIN" : "LOGOUT");
+        bb.addActionListener(this);
+        panel.add(bb, gbc);
         gbc.insets = new Insets(w, h, w, h);    //gli dico di mettermi uno spazio fra ogni bottone
 
         //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         for (int i = 0; i < bottonList.length; i++) {
-            if (!(bottonList[i].equals("SPRITE ESTRACTOR") && MainComponent.isRunningFromJar)
-                    && !(bottonList[i].equals("CREA LIVELLO") && MainComponent.isRunningFromJar)) {
-                TranslucentButton b = new TranslucentButton(bottonList[i]);
+            TranslucentButton b = new TranslucentButton(bottonList[i]);
 
-                b.setBgCol(new Color(42, 82, 190));
-                b.setBgCol(new Color(18, 10, 143)); //background
+            b.setBgCol(new Color(42, 82, 190));
+            b.setBgCol(new Color(18, 10, 143)); //background
 
-                b.setBgColro(Color.GRAY);
+            b.setBgColro(Color.GRAY);
 
-                b.setFgCol(new Color(127, 255, 212));   //bordi e scritte
+            b.setFgCol(new Color(127, 255, 212));   //bordi e scritte
 
-                b.setFgColsel(Color.BLACK);
+            b.setFgColsel(Color.BLACK);
 
-                b.addActionListener(this);
-                list.add(b);
-                panel.add(b, gbc);
-            }
+            b.addActionListener(this);
+            list.add(b);
+            panel.add(b, gbc);
         }
         return panel;
     }
@@ -332,6 +326,16 @@ public class Home extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
+            case "LOGIN":
+                if (Connessione.isConnected()) {
+                    dispose();
+                    new Login(this.getSize());
+                }
+                break;
+            case "LOGOUT":
+                Profilo.logout();
+                repaint();
+                break;
             case "INIZIA GIOCO":
                 start();
                 break;

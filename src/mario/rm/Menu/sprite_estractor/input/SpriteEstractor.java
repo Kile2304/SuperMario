@@ -4,7 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -13,8 +22,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import mario.MainComponent;
 import static mario.MainComponent.memoryUsed;
 import mario.rm.Menu.Griglia;
+import mario.rm.Menu.sprite_estractor.output.Design;
+import mario.rm.Menu.sprite_estractor.output.union.Union;
 
 /**
  *
@@ -33,13 +45,12 @@ public class SpriteEstractor extends JFrame {
     private static final int PIXEL = 30;
 
     private JScrollPane gri;
-    
+
     public static JLabel coordinate;
-    
+
     public static int adaptedWidth = adaptWidth(250);
 
-   // private final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
-
+    // private final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     public SpriteEstractor() {
         super(TITLE);
 
@@ -52,19 +63,18 @@ public class SpriteEstractor extends JFrame {
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         WIDTH = d.width / 16 * 13;
         HEIGHT = d.height / 16 * 13;
-        
 
         setSize(new Dimension(WIDTH, HEIGHT));
 
         setLayout(new BorderLayout());
 
         adaptedWidth = adaptWidth(250);
-        
+
         final int adaptedHeight = adaptHeight(250);
-System.out.println("pre Griglie: "+memoryUsed());
+        System.out.println("pre Griglie: " + memoryUsed());
         Griglia g = new Griglia(WIDTH + adaptedWidth, HEIGHT + adaptedHeight, this, PIXEL);
         g.setLayout(new GridLayout());
-System.out.println("dopo griglia: "+memoryUsed());
+        System.out.println("dopo griglia: " + memoryUsed());
         gri = new JScrollPane(g);
         gri.setPreferredSize(new Dimension(WIDTH - adaptedWidth, HEIGHT));
 
@@ -72,7 +82,7 @@ System.out.println("dopo griglia: "+memoryUsed());
         gri.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         s = new Selezione(g, this);
-        
+
         p = new Setting(s, HEIGHT);
         JScrollPane panelScroll = new JScrollPane(p);
         panelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -82,10 +92,10 @@ System.out.println("dopo griglia: "+memoryUsed());
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setPreferredSize(new Dimension(adaptedWidth + 25, HEIGHT - adaptWidth(60)));
         tabbedPane.addTab("Settings", null, panelScroll,
-                  "Does nothing");
+                "Does nothing");
         tabbedPane.addTab("Strumenti", null, new Strumenti(s, HEIGHT),
-                  "Does nothing2");
-        
+                "Does nothing2");
+
         addMenuBar();
 
         JPanel east = new JPanel();
@@ -103,16 +113,15 @@ System.out.println("dopo griglia: "+memoryUsed());
         g.addMouseListener(s);
         g.addMouseMotionListener(s);
         g.setPanel(p);
-        
+
         setLocationRelativeTo(null);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //setResizable(false);
-        
         setVisible(true);
         //System.gc();
-        System.out.println("Fine costruzione estrattore: "+memoryUsed());
+        System.out.println("Fine costruzione estrattore: " + memoryUsed());
 
     }
 
@@ -179,6 +188,27 @@ System.out.println("dopo griglia: "+memoryUsed());
 
     public int adaptHeight(int val) {
         return (int) ((double) val / 900 * HEIGHT);
+    }
+
+    public static void initAnimation() {
+        File f = new File(MainComponent.filePath + "/Luigi/Animation");
+        if (!f.isDirectory()) {
+            f.mkdir();
+        }
+        f = new File(MainComponent.filePath + "/Luigi/Animation/anim.txt");
+        try {
+            if (!f.isFile()) {
+                Collegamenti.createListAnim();
+            }
+            Union.checkBatFile();
+        } catch (IOException ex) {
+            Logger.getLogger(SpriteEstractor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        f = new File(MainComponent.filePath + "/Luigi/Animation");
+        System.out.println(""+f.list().length);
+        if (f.list().length == 2) {
+            new Design(null);
+        }
     }
 
 }

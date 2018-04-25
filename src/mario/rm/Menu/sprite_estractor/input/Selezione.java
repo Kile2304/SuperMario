@@ -62,7 +62,7 @@ public class Selezione implements MouseListener, MouseMotionListener {
 
     private void load() {
 
-        JFileChooser c = new JFileChooser(MainComponent.class.getClassLoader().getResource("Immagini/extract").getPath());
+        JFileChooser c = new JFileChooser(MainComponent.filePath + "/Luigi/resources");
 
         int valid = c.showOpenDialog(fr);
 
@@ -71,10 +71,10 @@ public class Selezione implements MouseListener, MouseMotionListener {
                 action("New");
             } catch (IOException ex) {
             }
-            String s = (c.getSelectedFile().getAbsolutePath());
-            System.out.println("" + s);
-            s = s.substring(s.lastIndexOf("Immagini\\extract"));
-            BufferedImage level = Loader.LoadImageCompletePath(s);
+            // s = (c.getSelectedFile().getAbsolutePath());
+            //System.out.println("" + s);
+            //s = s.substring(s.lastIndexOf("Immagini\\extract"));
+            BufferedImage level = Loader.LoadImageNormal(c.getSelectedFile().getAbsolutePath());
             g.loadImage(level);
         } else {
             return;

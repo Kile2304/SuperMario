@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mario.rm.Menu.opzioni;
 
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JButton;
@@ -30,8 +26,8 @@ import mario.rm.utility.Log;
  *
  * @author LENOVO
  */
-public abstract class Impostazioni extends JPanel implements ChangeListener, ActionListener{
-    
+public abstract class Impostazioni extends JPanel implements ChangeListener, ActionListener {
+
     protected static final JPanel center = new JPanel();
     protected JCheckBox sound;
     protected JSlider slider;
@@ -39,22 +35,21 @@ public abstract class Impostazioni extends JPanel implements ChangeListener, Act
     protected static BufferedImage img = Loader.LoadImage("Immagini/settings.jpg");
     protected Ini settings;
     protected JCheckBox full;
-    
-    public Impostazioni(){
+
+    public Impostazioni() {
         center.setOpaque(false);
     }
-    
+
     protected abstract void normal();
-    
+
     protected void option(boolean isHome) {
         settings = MainComponent.settings;
         center.removeAll();
         //center.setPreferredSize(new Dimension(SuperMario.WIDTH / 3, SuperMario.HEIGHT / 3));
 
         //center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
-        
-        center.setLayout(new GridBagLayout()); 
-        
+        center.setLayout(new GridBagLayout());
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -63,12 +58,13 @@ public abstract class Impostazioni extends JPanel implements ChangeListener, Act
         int h = (int) (5.0 / 540.0 * SuperMario.HEIGHT);
         // System.out.println(""+w+" "+h);
         gbc.insets = new Insets(w, h, w, h);    //gli dico di mettermi uno spazio fra ogni bottone
-        
+
         center.add((sound = new JCheckBox(changeColor("Sound", "yellow"))));
+        sound.setActionCommand("Sound");
         sound.setSelected(Boolean.parseBoolean(settings.getValue("sound")));
-        
+
         sound.addActionListener(this);
-        
+
         int vol = Integer.parseInt(settings.getValue("volume"));
         slider = new JSlider(JSlider.HORIZONTAL, 0, 100, vol);
         slider.setMajorTickSpacing(5);
@@ -76,22 +72,21 @@ public abstract class Impostazioni extends JPanel implements ChangeListener, Act
         slider.addChangeListener(this);
         slider.setEnabled(Boolean.parseBoolean(settings.getValue("sound")));
         center.add(slider, gbc);
-        
-        
-        center.add((current = new JLabel(changeColor("Il volume corrente e': " + (int) vol+"%", "yellow"))), gbc);
-        
-        if(isHome){
+
+        center.add((current = new JLabel(changeColor("Il volume corrente e': " + (int) vol + "%", "yellow"))), gbc);
+
+        if (isHome) {
             (full = new JCheckBox(changeColor("Fullscreen", "yellow")))
                     .setSelected(Boolean.parseBoolean(settings.getValue("fullscreen")));
             //center.add(new JLabel(changeColor("Fullscreen", "yellow")));
             center.add(full);
         }
         gbc.gridx++;
-        
+
         JButton indietro = new JButton("Indietro");
         indietro.addActionListener(this);
         center.add(indietro, gbc);
-        
+
         JButton applica = new JButton("Applica");
         applica.addActionListener(this);
         center.add(applica, gbc);
@@ -99,35 +94,35 @@ public abstract class Impostazioni extends JPanel implements ChangeListener, Act
         revalidate();
         repaint();
     }
-    
+
     public void stateChanged(ChangeEvent e) {
-            int sliderValue = slider.getValue();
-        current.setText(changeColor("Il volume corrente e': " + sliderValue+"%", "yellow"));
+        int sliderValue = slider.getValue();
+        current.setText(changeColor("Il volume corrente e': " + sliderValue + "%", "yellow"));
     }
-    
+
     protected void applica() {
         Sound.soundON = sound.isSelected();
-        settings.update("sound", ""+sound.isSelected());
-        
+        settings.modify("sound", "" + sound.isSelected());
+
         float value = slider.getValue();
-        settings.update("volume", ""+(int)value);
+        settings.modify("volume", "" + (int) value);
         Sound.setVolume(Integer.parseInt(settings.getValue("volume")));
-        
-        settings.update("fullscreen", ""+full.isSelected());
-        
+
+        if (full != null) {
+            settings.modify("fullscreen", "" + full.isSelected());
+        }
         settings.update();
-        
-        
+
     }
-    
+
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
     }
-    
-    public static String changeColor(String toOverride, String color){
-        return "<html><b><font color='"+color+"'>"+toOverride+"</font></b></html>";
+
+    public static String changeColor(String toOverride, String color) {
+        return "<html><b><font color='" + color + "'>" + toOverride + "</font></b></html>";
     }
     
 }

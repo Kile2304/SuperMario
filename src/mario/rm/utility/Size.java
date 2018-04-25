@@ -1,8 +1,5 @@
 package mario.rm.utility;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import javax.swing.JFrame;
 import mario.rm.SuperMario;
 
 /**

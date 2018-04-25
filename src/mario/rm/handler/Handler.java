@@ -1,5 +1,9 @@
 package mario.rm.handler;
 
+import Connessione.Connessione;
+import Connessione.Profilo;
+import Connessione.Query;
+import Connessione.Relazione;
 import java.awt.Graphics;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
@@ -42,14 +46,11 @@ public class Handler implements Reader {
     private static LinkedList<Tiles> tiles; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
     private static LinkedList<Enemy> enemy; //ELENCO TILES (DA MODIFICARE PER CREAZIONE DI SCENARI PIU COMPLESSI)
 
-    private static LinkedList<Enemy> enemyClone;
-    private static LinkedList<Tiles> tilesClone;
-
     /**
      *
      * level - ELENCO DI LIVELLI DA CARICARE, IN ORDINE DAL PRIMO ALL'ULTIMO
      */
-    public final SelectLevel level;
+    public SelectLevel level;
 
     private final MemoriaAC memoria;
 
@@ -57,11 +58,9 @@ public class Handler implements Reader {
 
     private boolean sound;
 
-    private final SuperMario mario;
+    private SuperMario mario;
 
     private Sound nextL;
-
-    private final boolean checkpoint;
 
     private ArrayList<int[]> tilesCollision;
 
@@ -72,8 +71,6 @@ public class Handler implements Reader {
         tiles = new LinkedList<>(); //ELENCO TILES IN CAMPO
         enemy = new LinkedList<>(); //ELENCO NEMICI IN CAMPO
 
-        tilesClone = new LinkedList<>(); //ELENCO TILES IN CAMPO
-        enemyClone = new LinkedList<>(); //ELENCO NEMICI IN CAMPO
         tilesCollision = new ArrayList<>();
         position = new ArrayList<>();
 
@@ -83,7 +80,7 @@ public class Handler implements Reader {
 
         Bullet.bullet = memoria.getBullet();
 
-        next = false;   //INDICA SE DEVE CAMBIARE LIVELLO
+        next = true;   //INDICA SE DEVE CAMBIARE LIVELLO
 
         nextL = new Sound("Sound/nsmb_stage_clear.mid");
 
@@ -91,7 +88,6 @@ public class Handler implements Reader {
 
         sound = false;
 
-        checkpoint = false;
     }
 
     /**
@@ -111,9 +107,13 @@ public class Handler implements Reader {
         t[0] = new Thread() {
             @Override
             public void run() {
-                player.stream().forEach((player) -> {
-                    player.render(g);
-                });
+                /*for (int i = player.size()-1; i < 0; i--) {
+                    System.out.println("kdjshbfsdhfb");
+                    player.get(i).render(g);
+                }*/
+                for (int i = 0; i < player.size(); i++) {
+                    player.get(player.size() - 1 - i).render(g);
+                }
             }
         };
         t[0].start();
@@ -226,12 +226,38 @@ public class Handler implements Reader {
                 @Override
                 public void run() {
                     memoria.getSound().stop();
+                    if (Connessione.isConnected() && Profilo.looged) {
+                        String currentLevelTemp = level.getCurrent().substring(level.getCurrent().lastIndexOf("/") + 1, level.getCurrent().lastIndexOf("."));
+                        Relazione s = Query.sendSelect("SELECT score FROM score WHERE username=\"" + Profilo.username + "\" AND name=\"" + currentLevelTemp + "\"");
+                        if (s.getValue().length == 0) {
+                            Query.insert("INSERT INTO score (name, username, score) VALUES (\""
+                                    + currentLevelTemp + "\",\""
+                                    + Profilo.username + "\","
+                                    + (Player.PUNTEGGIO + SuperMario.timeShow * 100) + ")");
+                        } else if (Integer.parseInt(s.getValue()[0][0]) < (Player.PUNTEGGIO + SuperMario.timeShow * 100)) {
+                            Query.insert("DELETE FROM score WHERE username=\"" + Profilo.username
+                                    + "\" AND name=\"" + currentLevelTemp + "\"");
+                            Query.insert("INSERT INTO score (name, username, score) VALUES (\""
+                                    + currentLevelTemp + "\",\""
+                                    + Profilo.username + "\","
+                                    + (Player.PUNTEGGIO + SuperMario.timeShow * 100) + ")");
+                        }
+                        Query.score = Query.sendSelect("SELECT username, score FROM Score WHERE name = \"" + currentLevelTemp + "\" ORDER BY SCORE DESC LIMIT 10");
+                    }
                     mario.createLV(false);   //CREA IL PROSSIMO LIVELLO (DA FIXARE PER IL CARICAMENTO)
                 }
             }.start();
             nextL.start();
             nextL.isRunning();
             nextL.stop();
+            mario.setIsWait();
+            if (!Sound.soundON) {
+                try {
+                    sleep(3000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Handler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             sound = false;
         }
         //System.out.println("tick: "+(System.currentTimeMillis()-time));
@@ -242,15 +268,15 @@ public class Handler implements Reader {
      * @return se ritorna falso, c'è stato un errore nel caricamento del livello
      */
     public boolean newLevel(boolean current) {
-        next = false;   //INDICA CHE DOPO QUESTO NON DOVRA' PIU' CARICARE UN NUOVO LIVELLO
 
         player.clear(); //PULISCE IL BUFFER DEI PLAYER
         enemy.clear();  //PULISCE IL BUFFER DEI NEMICI
         tiles.clear();  //PULISCE IL BUFFER DEI TILE
 
+        memoria.clean();
         memoria.carica();
         //memoria.adaptImage(SuperMario.standardWidth, SuperMario.standardHeight);
-
+        System.gc();
         if (!new Loader().convertTextInMap(current ? level.getCurrent() : level.getNext(), this)) {
             return false;
         } //CREA IL LIVELLO
@@ -274,9 +300,12 @@ public class Handler implements Reader {
             }
         }
         memoria.getSound().loop();
+        Player.initSound();
 
         System.gc();
         System.out.println("level created: " + MainComponent.memoryUsed());
+
+        next = false;   //INDICA CHE DOPO QUESTO NON DOVRA' PIU' CARICARE UN NUOVO LIVELLO
 
         return true;
     }
@@ -361,7 +390,11 @@ public class Handler implements Reader {
                         long memoryUsed = MainComponent.memoryUsed();
                         System.out.println("pre: " + memoryUsed);
                         for (int i = 0; i < SuperMario.playerNumber; i++) {
-                            player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, "CRASH", i));   //SE PIXEL BLU è UN PLAYER
+                            if (i % 2 == 0) {
+                                player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, "CRASH", i));   //SE PIXEL BLU è UN PLAYER
+                            } else {
+                                player.add(new Player(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, "PLAYER_LUIGI", i));   //SE PIXEL BLU è UN PLAYER
+                            }
                         }
                         break;
                     case "COIN":
@@ -531,10 +564,10 @@ public class Handler implements Reader {
 
     }
 
-    public void addScript(){
+    public void addScript() {
         position.add(tiles.getFirst());
     }
-    
+
     /**
      *
      */
@@ -559,37 +592,25 @@ public class Handler implements Reader {
     }
 
     public void cloneCurrentStatus() {
-        for (int i = 0; i < enemy.size(); i++) {
-            Enemy e = enemy.get(i).clone();
-            if (e != null) {
-                enemyClone.add(e);
-            } else {
-                Log.append("Null pointer", DefaultFont.ERROR);
-            }
-        }
-        for (int i = 0; i < tiles.size(); i++) {
-            tilesClone.push(tiles.get(i).clone());
-        }
     }
 
     public void restoreStatus() {
-        enemy.clear();
-        tiles.clear();
-        long before = System.currentTimeMillis();
-        //Log.append("Numero di nemici: "+ enemyClone.size(), DefaultFont.DEBUG);
-        for (int i = 0; i < enemyClone.size(); i++) {
-            enemy.add(enemyClone.get(i).clone());
-        }
-        //System.out.println(""+enemy.size());
-        for (int i = 0; i < tilesClone.size(); i++) {
-            tiles.add(tilesClone.get(i).clone());
-        }
-        Log.append("Tempo di copia: " + (System.currentTimeMillis() - before), DefaultFont.DEBUG);
+    }
+
+    public boolean getNext() {
+        return next;
     }
 
     public void clean() {
+        memoria.clean();
+        memoria.delete();
+        position = null;
+        tilesCollision = null;
+        nextL = null;
         player = null;
         enemy = null;
         tiles = null;
+        level = null;
+        mario = null;
     }
 }

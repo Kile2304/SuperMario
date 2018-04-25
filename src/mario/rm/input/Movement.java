@@ -32,9 +32,9 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
     public static int velX;  //COSTANTE PER LA VELOCITA' SULL'ASSE X
     public static double jump; //COSTANTE PER LA DISTANZA DI SALTO
 
-    private static final Sound salto = new Sound("Sound/nsmb_jump.wav");
+    private Sound salto = new Sound("Sound/nsmb_jump.wav");
 
-    private final boolean move[];
+    private boolean move[];
 
     private Handler handler;
 
@@ -224,6 +224,12 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
 
     public double getJump() {
         return jump;
+    }
+    
+    public void clean(){
+        salto = null;
+        move = null;
+        shoot = null;
     }
 
 }

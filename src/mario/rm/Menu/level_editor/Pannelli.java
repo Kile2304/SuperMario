@@ -258,7 +258,7 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
         for (int i = 0; i < temp.length; i++) {
             String a = null;
-            if (MainComponent.jar.isFile()) {
+            if (MainComponent.isRunningFromJar) {
                 StringBuilder s = new StringBuilder(temp[i]);
                 s.deleteCharAt(s.length() - 1);
                 a = s.substring(s.lastIndexOf("/") + 1, s.length());

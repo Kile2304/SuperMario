@@ -61,12 +61,13 @@ public class Preview {
 
     public String load() {
         JFileChooser c = null;
-        if (MainComponent.jar.isFile()) {
+        /*if (MainComponent.jar.isFile()) {
             c = new JFileChooser(new File(MainComponent.jar.getAbsolutePath() + "/res/Immagini/livelli"));
         } else {
             String f = MainComponent.jarPath.getAbsolutePath().substring(0, MainComponent.jarPath.getAbsolutePath().lastIndexOf("\\"));
             c = new JFileChooser(new File(f + "/res/Immagini/livelli"));
-        }
+        }*/
+        c = new JFileChooser(MainComponent.filePath+"/Luigi/Level");
 
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".level", "level", "level");
         c.setFileFilter(filter);

@@ -18,40 +18,48 @@ import java.util.logging.Logger;
  * @author LENOVO
  */
 public class Ini {
-    
+
     private Map<String, String> list = new HashMap();
     private String path;
-    public Ini(String path){
+
+    public Ini(String path) {
         this.path = path;
         try {
-            init(new File(path));
+            File f = new File(path);
+            if (!f.isFile()) {
+                f.createNewFile();
+            } else {
+                init(f);
+            }
         } catch (IOException ex) {
+            System.out.println(""+path);
             Logger.getLogger(Ini.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void init(File f) throws FileNotFoundException, IOException{
+
+    private void init(File f) throws FileNotFoundException, IOException {
         InputStreamReader isr = new InputStreamReader(new FileInputStream(f));
         BufferedReader br = new BufferedReader(isr);
-        
+
         String temp = "";
-        while((temp = br.readLine()) != null){
+        while ((temp = br.readLine()) != null) {
             String[] ini = temp.split("=");
-            list.put(ini[0], ini[1]);
+            list.put(ini[0], ini.length > 1 ? ini[1] : "");
         }
-        
+
     }
-    
-    public void update(String key, String newValue){
+
+    public void modify(String key, String newValue) {
         list.put(key, newValue);
     }
-    public void update(){
+
+    public void update() {
         FileWriter fw = null;
         try {
             fw = new FileWriter(new File(path));
             BufferedWriter bw = new BufferedWriter(fw);
             for (String key : list.keySet()) {
-                bw.append(key+"="+list.get(key)+"\n");
+                bw.append(key + "=" + list.get(key) + "\n");
             }
             bw.close();
         } catch (IOException ex) {
@@ -64,10 +72,14 @@ public class Ini {
             }
         }
     }
-    
-    public String getValue(String index){
+
+    public String getValue(String index) {
         index = index.toLowerCase();
         return list.get(index);
     }
     
+    public boolean isEmpty(){
+        return list.isEmpty();
+    }
+
 }

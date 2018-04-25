@@ -14,6 +14,7 @@ import mario.rm.identifier.Move;
 import mario.rm.identifier.Tipologia;
 import mario.rm.sprite.Sprite;
 import mario.rm.sprite.tiles.Tiles;
+import static mario.rm.SuperMario.adaptHeight;
 
 /**
  *

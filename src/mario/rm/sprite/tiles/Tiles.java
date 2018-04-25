@@ -168,7 +168,7 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
                     azione = new Linear(script);
                     break;
                 case "onCollide":
-                    azione = new OnCollide(script, this);
+                    //azione = new OnCollide(script, this);
                     break;
                 case "disappear":
                     azione = new Disappear(script, this);

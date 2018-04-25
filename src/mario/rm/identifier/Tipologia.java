@@ -23,9 +23,9 @@ public class Tipologia {
     public static Map<String, int[]> list = new HashMap<>();
     private static final Map<String, Integer> index = new HashMap<>();
 
-    public static void init() {
+    public static void initTipologia() {
         index();
-        String path = System.getProperty("user.home") + "/Luigi/type.dat";
+        String path = MainComponent.filePath + "/Luigi/type.dat";
         File f = new File(path);
         if (!f.isFile()) {
             create(path);
@@ -73,7 +73,7 @@ public class Tipologia {
                 temp[i] = 0;
             }
             list.put(name, temp);
-            FileWriter fw = new FileWriter(new File(System.getProperty("user.home") + "/Luigi/type.dat"), true);
+            FileWriter fw = new FileWriter(new File(MainComponent.filePath + "/Luigi/type.dat"), true);
             BufferedWriter bw = new BufferedWriter(fw);
 
             String newLine = name + " ";

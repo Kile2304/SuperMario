@@ -6,8 +6,6 @@
 package mario.rm.utility;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JTextPane;
 import javax.swing.text.DefaultCaret;

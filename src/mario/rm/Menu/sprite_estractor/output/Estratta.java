@@ -83,7 +83,7 @@ public class Estratta {
 
         //System.out.println(""+path);
         String p1 = path;
-
+        /*System.out.println(""+p1);
         try {
             path = this.path.substring(this.path.lastIndexOf("\\player\\"), this.path.lastIndexOf("\\"));
         } catch (StringIndexOutOfBoundsException e) {
@@ -103,31 +103,55 @@ public class Estratta {
                     }
                 }
             }
+        }*/
+        boolean jarNeeded = true;
+        try {
+            path = this.path.substring(this.path.lastIndexOf("\\Immagini\\extract\\") + 1, path.length());
+        } catch (StringIndexOutOfBoundsException e) {
+            path = this.path.substring(this.path.lastIndexOf("\\Luigi\\resources\\") + 1, path.length());
+            jarNeeded = false;
         }
+        p1 = MainComponent.filePath + "/" + path;
+        p1 = p1.replace('\\', '/');
+        //System.out.println(""+p1);
         //path = path.replace("/src/mario/res", "");
-        
+
         //System.out.println("estratta path: "+path);
         Log.append(p1, DefaultFont.INFORMATION);
         ObjectOutputStream out = null;
         FileOutputStream fos = null;
-
         String cart = "";
         try {
             cart = nomeFile.substring(0, nomeFile.lastIndexOf("-"));
         } catch (StringIndexOutOfBoundsException e) {
             cart = nomeFile.substring(0, nomeFile.lastIndexOf("."));
         }
-        
+
+        String category = "";
+        String[] split = p1.split("/");
+        for (int i = split.length - 1; i > 0; i--) {
+            if (split[i].equals("player") || split[i].equals("tile") || split[i].equals("enemy")) {
+                for (int j = i; j < split.length - 1; j++) {
+                    category += split[j] + "/";
+                }
+                break;
+            }
+        }
+        //System.out.println("category: "+category);
+
         //System.out.println(""+path + "\\" + cart);
-        System.out.println(""+p1);
-        p1 = "Immagini\\extract"+path + "\\" + p1.substring(p1.lastIndexOf("\\") + 1);
+        //System.out.println(""+p1);
+        //p1 = "Immagini\\extract"+path + "\\" + p1.substring(p1.lastIndexOf("\\") + 1);
+        //System.out.println(""+p1);
+        String percorso = jarNeeded ? path : p1;
+        System.out.println(""+percorso + " "+jarNeeded);
         Cut cut = null;
         if (tile == null) {
-            cut = new Cut(p1, coord, move, type, direction, path + "\\" + cart, transformation);
+            cut = new Cut(percorso, coord, move, type, direction, category + "/" + cart, transformation, jarNeeded);
         } else if (unlock == null) {
-            cut = new Cut(p1, coord, null, type, null, path + "\\" + cart, tile);
+            cut = new Cut(percorso, coord, null, type, null, category + "/" + cart, tile, jarNeeded);
         } else {
-            cut = new Cut(p1, coord, null, type, null, path + "\\" + cart, tile, unlock);
+            cut = new Cut(percorso, coord, null, type, null, category + "/" + cart, tile, unlock, jarNeeded);
         }
 
         if (cut.getErrore()) {
@@ -135,16 +159,19 @@ public class Estratta {
         }
 
         //File f = new File("src\\mario\\res\\Animazioni" + path + "\\" + cart);
-        File f = new File("res\\Animazioni" + path + "\\" + cart);
+        path = p1.substring(0, p1.lastIndexOf("/"));
+        File f = new File(MainComponent.filePath + "/Luigi/Animation/" + "/" + category + cart);
+        //System.out.println(""+f.getAbsolutePath());
+        //System.out.println("cartella: "+f.getAbsolutePath());
         if (!f.exists()) {
-            f.mkdir();
+            f.mkdirs();
         }
 
         //System.out.println(""+new File("src\\dragon\\ball\\res\\animazioni"+path+"\\"+cart+"\\"+nomeFile).getAbsolutePath());
         //System.out.println(""+path);
         try {
             //fos = new FileOutputStream(new File("src\\mario\\res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
-            fos = new FileOutputStream(new File("res\\Animazioni" + path + "\\" + cart + "\\" + nomeFile).getAbsolutePath());
+            fos = new FileOutputStream(new File(f.getAbsolutePath() + "\\" + nomeFile).getAbsolutePath());
             out = new ObjectOutputStream(fos);
             out.writeObject(cut);
 

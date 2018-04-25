@@ -5,20 +5,12 @@
  */
 package mario.rm.input;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.URL;
-import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import mario.MainComponent;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.Tile;
@@ -46,21 +38,12 @@ public class MemoriaAC {
 
     private Sound level;
 
-    private static File jarFile = null;
-
     public MemoriaAC(boolean temp) {
-        if (jarFile == null) {
-            jarFile = MainComponent.jar;
-        }
     }
 
     public MemoriaAC() {
 
-        if (jarFile == null) {
-            jarFile = MainComponent.jar;
-        }
-
-        indirizzo = "Animazioni/";
+        indirizzo = "Animation/";
 
         enemy = new ArrayList<>();  //ELENCO IMMAGINI NEMICI
         player = new ArrayList<>(); //ELENCO IMMAGINI PLAYER
@@ -144,62 +127,29 @@ public class MemoriaAC {
 
     public ArrayList<Object> getAnim(String path, ArrayList list) {
         ArrayList<String> Files = new ArrayList<>();
-        
-        if (jarFile.isFile()) {
-            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
-            ZipInputStream zip = null;
-            try {
-                URL jar = src.getLocation();
-                zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null) {
-                        break;
-                    }
-                    String name = e.getName();
-                    if (name.startsWith(path + "/")) {
-                        /* Do something with this entry. */
-                        //System.out.println("" + name);
-                        //Log.append(name, DefaultFont.DEBUG);
-                        if (name.charAt(name.length() - 1) != '/') {
-                            //Log.append(name, DefaultFont.DEBUG);
-                            Files.add(name);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    zip.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MemoriaAC.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            LinkedList<String> Dir = new LinkedList<>();
-            String pat = "res/" + path;
-            File f = new File(pat);
+        LinkedList<String> Dir = new LinkedList<>();
+        String pat = MainComponent.filePath + "/" + "Luigi/" + path;
+        File f = new File(pat);
+        System.out.println("" + f.getAbsolutePath());
 
-            Dir.add(f.getAbsolutePath());
+        Dir.add(f.getAbsolutePath());
+        //System.out.println(""+f.getAbsolutePath());
+        while (!Dir.isEmpty()) {
+            //System.out.println("" +f.getAbsolutePath());
+            f = new File(Dir.pop());
+            //Log.append(""+f.getAbsolutePath(), DefaultFont.DEBUG);
             //System.out.println(""+f.getAbsolutePath());
-            while (!Dir.isEmpty()) {
-                //System.out.println("" +f.getAbsolutePath());
-                f = new File(Dir.pop());
-                    //Log.append(""+f.getAbsolutePath(), DefaultFont.DEBUG);
-                //System.out.println(""+f.getAbsolutePath());
-                if (f.isFile()) {
-                    Files.add(f.getAbsolutePath());
-                } else {
-                    String arr[] = f.list();
-                    try {
-                        for (int i = 0; i < arr.length; i++) {
-                            Dir.add(f.getAbsolutePath() + "/" + arr[i]);
-                            //System.out.println(""+Dir.get(i));
-                        }
-                    } catch (NullPointerException exp) {
-                        Dir.remove(f.getAbsoluteFile());
+            if (f.isFile()) {
+                Files.add(f.getAbsolutePath());
+            } else {
+                String arr[] = f.list();
+                try {
+                    for (int i = 0; i < arr.length; i++) {
+                        Dir.add(f.getAbsolutePath() + "/" + arr[i]);
+                        //System.out.println(""+Dir.get(i));
                     }
+                } catch (NullPointerException exp) {
+                    Dir.remove(f.getAbsoluteFile());
                 }
             }
         }
@@ -211,24 +161,17 @@ public class MemoriaAC {
         try {
             for (String string : Files) {
                 Object ob = null;
-                if (jarFile.isFile()) {
-                    InputStream in = new BufferedInputStream(MainComponent.class.getClassLoader().get‌​ResourceAsStream(string));
-                    ob = new ObjectInputStream(in).readObject();
-
-                    in.close();
-                } else {
-                    FileInputStream fos = new FileInputStream(string);
-                    ObjectInputStream obi = new ObjectInputStream(fos);
-                    ob = obi.readObject();
-                    fos.close();
-                    obi.close();
-                }
+                FileInputStream fos = new FileInputStream(string);
+                ObjectInputStream obi = new ObjectInputStream(fos);
+                ob = obi.readObject();
+                fos.close();
+                obi.close();
                 //System.out.println(""+string);
                 if (ob instanceof Anim) {
                     list.add((Anim) ob);
-                } else if(ob instanceof Tile){
+                } else if (ob instanceof Tile) {
                     list.add((Tile) ob);
-                }else{
+                } else {
                     System.out.println("Altro elemento");
                 }
             }
@@ -257,9 +200,11 @@ public class MemoriaAC {
     public ArrayList<Tile> getTerreni() {
         return terreni;
     }
+
     public ArrayList<Anim> getBullet() {
         return bullet;
     }
+
     public ArrayList<Tile> getSpecial() {
         return special;
     }
@@ -273,28 +218,40 @@ public class MemoriaAC {
         bullet.clear();
         special.clear();
     }
+    
+    public void delete(){
+        enemy = null;
+        player = null;
+        tiles = null;
+        terreni = null;
+        unlockable = null;
+        bullet = null;
+        special = null;
+        audio = null;
+        level = null;
+    }
 
     public void adaptImage(int width, int height) {
-        for (Anim anim : enemy) {
+        enemy.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
-        for (Anim anim : player) {
+        });
+        player.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
-        for (Anim anim : bullet) {
+        });
+        bullet.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
-        for (Tile anim : tiles) {
+        });
+        tiles.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
-        for (Tile anim : terreni) {
+        });
+        terreni.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
-        for (Tile anim : unlockable) {
+        });
+        unlockable.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
-        for (Tile anim : special) {
+        });
+        special.stream().forEach((anim) -> {
             anim.adapt(width, height);
-        }
+        });
     }
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -47,11 +48,9 @@ public class Union {
             p.add(enemy);
         });
 
-        ArrayList<Anim> anim = new ArrayList<>();
-        ArrayList<Tile> tile = new ArrayList<>();
-
+        LinkedList<Anim> anim = new LinkedList<>();
+        LinkedList<Tile> tile = new LinkedList<>();
         p.stream().forEach((cut) -> {
-            //System.out.println(""+cut.getNormal().length);
             boolean nuovo = true;
             if (cut.getTile() != null && !cut.getTile().equals("")) {
                 boolean isJustAdded = false;
@@ -72,7 +71,7 @@ public class Union {
                 for (Anim a : anim) {
                     if (cut.getType().equals(a.getType())) {
                         nuovo = false;
-                        if (cut.getTransformation().equals("normal")) {
+                        if (cut.getTransformation() == null || cut.getTransformation().equals("normal")) {
                             a.addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
                             a.addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                         }
@@ -82,14 +81,15 @@ public class Union {
                     }
                 }
                 if (nuovo) {
-                    System.out.println("" + cut.getPath());
+                    //System.out.println("" + cut.getPath());
                     anim.add(new Anim(cut.getType(), cut.getPath()));
-                    if (cut.getTransformation() != null && cut.getTransformation().equals("normal")) {
-                        anim.get(anim.size() - 1).addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
-                        anim.get(anim.size() - 1).addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
+                    if (cut.getTransformation() == null || cut.getTransformation().equals("normal")) {
+                        System.out.println(""+cut.getMove()+" "+cut.getDirection()+" "+cut.getType());
+                        anim.getLast().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
+                        anim.getLast().addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                     } else {
-                        anim.get(anim.size() - 1).getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
-                        anim.get(anim.size() - 1).getSuper().addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
+                        anim.getLast().getSuper().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
+                        anim.getLast().getSuper().addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                     }
                 }
             }
@@ -111,7 +111,8 @@ public class Union {
             m = null;
             p.clear();
             temp.clear();
-            Runtime.getRuntime().exec("cmd /c start " + new File("res/Animazioni/eliminazioneAnim.bat") + " " + new File("res/Animazioni/").getAbsolutePath());
+
+            Runtime.getRuntime().exec("cmd /c start " + new File(MainComponent.filePath + "/Luigi/Animation/eliminazioneAnim.bat") + " " + new File(MainComponent.filePath + "/Luigi/Animation").getAbsolutePath());
         } catch (IOException ex) {
             Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -122,50 +123,43 @@ public class Union {
 
     }
 
-    /*private void tempFile() {
-        try {
-            InputStreamReader isr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream("Animazioni\\eliminazioneAnim.bat"));
-            BufferedReader br = new BufferedReader(isr);
-
-            File f = new File(System.getProperty("user.dir") + "\\" + "eliminazioneFileAc.bat");
+    public static void checkBatFile() throws IOException {
+        File f = new File(MainComponent.filePath + "/Luigi/Animation/eliminazioneAnim.bat");
+        if (!f.isFile()) {
             f.createNewFile();
-
-            FileWriter fw = new FileWriter(f);
-            BufferedWriter bw = new BufferedWriter(fw);
-            String temp = "";
-            while ((temp = br.readLine()) != null) {
-                bw.append(temp);
-            }
-            bw.close();
-            br.close();
-            
-            try {
-                Runtime.getRuntime().exec("cmd /c start " + System.getProperty("user.dir") + "\\" + "eliminazioneFileAc.bat"+" "+MainComponent.class.getClassLoader().getResource("Animazioni\\eliminazioneAnim.bat"));
-            } catch (IOException ex) {
-                Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            f.delete();
-
-        } catch (IOException ex) {
-            Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+        BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+        bw.append("title first batch program\n"
+                + "\n"
+                + "ECHO \"Script per la cancellazione deglle animazioni\"\n"
+                + "\n"
+                + "del /s /Q %1\\\\tile\\\\*.anim\n"
+                + "del /s /Q %1\\\\player\\\\*.anim\n"
+                + "del /s /Q %1\\\\enemy\\\\*.anim\n"
+                + "\n"
+                + "ECHO \"Eliminazione completata con successo\"");
+        bw.close();
+    }
+
+
     private void toObject(Object anim1, String path, String tile) {
         FileOutputStream fos = null;
         try {
             String newFile = "";
             try {
-                newFile = path.substring(path.lastIndexOf("\\"));
+                newFile = path.substring(path.lastIndexOf("/"));
             } catch (StringIndexOutOfBoundsException e) {
             }
+            System.out.println("percorso"+path);
+            System.out.println("acaca "+newFile);
 
             //File directory = new File("src\\mario\\res\\Animazioni\\" + path);
             //System.out.println("attuale: "+path);
-            File directory = new File("res\\Animazioni\\" + path);
+            File directory = new File(MainComponent.filePath + "/Luigi/Animation/" + path);
             Log.append("checker: " + directory.getAbsolutePath(), DefaultFont.INFORMATION);
 
             File[] files = directory.listFiles();
-            System.out.println("" + directory.length());
+            //System.out.println("" + directory.length());
 
             for (File f : files) {
                 Log.append("" + f.getAbsolutePath(), DefaultFont.INFORMATION);
@@ -177,9 +171,9 @@ public class Union {
             }
 
             if (anim1 instanceof Anim) {
-                fos = new FileOutputStream("res\\Animazioni\\" + path + "\\" + newFile + ".ac");
+                fos = new FileOutputStream(directory.getAbsolutePath() + "\\" + newFile + ".ac");
             } else {
-                fos = new FileOutputStream("res\\Animazioni\\" + path + "\\" + newFile + "-" + tile + ".ti");
+                fos = new FileOutputStream(MainComponent.filePath + "/Luigi/Animation/" + path + "/" + newFile + "-" + tile + ".ti");
             }
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(anim1);

@@ -1,28 +1,29 @@
 package mario;
 
-import com.sun.jna.NativeLibrary;
-import java.io.BufferedWriter;
+import Connessione.Profilo;
+import java.awt.EventQueue;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import mario.rm.Animation.Memoria;
 import mario.rm.Menu.home.Home;
+import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 
 import mario.rm.SuperMario;
+import mario.rm.handler.SelectLevel;
 import mario.rm.identifier.Tipologia;
 import mario.rm.input.Sound;
 import mario.rm.other.DefaultFont;
 import mario.rm.utility.Ini;
 import mario.rm.utility.Log;
+import mario.rm.utility.ThreadList;
+import mario.rm.utility.Utility;
 import mario.rm.utility.joystick.Joystick;
-import uk.co.caprica.vlcj.binding.LibC;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
-import uk.co.caprica.vlcj.version.LibVlcVersion;
 
 /**
  *
@@ -30,12 +31,6 @@ import uk.co.caprica.vlcj.version.LibVlcVersion;
  */
 public class MainComponent {
 
-    private static final Class<?> referenceClass = MainComponent.class;
-    public static final URL url
-            = referenceClass.getProtectionDomain().getCodeSource().getLocation();
-    public static File jarPath;
-
-    public static File jar;
     /**
      * Oggetto per la creazione di una nuova partita
      */
@@ -52,58 +47,61 @@ public class MainComponent {
      */
     public static Ini settings;
 
-    /**
-     * Variabile per riconoscere se è stato trovato VLCJ
-     */
-    public static boolean VLC;
-    
     public static boolean isRunningFromJar = false;
+
+    public static String filePath;
+
+    public static boolean loading = false;
+    
+    public static final boolean JOYSTICK_UPLOAD = false;
+
+    private static Home home;
 
     public MainComponent() {
 
+        System.gc();
+        
         su = null;
 
         /*if (log == null) {
             log = new Log(this);
         }*/
-        jar = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-        try {
-            jarPath = new File(MainComponent.class.getResource("./MainComponent.class").getFile());
-        } catch (NullPointerException e) {
-
-        }
-
-        Memoria.setJarFile(jar);
 
         //System.out.println(jarPath.getAbsolutePath());
-        Home home = new Home();
+        home = new Home();
         home.setMainComponent(this);
-        if (VLC) {
+        /*if (VLC) {
             home.play("Untitled.wmv");
-        }
+        }*/
         //home.intro();
 
         //File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-        Log.append(jar.getAbsolutePath(), DefaultFont.INFORMATION);
-
-        Joystick.UPDATE = false;
-
-        new Thread(new Joystick()).start();
+        Log.append(""+isRunningFromJar, DefaultFont.INFORMATION);
+        
+        if(!Utility.isThread(ThreadList.JOYSTICK.threadName))   new Joystick(JOYSTICK_UPLOAD);
+        
+        System.gc();
+        System.out.println("Begin: " + memoryUsed());
 
     }
 
-    public static void main(String[] args) {
-        System.out.println("" + memoryUsed());
-        init();
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //System.setProperty("sun.java2d.opengl","True");
-        new MainComponent();
-        System.gc();
-        System.out.println("Begin: " + memoryUsed());
+    public static void main(String[] args) throws IOException {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("" + memoryUsed());
+                System.out.println("Current path: " + MainComponent.class.getProtectionDomain().getCodeSource().getLocation());
+                init();
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(SuperMario.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //System.setProperty("sun.java2d.opengl","True");
+                new MainComponent();
+
+            }
+        });
     }
 
     /**
@@ -112,14 +110,27 @@ public class MainComponent {
      * tipologie di sprite.
      */
     private static void init() {
+        filePath = MainComponent.class.getProtectionDomain().getCodeSource().getLocation().toString();
+        filePath = filePath.substring(6, filePath.charAt(filePath.length() - 1) == '/' ? filePath.length() : filePath.lastIndexOf("/"));
+        System.out.println("" + filePath);
         isRunningFromJar = MainComponent.class.getResource("MainComponent.class").toString().startsWith("jar:");
+        loading = true;
         new Thread() {
             @Override
             public void run() {
-                checkFile();
-                settings = new Ini(System.getProperty("user.home") + "/Luigi/settings.ini");
+                initFile();
+                //settings = new Ini(System.getProperty("user.home") + "/Luigi/settings.ini");
+                settings = new Ini(filePath + "/Luigi/settings.ini");
                 Sound.setSound();
-                Tipologia.init();
+                Tipologia.initTipologia();
+                SpriteEstractor.initAnimation();
+                SelectLevel.initLevel();
+                loading = false;
+                if (home != null) {
+                    home.dispose();
+                    home = new Home();
+                }
+
             }
         }.start();
 
@@ -145,7 +156,6 @@ public class MainComponent {
             System.err.println(Log.stackTraceToString(e));
             VLC = false;
         }*/
-        VLC = false;
         /*if (VLC) {
             System.out.println("Trovata la versione: " + LibVlc.INSTANCE.libvlc_get_version() + " di VLC");
         } else {
@@ -154,30 +164,60 @@ public class MainComponent {
     }
 
     /**
-     * Controlla se i in %user_path%\\Luigi , sono presenti i file: conf.ini e
-     * type.dat , indispensabili per l'esecuzione del gioco
+     * Controlla se i in %user_path%\\Luigi , sono presenti i file: conf.ini e ,
+     * indispensabili per l'esecuzione del gioco
      */
-    private static void checkFile() {
-        String path = System.getProperty("user.home");
-        File f = new File(path + "/Luigi");
+    private static void initFile() {
+        File f = new File(filePath + "/Luigi");
         if (!f.isDirectory()) {
             System.out.println(f.getAbsolutePath());
             f.mkdir();
         }
-        try {
-            File conf = new File(f.getAbsolutePath() + "/settings.ini");
-            if (!conf.isFile()) {
-                conf.createNewFile();
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(conf))) {
-                    bw.append("sound=false\nvolume=50\nscale=2\nfullscreen=false\n");
-                }
+        File resource = new File(f.getAbsolutePath() + "/resources");
+        if (!resource.isDirectory()) {
+            resource.mkdir();
+            
+            File resFolder = new File(resource.getAbsolutePath()+"\\player");
+            if(!resFolder.isDirectory()) resFolder.mkdir();
+            
+            resFolder = new File(resource.getAbsolutePath()+"\\enemy");
+            if(!resFolder.isDirectory()) resFolder.mkdir();
+            
+            resFolder = new File(resource.getAbsolutePath()+"\\tile");
+            if(!resFolder.isDirectory()){
+                resFolder.mkdir();
+                
             }
-            File user = new File(f.getAbsolutePath() + "/user.ini");
-            if (!user.isFile()) {
-                user.createNewFile();
+            File resFolderTile = new File(resFolder.getAbsolutePath() + "\\other"); if(!resFolderTile.isDirectory())    resFolderTile.mkdir();
+            resFolderTile = new File(resFolder.getAbsolutePath() + "\\special");    if(!resFolderTile.isDirectory())    resFolderTile.mkdir();
+            resFolderTile = new File(resFolder.getAbsolutePath() + "\\terrain");    if(!resFolderTile.isDirectory())    resFolderTile.mkdir();
+            resFolderTile = new File(resFolder.getAbsolutePath() + "\\unlockable"); if(!resFolderTile.isDirectory())    resFolderTile.mkdir();
+        }
+        File conf = new File(f.getAbsolutePath() + "/settings.ini");
+        Ini temp = new Ini(conf.getAbsolutePath());
+        if (temp.isEmpty()) {
+            temp.modify("sound", "false");
+            temp.modify("volume", "50");
+            temp.modify("scale", "2");
+            temp.modify("fullscreen", "false");
+            temp.update();
+        }
+        File user = new File(f.getAbsolutePath() + "/user.ini");
+        temp = new Ini(user.getAbsolutePath());
+        if (temp.isEmpty()) {
+            temp.modify("remember", "false");
+            temp.modify("email", "");
+            temp.modify("username", "");
+            temp.modify("password", "");
+            temp.update();
+        } else {
+            Ini i = new Ini(user.getAbsolutePath());
+            if (Boolean.getBoolean(i.getValue("remember"))) {
+                Profilo.email = i.getValue("email");
+                Profilo.looged = true;
+                Profilo.password = i.getValue("password");
+                Profilo.username = i.getValue("username");
             }
-        } catch (IOException ex) {
-            Logger.getLogger(MainComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -187,6 +227,7 @@ public class MainComponent {
      * @param player : Numero di player che devono giocare.
      */
     public void start(int player) {
+        home = null;
         su = new SuperMario(player);
     }
 

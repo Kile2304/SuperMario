@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
+import mario.rm.utility.ThreadList;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
@@ -19,6 +20,15 @@ public class Joystick extends Thread {
     public static boolean UPDATE = false;
 
     public static Controller[] lastUpdate;
+    
+    public Joystick(boolean update){
+        UPDATE = update;
+        if(update){
+            Thread t = new Thread(this);
+            t.setName(ThreadList.JOYSTICK.threadName);
+            t.start();
+        }
+    }
 
     public static final Controller[] getController() {
         LinkedList<Controller> joystick = new LinkedList<>();
@@ -72,7 +82,6 @@ public class Joystick extends Thread {
     public void run() {
 
         while (UPDATE) {
-
             Controller[] controller = getController();
 
             if(controller.length > 0)   System.out.println("" + controller.length + " type: " + 

@@ -1,6 +1,9 @@
 package mario.rm.handler;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.Animation.Memoria;
 import mario.rm.other.DefaultFont;
@@ -12,9 +15,9 @@ import mario.rm.utility.Log;
  */
 public class SelectLevel {
 
-    private int index;
+    private static int index;
 
-    private static final String[] history = {"try.level"};    //livelli da cambiare con .level
+    private static final String[] history = {"try.level", "try.level"};    //livelli da cambiare con .level
 
     private static final String path = "Immagini/livelli/";
 
@@ -84,22 +87,22 @@ public class SelectLevel {
         return s;
     }
 
-    public void reset() {
+    public static void reset() {
         custom = false;
         next = null;
         index = -1;
     }
 
     private void setList() {
-        String[] temp = Memoria.getFile(path);
+        String[] temp = Memoria.getFile(MainComponent.filePath+"/Luigi/Level");
         ArrayList<String> file = new ArrayList<>();
         for (String string : temp) {
             //System.out.println(""+string);
-            try{
+            try {
                 string.substring(0, string.lastIndexOf("Compl.level"));
                 file.add(string);
-            }catch(StringIndexOutOfBoundsException e){
-                
+            } catch (StringIndexOutOfBoundsException e) {
+
             }
         }
         next = new String[file.size()];
@@ -108,13 +111,29 @@ public class SelectLevel {
             Log.append(next[i], DefaultFont.INFORMATION);
         }
     }
-    
-    public String[] getList(){
+
+    public String[] getList() {
         return next;
     }
-    
-    public int getIndex(){
+
+    public int getIndex() {
         return index;
     }
-    
+
+    public static void initLevel() {
+        File f = new File(MainComponent.filePath + "/Luigi/Level");
+        if (!f.isDirectory()) {
+            f.mkdir();
+        }
+        if (f.list().length <= 0) {
+            for (String level : history) {
+                try {
+                    Memoria.ExportResource("/"+path + level, "/Luigi/Level/" + level);
+                } catch (Exception ex) {
+                    Logger.getLogger(SelectLevel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
 }
