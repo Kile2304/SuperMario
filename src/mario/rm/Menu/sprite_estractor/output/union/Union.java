@@ -1,13 +1,11 @@
 package mario.rm.Menu.sprite_estractor.output.union;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -84,7 +82,7 @@ public class Union {
                     //System.out.println("" + cut.getPath());
                     anim.add(new Anim(cut.getType(), cut.getPath()));
                     if (cut.getTransformation() == null || cut.getTransformation().equals("normal")) {
-                        System.out.println(""+cut.getMove()+" "+cut.getDirection()+" "+cut.getType());
+                        System.out.println("" + cut.getMove() + " " + cut.getDirection() + " " + cut.getType());
                         anim.getLast().addAnimation(cut.getNormal(), cut.getMove(), cut.getDirection());
                         anim.getLast().addAnimation(cut.getMirror(), cut.getMove(), cut.getDirection() == Direction.RIGHT ? Direction.LEFT : Direction.RIGHT);
                     } else {
@@ -112,8 +110,13 @@ public class Union {
             p.clear();
             temp.clear();
 
-            Runtime.getRuntime().exec("cmd /c start " + new File(MainComponent.filePath + "/Luigi/Animation/eliminazioneAnim.bat") + " " + new File(MainComponent.filePath + "/Luigi/Animation").getAbsolutePath());
-        } catch (IOException ex) {
+            //Runtime.getRuntime().exec("cmd /c " + new File(MainComponent.filePath + "/Luigi/Animation/eliminazioneAnim.bat") + " " + new File(MainComponent.filePath + "/Luigi/Animation").getAbsolutePath());
+            Runtime rt = Runtime.getRuntime();
+            //Process process = rt.exec("cmd /c start " + new File(MainComponent.filePath + "/Luigi/Animation/eliminazioneAnim.bat") + " " + new File(MainComponent.filePath + "/Luigi/Animation").getAbsolutePath());
+            Process process = rt.exec("cmd /c start " + new File(MainComponent.filePath + "/Luigi/Animation/eliminazioneAnim.bat") + " " + new File(MainComponent.filePath + "/Luigi/Animation").getAbsolutePath());
+            final int exitStatus = process.waitFor();
+            System.out.println("exit status: " + exitStatus);
+        } catch (IOException | InterruptedException ex) {
             Logger.getLogger(Union.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -130,6 +133,7 @@ public class Union {
         }
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));
         bw.append("title first batch program\n"
+                + "@echo off\n"
                 + "\n"
                 + "ECHO \"Script per la cancellazione deglle animazioni\"\n"
                 + "\n"
@@ -137,10 +141,10 @@ public class Union {
                 + "del /s /Q %1\\\\player\\\\*.anim\n"
                 + "del /s /Q %1\\\\enemy\\\\*.anim\n"
                 + "\n"
-                + "ECHO \"Eliminazione completata con successo\"");
+                + "ECHO \"Eliminazione completata con successo\"\n"
+                + "exit");
         bw.close();
     }
-
 
     private void toObject(Object anim1, String path, String tile) {
         FileOutputStream fos = null;
@@ -150,8 +154,8 @@ public class Union {
                 newFile = path.substring(path.lastIndexOf("/"));
             } catch (StringIndexOutOfBoundsException e) {
             }
-            System.out.println("percorso"+path);
-            System.out.println("acaca "+newFile);
+            System.out.println("percorso" + path);
+            System.out.println("acaca " + newFile);
 
             //File directory = new File("src\\mario\\res\\Animazioni\\" + path);
             //System.out.println("attuale: "+path);

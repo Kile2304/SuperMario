@@ -1,11 +1,9 @@
 package mario.rm.sprite.tiles;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mario.rm.Animation.Tile;
@@ -17,9 +15,7 @@ import mario.rm.identifier.TilePart;
 import mario.rm.identifier.Tipologia;
 import mario.rm.sprite.tiles.movement.Azione;
 import mario.rm.sprite.tiles.movement.Linear;
-import mario.rm.sprite.Player;
 import mario.rm.sprite.tiles.movement.Disappear;
-import mario.rm.sprite.tiles.movement.OnCollide;
 import mario.rm.utility.MoveAttrib;
 import mario.rm.utility.Punto;
 
@@ -98,10 +94,10 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
                 this.temp = tile.getImage(TilePart.valueOf(part));
             });
         }
-        if(type.equals("CHECKPOINT"))System.out.println("x: "+x+" y: "+y/SuperMario.standardHeight);
+        /*if(type.equals("CHECKPOINT"))System.out.println("x: "+x+" y: "+y/SuperMario.standardHeight);
         if(type.equals("ROD")){
             System.out.println("width: "+width+" height: "+height+" x: "+x+" y: "+y/SuperMario.standardHeight);
-        }
+        }*/
         numImma = temp != null ? temp.length : 0;
         
         this.numSerieX = 1;
@@ -173,6 +169,8 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
                 case "disappear":
                     azione = new Disappear(script, this);
                     break;
+                case "GravityTile":
+                    azione = new mario.rm.sprite.tiles.movement.GravityTile(handler, this);
             }
         } else {
             moveType = -1;
@@ -235,7 +233,7 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
      * @return RITORNA L'AREA OCCUPANTE DALLA PARTE ALTA DELLO SPRITE
      */
     public Rectangle getBoundsTop() {   //RITORNA L'AREA OCCUPANTE DALLA PARTE ALTA DELLO SPRITE
-        return new Rectangle(x + SuperMario.adaptWidth(10), y, width - SuperMario.adaptWidth(20), SuperMario.adaptHeight(5));  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
+        return new Rectangle(x + SuperMario.adaptWidth(10), y, width * numSerieX - SuperMario.adaptWidth(20), SuperMario.adaptHeight(5));  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
     }
 
     /**
@@ -243,7 +241,7 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
      * @return RITORNA L'AREA OCCUPANTE DALLA PARTE BASSA DELLO SPRITE
      */
     public Rectangle getBoundsBottom() {   //RITORNA L'AREA OCCUPANTE DALLA PARTE BASSA DELLO SPRITE
-        return new Rectangle(x + SuperMario.adaptWidth(10), y + height - SuperMario.adaptHeight(5), width - SuperMario.adaptWidth(20), SuperMario.adaptHeight(5));  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
+        return new Rectangle(x + SuperMario.adaptWidth(10), y + height - SuperMario.adaptHeight(5), width * numSerieX - SuperMario.adaptWidth(20), SuperMario.adaptHeight(5));  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
     }
 
     /**
@@ -259,7 +257,7 @@ public abstract class Tiles implements Size, Cloneable {    //sarebbe meglio ast
      * @return RITORNA L'AREA OCCUPANTE DALLA PARTE DESTRA DELLO SPRITE
      */
     public Rectangle getBoundsRight() {   //RITORNA L'AREA OCCUPANTE DALLA PARTE DESTRA DELLO SPRITE
-        return new Rectangle(x + width - SuperMario.adaptWidth(10), y + SuperMario.adaptHeight(10), SuperMario.adaptWidth(5), height - SuperMario.adaptHeight(20));  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
+        return new Rectangle((x + width) * numSerieX - SuperMario.adaptWidth(10), y + SuperMario.adaptHeight(10), SuperMario.adaptWidth(5), height - SuperMario.adaptHeight(20));  //POSIZIONE X, Y, LARGHEZZA, ALTEZZA. DA UTILIZZARE PER COLLIDER
     }
 
     public void tick() {

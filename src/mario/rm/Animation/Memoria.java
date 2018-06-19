@@ -41,7 +41,6 @@ public class Memoria {
 
     private Sound level;
 
-
     public Memoria(boolean temp) {
     }
 
@@ -243,57 +242,25 @@ public class Memoria {
         ArrayList<String> Files = new ArrayList<>();
         Log.append(path, DefaultFont.ERROR);
 
-        if (MainComponent.isRunningFromJar) {
-            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
-            ZipInputStream zip = null;
-            try {
-                URL jar = new URL(path);
-                zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null) {
-                        break;
-                    }
-                    String name = e.getName();
-                    //Log.append(name, DefaultFont.ERROR);
-                    if (name.startsWith(path)) {
-                        /* Do something with this entry. */
-                        //System.out.println("" + name);
-                        if (name.charAt(name.length() - 1) != '/') {
-                            Files.add(name);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    zip.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            LinkedList<String> Dir = new LinkedList<>();
-            File f = new File(path);
-            Dir.add(f.getAbsolutePath());
+        LinkedList<String> Dir = new LinkedList<>();
+        File f = new File(path);
+        Dir.add(f.getAbsolutePath());
+        //System.out.println(""+f.getAbsolutePath());
+        while (!Dir.isEmpty()) {
+            //System.out.println("" +f.getAbsolutePath());
+            f = new File(Dir.pop());
             //System.out.println(""+f.getAbsolutePath());
-            while (!Dir.isEmpty()) {
-                //System.out.println("" +f.getAbsolutePath());
-                f = new File(Dir.pop());
-                //System.out.println(""+f.getAbsolutePath());
-                if (f.isFile()) {
-                    Files.add(f.getAbsolutePath());
-                } else {
-                    String arr[] = f.list();
-                    try {
-                        for (int i = 0; i < arr.length; i++) {
-                            Dir.add(f.getAbsolutePath() + "/" + arr[i]);
-                            //System.out.println(""+Dir.get(i));
-                        }
-                    } catch (NullPointerException exp) {
-                        Dir.remove(f.getAbsoluteFile());
+            if (f.isFile()) {
+                Files.add(f.getAbsolutePath());
+            } else {
+                String arr[] = f.list();
+                try {
+                    for (int i = 0; i < arr.length; i++) {
+                        Dir.add(f.getAbsolutePath() + "/" + arr[i]);
+                        //System.out.println(""+Dir.get(i));
                     }
+                } catch (NullPointerException exp) {
+                    Dir.remove(f.getAbsoluteFile());
                 }
             }
         }
@@ -332,57 +299,26 @@ public class Memoria {
     public static String[] getDirectory(String path) {
         ArrayList<String> Files = new ArrayList<>();
 
-        if (MainComponent.isRunningFromJar) {
-            CodeSource src = MainComponent.class.getProtectionDomain().getCodeSource();
-            ZipInputStream zip = null;
-            try {
-                URL jar = src.getLocation();
-                zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null) {
-                        break;
-                    }
-                    String name = e.getName();
-                    if (name.startsWith(path + "/")) {
-                        /* Do something with this entry. */
-                        //System.out.println("" + name);
-                        Log.append(name, DefaultFont.DEBUG);
-                        if (name.charAt(name.length() - 1) == '/') {
-                            Files.add(name);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    zip.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Memoria.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            String pat = "res/" + path;
-            LinkedList<String> Dir = new LinkedList<>();
-            File f = new File(pat);
-            Dir.add(f.getAbsolutePath());
+        String pat = path;
+        LinkedList<String> Dir = new LinkedList<>();
+        File f = new File(MainComponent.filePath + pat);
+        System.out.println("directory: " + f.getAbsolutePath());
+        Dir.add(f.getAbsolutePath());
+        //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
+        while (!Dir.isEmpty()) {
+            //System.out.println("" + f.getAbsolutePath());
+            f = new File(Dir.pop());
             //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
-            while (!Dir.isEmpty()) {
-                //System.out.println("" + f.getAbsolutePath());
-                f = new File(Dir.pop());
+            if (f.isDirectory()) {
                 //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
-                if (f.isDirectory()) {
-                    //Log.append(f.getAbsolutePath(), DefaultFont.ERROR);
-                    Files.add(f.getAbsolutePath());
-                    String arr[] = f.list();
-                    try {
-                        for (int i = 0; i < arr.length; i++) {
-                            Dir.add(f.getAbsolutePath() + "/" + arr[i]);
-                        }
-                    } catch (NullPointerException exp) {
-                        Dir.remove(f.getAbsoluteFile());
+                Files.add(f.getAbsolutePath());
+                String arr[] = f.list();
+                try {
+                    for (int i = 0; i < arr.length; i++) {
+                        Dir.add(f.getAbsolutePath() + "/" + arr[i]);
                     }
+                } catch (NullPointerException exp) {
+                    Dir.remove(f.getAbsoluteFile());
                 }
             }
         }

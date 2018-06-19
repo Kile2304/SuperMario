@@ -94,8 +94,13 @@ public class Loader {
             /*if(MainComponent.jar.isFile()){
                 path = path.replace("src/", "");
                 Log.append(path);*/
-            System.out.println("" + path);
-            fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
+            System.out.println("coversione testo in mappa di: " + path);
+            if(path.lastIndexOf("Immagini/livelli/") != -1){
+                fr = new InputStreamReader(MainComponent.class.getClassLoader().getResourceAsStream(path));
+                System.out.println("asdasdasdasdadasdasda");
+            }
+            else    fr = new InputStreamReader(new FileInputStream(MainComponent.filePath+"/"+path));
+            
             /*}else{
                 fr = new FileReader(path);
             }*/

@@ -5,6 +5,7 @@ import Connessione.Profilo;
 import Connessione.Query;
 import Connessione.Relazione;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mario.MainComponent;
 import mario.rm.SuperMario;
+import mario.rm.identifier.TilePart;
 import mario.rm.input.Sound;
 import mario.rm.sprite.Player;
 import mario.rm.sprite.Sprite;
@@ -121,8 +123,10 @@ public class Handler implements Reader {
         t[1] = new Thread() {
             @Override
             public void run() {
+                Rectangle window = new Rectangle((int) (player.get(0).getX() - SuperMario.WIDTH / 1.5), z, (int) (SuperMario.WIDTH / 1.5) * 2,(int) (SuperMario.HEIGHT / 1.5) * 2);
                 for (int i = 0; i < tiles.size(); i++) {
-                    if (tiles.get(i).getX() <= d && tiles.get(i).getX() >= c && p >= tiles.get(i).getY() && z <= tiles.get(i).getY()) {
+                    //System.out.println(""+tiles.get(i).getBounds().toString() + " " + new Rectangle(c, p, 1, SuperMario.HEIGHT).toString());
+                    if (tiles.get(i).getBounds().intersects(window)) {
                         tiles.get(i).render(g);
                     }
                 }
@@ -341,6 +345,9 @@ public class Handler implements Reader {
     public void addTiles(Tiles til) {    //AGGIUNGE UN TILE ALL'ELENCO
         tiles.push(til);
     }
+    public void addPosition() {    //AGGIUNGE UN TILE ALL'ELENCO
+        position.add(tiles.getFirst());
+    }
 
     public void addEnemy(Enemy en) {
         enemy.add(en);
@@ -386,6 +393,7 @@ public class Handler implements Reader {
                     //case "UNLOCKED":
                     //tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this, type, memoria.getUnlockable(), true, tile, false, unlockable));
                     //break;
+                    case "CRASH":
                     case "PLAYER_LUIGI":
                         long memoryUsed = MainComponent.memoryUsed();
                         System.out.println("pre: " + memoryUsed);
@@ -463,6 +471,7 @@ public class Handler implements Reader {
                     case "COLUMNDESERT":
                     case "ICE":
                     case "COLUMNICE":
+                    case "GRASS":
                     case "MUSHROOMPLATFORM":
                         /*tiles.add(new Solid(x0, y0, SuperMario.standardWidth, SuperMario.standardHeight, this,
                                 type, true, tile, movement));*/   //SE E NERO E' NORMALE SOLIDO
@@ -541,16 +550,13 @@ public class Handler implements Reader {
             /*if (tiles.get(i).getType().equals("SOLID") || tiles.get(i).getType().equals("COINS") || tiles.get(i).getType().equals("MUSHROOM") || tiles.get(i).getType().equals("UNLOCKABLE")) {
                 continue;
             }*/
-            if (tiles.get(i) instanceof CoinBlock || tiles.get(i) instanceof GravityTile || tiles.get(i).getType().equals("SOLID")) {
-                continue;
-            }
+            if (checker(tiles.get(i))) continue;
+
             for (int j = i + 1; j < tiles.size(); j++) {
                 /*if (tiles.get(j).getType().equals("SOLID") || tiles.get(j).getType().equals("COIN") || tiles.get(j).getType().equals("MUSHROOM") || tiles.get(j).getType().equals("UNLOCKABLE")) {
                     continue;
                 }*/
-                if (tiles.get(i) instanceof CoinBlock || tiles.get(i) instanceof GravityTile || tiles.get(i).getType().equals("SOLID")) {
-                    continue;
-                }
+                if (checker(tiles.get(j))) continue;
                 if (tiles.get(i).getType().equals(tiles.get(j).getType())
                         && tiles.get(i).getX() + (tiles.get(i).getWidth() * tiles.get(i).getSerie()) == tiles.get(j).getX()
                         && tiles.get(i).getY() == tiles.get(j).getY()
@@ -562,6 +568,16 @@ public class Handler implements Reader {
             }
         }
 
+    }
+    
+    private boolean checker(Tiles ob){
+        return ob instanceof CoinBlock
+               || ob instanceof GravityTile
+               || ob.getType().equals("SOLID")
+               || ob.getType().equals("UP1")
+               || ob.getType().equals("REDFLOWER")
+               || ob.getType().equals("COIN")
+               || ob.getType().equals("MUSHROOM");
     }
 
     public void addScript() {

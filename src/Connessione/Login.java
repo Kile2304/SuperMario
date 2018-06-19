@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -33,6 +35,7 @@ public class Login extends JFrame implements ActionListener {
         setSize(dim);
         setBackground(Color.BLACK);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         add(content());
 
@@ -70,15 +73,17 @@ public class Login extends JFrame implements ActionListener {
         switch (e.getActionCommand()) {
             case "LOGIN":
                 System.out.println("" + passw.getText());
-                Relazione sel = Query.sendSelect("SELECT * FROM uteti where username=" + username.getText() + " AND password=" + passw.getText());
-                if (sel.getValue()[0].length > 0) {
-                    Profilo.email = sel.getValue()[0][0];
-                    Profilo.username = sel.getValue()[1][0];
-                    Profilo.password = sel.getValue()[2][0];
+                Relazione sel = Query.sendSelect("SELECT * FROM utente where username=\"" + username.getText() + "\" AND password=\"" + passw.getText()+"\"");
+                if (sel != null) {
+                    Profilo.password = sel.getValue()[0][0];
+                    Profilo.email = sel.getValue()[0][1];
+                    Profilo.username = sel.getValue()[0][2];
+                    Profilo.looged = true;
                     System.out.println(""+Profilo.email+" "+Profilo.username+" "+Profilo.password);
                 } else {
                     username.setText("");
                     passw.setText("");
+                    JOptionPane.showMessageDialog(rootPane, "Utente non trovato");
                     break;
                 }
             case "INDIETRO":

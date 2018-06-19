@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import mario.rm.Menu.Componenti.Scrollable;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
+import mario.rm.input.Loader;
 import mario.rm.other.DefaultFont;
 import mario.rm.utility.Log;
 
@@ -28,81 +29,68 @@ public class Editor extends JFrame implements Scrollable {
     private int WIDTH;
 
     private static Selezione s;
-    
+
     private Pannelli p;
 
     private static final int PIXEL = 32;
-    
-    private static final String TITLE = "EDITOR";
-    
+
+    private static final String TITLE = "Level Editor";
+
     private JScrollPane gri;
-    
-    private JScrollPane sc;
-    
+
     public static int adaptedWidth;
-    
+
     public Editor(Home home) {
         super(TITLE);
-        
-        
+
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         /*WIDTH = d.width / 4 * 3;
         HEIGHT = d.height / 4 * 3;*/
         WIDTH = d.width;
         HEIGHT = d.height;
-        
+
         setSize(WIDTH, HEIGHT);
-        
+
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
-        
-        
+        setResizable(false);
+        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
+
         adaptedWidth = adaptWidth(240);
         final int adaptedHeight = adaptHeight(250);
-        Log.append(adaptedWidth+ " "+adaptedHeight, DefaultFont.ERROR);
+        Log.append(adaptedWidth + " " + adaptedHeight, DefaultFont.ERROR);
         Griglia g = new Griglia(WIDTH + adaptedWidth, HEIGHT + adaptedHeight, this, PIXEL);
-        System.out.println("height: "+HEIGHT);
+        System.out.println("height: " + HEIGHT);
         gri = new JScrollPane(g);
         gri.setPreferredSize(new Dimension(WIDTH - adaptedWidth, HEIGHT));
         gri.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         gri.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
+
         s = new Selezione(g, this);
-        
-        
-        sc = new JScrollPane();
+
         p = new Pannelli(this, g.getPreview().getMemoria(), HEIGHT - adaptHeight(50));
 
-        sc.setViewportView(p);
-        sc.setPreferredSize(new Dimension(adaptedWidth, HEIGHT - adaptWidth(50)));
-        sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        sc.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
         addMenuBar();
 
         JPanel east = new JPanel();
-        east.add(sc, BorderLayout.EAST);
+        east.add(p, BorderLayout.EAST);
         add(east, BorderLayout.EAST);
-        
+
         JPanel center = new JPanel();
-        center.setLayout(new BorderLayout());
+        center.setLayout(new GridLayout());
         add(center, BorderLayout.CENTER);
-        
+
         center.add(gri);
-        
+
         g.addMouseListener(s);
         g.addMouseMotionListener(s);
         g.setPanel(p);
-        
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+
         setVisible(true);
     }
 
-    public JScrollPane getPanelScroll(){
-        return sc;
-    }
-    
     public Selezione getSelezione() {
         return s;
     }
@@ -115,54 +103,52 @@ public class Editor extends JFrame implements Scrollable {
     public void changeStateVertical(int stato) {
         //vertical.changeState(stato);
     }
-    
+
     @Override
-    public void changeState(){
+    public void changeState() {
         gri.repaint();
         gri.revalidate();
     }
 
-    private void addMenuBar(){
+    private void addMenuBar() {
         JMenuBar bar = new JMenuBar();
-        
+
         JMenu file = new JMenu("File");
         String[] name = new String[]{"New", "Load", "Save", "Home", "Exit"};
-        
-        
+
         JMenu help = new JMenu("Help");
         JMenuItem manuale = new JMenuItem("Manuale");
-        
+
         JMenu visualizza = new JMenu("Visualizza");
         JMenuItem toolTip = new JMenuItem("ToolTip Script");
-        
+
         JMenu opzioni = new JMenu("Opzioni");
         JMenuItem option = new JMenuItem("Opzioni");
         JMenuItem clean = new JMenuItem("Clean");
         JMenuItem info = new JMenuItem("Info");
-        
+
         JMenu insert = new JMenu("Insert");
         JMenuItem row = new JMenuItem("Row");
         JMenuItem column = new JMenuItem("Column");
         JMenuItem rowEColumn = new JMenuItem("Row e Column");
-        
+
         JMenu bg = new JMenu("NOBG");
         JMenuItem get = new JMenuItem("Selettore");
-        
-        
+
         ArrayList<JMenuItem> item = new ArrayList<>();
-        
+
         for (int i = 0; i < name.length; i++) {
             item.add(new JMenuItem(name[i]));
             item.get(i).addActionListener(p);
             file.add(item.get(i));
-            if(i < name.length-1){
+            if (i < name.length - 1) {
                 file.addSeparator();
             }
         }
-        
+
         visualizza.add(toolTip);
         toolTip.addActionListener(p);
-        
+
         opzioni.add(insert);
         insert.add(row);
         row.addActionListener(p);
@@ -170,7 +156,7 @@ public class Editor extends JFrame implements Scrollable {
         column.addActionListener(p);
         insert.add(rowEColumn);
         rowEColumn.addActionListener(p);
-        
+
         opzioni.add(option);
         opzioni.add(clean);
         clean.addActionListener(p);
@@ -179,24 +165,33 @@ public class Editor extends JFrame implements Scrollable {
         bg.add(manuale);
         manuale.addActionListener(p);
         opzioni.add(bg);
-        
+
         info.addActionListener(p);
         help.add(info);
         //bg.addActionListener(p);
-        
+
         bar.add(file);
         bar.add(visualizza);
         bar.add(opzioni);
         bar.add(help);
-        
+
         setJMenuBar(bar);
     }
- 
-    public int adaptWidth(int val){
-        return (int) ((double)val / 1200 * WIDTH);
+
+    public int getWidth() {
+        return WIDTH;
     }
-    public int adaptHeight(int val){
-        return (int) ((double)val / 900 * HEIGHT);
+
+    public int getHeight() {
+        return HEIGHT;
     }
-    
+
+    public int adaptWidth(int val) {
+        return (int) ((double) val / 1200 * WIDTH);
+    }
+
+    public int adaptHeight(int val) {
+        return (int) ((double) val / 900 * HEIGHT);
+    }
+
 }

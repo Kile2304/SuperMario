@@ -128,7 +128,7 @@ public class MemoriaAC {
     public ArrayList<Object> getAnim(String path, ArrayList list) {
         ArrayList<String> Files = new ArrayList<>();
         LinkedList<String> Dir = new LinkedList<>();
-        String pat = MainComponent.filePath + "/" + "Luigi/" + path;
+        String pat = MainComponent.filePath + "/Luigi/" + path;
         File f = new File(pat);
         System.out.println("" + f.getAbsolutePath());
 

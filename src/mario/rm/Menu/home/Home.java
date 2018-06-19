@@ -4,12 +4,11 @@ import Connessione.Connessione;
 import Connessione.Login;
 import Connessione.Profilo;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -18,9 +17,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,15 +34,15 @@ import javax.swing.JRootPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.xml.bind.DatatypeConverter;
 import mario.MainComponent;
+import mario.rm.Menu.Componenti.Visualizzatore;
+import mario.rm.Menu.Componenti.bottoni.RoundedCornerButton;
 import mario.rm.Menu.opzioni.Impostazioni;
 import mario.rm.Menu.Componenti.bottoni.TranslucentButton;
-import mario.rm.Menu.Componenti.Visualizzatore;
 import mario.rm.Menu.level_editor.Editor;
 import mario.rm.Menu.opzioni.MenuHome;
 import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 import mario.rm.handler.SelectLevel;
 import mario.rm.input.Loader;
-import mario.rm.multigiocatore.TypeMulti;
 import mario.rm.other.DefaultFont;
 import mario.rm.utility.Font;
 import mario.rm.utility.Font.ColorName;
@@ -52,8 +56,17 @@ public class Home extends JFrame implements ActionListener {
 
     private static final String TITLE = "HOME";
 
-    private static final String[] bottonList = new String[]{"INIZIA GIOCO", "MULTIGIOCATORE", "SELEZIONA LIVELLO", "CREA LIVELLO",
-        "SPRITE ESTRACTOR", "OPZIONI", "RINGRAZIAMENTI", "ESCI"};
+    private static final Object[] bottonList = new Object[]{
+        "INIZIA GIOCO",
+        "MULTIGIOCATORE",
+        "SELEZIONA LIVELLO",
+        "CREA LIVELLO",
+        "SPRITE ESTRACTOR",
+        new ImageIcon(MainComponent.class.getClassLoader().getResource("Immagini/settings.png")),
+        "RINGRAZIAMENTI",
+        "X",
+        "Sito Web"
+    };
 
     private static MainComponent main;
 
@@ -98,11 +111,11 @@ public class Home extends JFrame implements ActionListener {
     }
 
     private void loading() {
-        add(new JPanel() {
-            public void paintComponent(Graphics g) {
-                g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-            }
-        });
+        URL url = MainComponent.class.getClassLoader().getResource("Immagini/main_load.gif");
+        Icon icon = new ImageIcon(url);
+        JLabel label = new JLabel(icon);
+        label.setBounds(0, 0, getWidth(), getHeight());
+        add(label);
     }
 
     private void sizer() {
@@ -118,17 +131,14 @@ public class Home extends JFrame implements ActionListener {
 
     public void home() {
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
         all = new JPanel() {   //pannello per disegnarmi lo sfondo
             public void paintComponent(Graphics g) {
                 g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
             }
         };
-        all.setLayout(new GridBagLayout());   //layout per accentrarmi i bottoni
-        all.add(bottoni(), gbc);
+        all.setLayout(new GridLayout());
+        //all.setBounds(0, 0, getWidth(), getHeight());
+        all.add(bottoni());
         add(all);
         revalidate();
         repaint();
@@ -136,6 +146,9 @@ public class Home extends JFrame implements ActionListener {
 
     public void reset() {
         remove(menuHome);
+        sizer();
+        all = null;
+        home();
         add(all);
         sizer();
         revalidate();
@@ -190,7 +203,6 @@ public class Home extends JFrame implements ActionListener {
     private void visualizza() {
         dispose();
         new Visualizzatore(dim.width, dim.height, this);
-        setVisible(false);
     }
 
     private void creaLivello() {
@@ -251,75 +263,115 @@ public class Home extends JFrame implements ActionListener {
     }
 
     private void spriteEstractor() {
-        /*JPanel panel = new JPanel();
-        JLabel label = new JLabel("Enter a password:");
-        JPasswordField pass = new JPasswordField(10);
-        panel.add(label);
-        panel.add(pass);
-        String[] options = new String[]{"OK", "Cancel"};
-        int option = JOptionPane.showOptionDialog(null, panel, "Login",
-                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-                null, options, pass);
-        if (option == 0) // pressing OK button
-        {
-            char[] password = pass.getPassword();
-            //System.out.println("Your password is: " + new String(password));
-            if (isCorrect(password)) {
-                Log.append("WELCOME ADMIN", DefaultFont.INFORMATION);
-                dispose();
-                JOptionPane.showMessageDialog(rootPane, "Attenzione mentre si usa questa modalita\nsi potrebbe rompere l'intero progetto", "titolo", JOptionPane.ERROR_MESSAGE);
-                new SpriteEstractor();
-            } else {
-                Log.append("PASSWORD: " + new String(password) + ". NON RICONOSCIUTA.", DefaultFont.ERROR);
-            }
-        }*/
         dispose();
         new SpriteEstractor();
     }
 
     private void mutltigiocatore() {
-        new TypeMulti(main).setVisible(true);
+        new SelectLevel(false).reset();
         dispose();
+        main.start(2);
     }
 
     private JPanel bottoni() {
         JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBounds(0, 0, getWidth(), getHeight());
         panel.setOpaque(false); //gli dico di non disegnarmi lo sfondo
 
-        panel.setLayout(new GridBagLayout());   //layout per mettere bottoni in verticale spaziati
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        final int[] width = new int[]{
+            adaptWidth(170),
+            adaptWidth(220),
+            adaptWidth(180),
+            adaptWidth(180),
+            adaptWidth(180),
+            adaptWidth(50),
+            0,
+            adaptWidth(50),
+            adaptWidth(170)
+        };
+        final int[] height = new int[]{
+            adaptHeight(60),
+            adaptHeight(60),
+            adaptHeight(60),
+            adaptHeight(60),
+            adaptHeight(60),
+            adaptHeight(50),
+            0,
+            adaptHeight(50),
+            adaptHeight(60)
+        };
 
-        int w = (int) (5.0 / 960.0 * getWidth());
-        int h = (int) (5.0 / 540.0 * getHeight());
-        // System.out.println(""+w+" "+h);
-        Profilo.looged = true;
-        Profilo.username = "carpaccio";
-        panel.add(new JLabel(Profilo.looged ? Font.setHtmlColor("Loggato come: " + Profilo.username, ColorName.GREEN) : Font.setHtmlColor("Nessuno loggato", ColorName.RED)));
-        //JButton bb = new JButton(Profilo.looged ? "LOGOUT" : "LOGIN");
-        JButton bb = new JButton(Profilo.looged ? "LOGIN" : "LOGOUT");
-        bb.addActionListener(this);
-        panel.add(bb, gbc);
-        gbc.insets = new Insets(w, h, w, h);    //gli dico di mettermi uno spazio fra ogni bottone
+        final int[] x = new int[]{
+            (getWidth() - width[0]) / 2,
+            (getWidth() - width[1]) / 2,
+            (getWidth() - width[1]) / 2 - width[2],
+            (getWidth() + width[1]) / 2,
+            adaptWidth(20),
+            getWidth() - width[5] - adaptWidth(20),
+            0,
+            (getWidth() - width[7]) / 2,
+            (getWidth() - width[8]) / 2
+        };
+        final int[] y = new int[]{
+            (getHeight() - height[0]) / 2,
+            (getHeight() + height[1]) / 2,
+            (getHeight() + height[1]) / 2,
+            (getHeight() + height[1]) / 2,
+            getHeight() - height[4] - adaptHeight(10),
+            getHeight() - height[5] - adaptHeight(10),
+            0,
+            getHeight() - height[7] - adaptHeight(10),
+            (getHeight() + height[8]) / 2 + height[1]
+        };
 
-        //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        final java.awt.Font f = new java.awt.Font("arial", java.awt.Font.BOLD, adaptWidth(14));
         for (int i = 0; i < bottonList.length; i++) {
-            TranslucentButton b = new TranslucentButton(bottonList[i]);
+            /*JButton temp = new JButton(bottonList[i]);
+            temp.setBounds(x[i], y[i], width[i], height[i]);
+            System.out.println("x: " + x[i] + " y: " + y[i] + " width: " + width[i] + " height: " + height[i]);
+            temp.addActionListener(this);*/
+            JButton temp = null;
+            if (bottonList[i] instanceof String) {
+                temp = new RoundedCornerButton((String) bottonList[i]);
+            } else {
+                Icon newimg = new ImageIcon(((ImageIcon)bottonList[i]).getImage().getScaledInstance(width[i], height[i], java.awt.Image.SCALE_SMOOTH));
+                temp = new JButton(newimg);
+                temp.setActionCommand("OPZIONI");
+                temp.setBorder(null);
+                temp.setContentAreaFilled(false);
+            }
+            temp.setBounds(x[i], y[i], width[i], height[i]);
+            temp.setBackground(Color.LIGHT_GRAY);
+            temp.addActionListener(this);
+            temp.setFont(f);
 
-            b.setBgCol(new Color(42, 82, 190));
-            b.setBgCol(new Color(18, 10, 143)); //background
-
-            b.setBgColro(Color.GRAY);
-
-            b.setFgCol(new Color(127, 255, 212));   //bordi e scritte
-
-            b.setFgColsel(Color.BLACK);
-
-            b.addActionListener(this);
-            list.add(b);
-            panel.add(b, gbc);
+            panel.add(temp);
         }
+
+        /*Profilo.looged = true;
+        Profilo.username = "carpaccio";*/
+        String temp = Profilo.looged ? "Loggato come: " + Profilo.username : "Nessuno loggato";
+        JLabel label = new JLabel(Profilo.looged ? Font.setHtmlColor(temp, ColorName.GREEN) : Font.setHtmlColor(temp, ColorName.RED));
+        int strWi = label.getFontMetrics(label.getFont()).stringWidth(temp);
+        label.setBounds(
+                getWidth() - adaptWidth(10) - strWi - adaptWidth(120) - adaptWidth(50),
+                adaptHeight(50),
+                adaptWidth(250),
+                adaptHeight(60));
+        panel.add(label);
+        //JButton bb = new JButton(Profilo.looged ? "LOGOUT" : "LOGIN");
+        RoundedCornerButton bb = new RoundedCornerButton(!Profilo.looged ? "LOGIN" : "LOGOUT");
+        bb.setBackground(Color.LIGHT_GRAY);
+        bb.setFont(f);
+        bb.setBounds(
+                getWidth() - adaptWidth(120) - adaptWidth(50),
+                adaptHeight(50),
+                adaptWidth(120),
+                adaptHeight(60));
+        bb.addActionListener(this);
+        panel.add(bb);
+
         return panel;
     }
 
@@ -330,11 +382,15 @@ public class Home extends JFrame implements ActionListener {
                 if (Connessione.isConnected()) {
                     dispose();
                     new Login(this.getSize());
-                }
+                } else System.out.println("break");
                 break;
             case "LOGOUT":
                 Profilo.logout();
+                remove(all);
+                all = null;
+                home();
                 repaint();
+                revalidate();
                 break;
             case "INIZIA GIOCO":
                 start();
@@ -346,6 +402,7 @@ public class Home extends JFrame implements ActionListener {
                 visualizza();
                 break;
             case "CREA LIVELLO":
+                System.out.println("asdasdas");
                 creaLivello();
                 break;
             case "SPRITE ESTRACTOR":
@@ -353,17 +410,37 @@ public class Home extends JFrame implements ActionListener {
                 break;
             case "OPZIONI":
                 this.remove(all);
-                this.add((menuHome = new MenuHome(this)));
+                menuHome = new MenuHome(this);
+                add(menuHome);
                 repaint();
                 revalidate();
                 break;
             case "RINGRAZIAMENTI":
                 ringraziamenti();
                 break;
-            case "ESCI":
+            case "Sito Web":
+                try {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().browse(new URI("http://localhost/SuperMario/index.php"));
+                    } else {
+                        System.err.println("Isn't desktop supported");
+                    }
+                } catch (IOException | URISyntaxException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case "X":
                 esci();
                 break;
         }
+    }
+
+    public int adaptWidth(int val) { //RIADATTO LA LARGHEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
+        return (int) ((double) val / 1200.0 * getWidth());
+    }
+
+    public int adaptHeight(int val) {    //RIADATTA LA ALTEZZA DELLE IMMAGINI IN BASE ALLA GRANDEZZA DELLO SCHERMO
+        return (int) ((double) val / 900.0 * getHeight());
     }
 
 }

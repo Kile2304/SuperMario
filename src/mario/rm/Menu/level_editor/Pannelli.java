@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import mario.MainComponent;
 import mario.rm.Animation.Animated;
 import mario.rm.Animation.Memoria;
@@ -49,13 +50,18 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     private JPanel content;
     private JPanel standard;
 
-    private int gbcX;
-    private int gbcY;
-
     private boolean attach;
 
     private int row;
     private int columnMax;
+
+    private int width;
+    private int height;
+
+    private int gridx;
+    private int gridy;
+
+    private JScrollPane sc;
 
     public Pannelli(Editor ed, MemoriaAC memoria, int height) {
         super();
@@ -72,37 +78,28 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         content = new JPanel();
         standard = new JPanel();
 
-        super.add(content, BorderLayout.CENTER);
-        super.add(standard, BorderLayout.NORTH);
-
         collider = false;
 
-        content.setLayout(new GridBagLayout());
+        content.setLayout(null);
+        content.setSize(new Dimension(Editor.adaptedWidth, ed.getHeight() - ed.getHeight() / 4));
+        sc = new JScrollPane();
+        sc.setViewportView(content);
+        sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        sc.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
         standard.setLayout(new GridLayout(3, 2, 10, 10));
         standard.setPreferredSize(new Dimension(Editor.adaptedWidth, height / 4));
 
-        gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gridx = 0;
+        gridy = 0;
 
-        gbc.gridwidth = 1;
-        gbc.gridheight = 1;
-
-        gbc.weightx = 1;
-        gbc.weighty = 0.5;
-
-        gbc.fill = GridBagConstraints.BOTH;
-
-        int w = (int) (5.0 / 960.0 * Editor.adaptedWidth * 2);
-        int h = (int) (5.0 / 540.0 * height);
-
-        // System.out.println(""+w+" "+h);
-        primo = new Insets(h, w, h, w);
-        gbc.insets = primo;    //gli dico di mettermi uno spazio fra ogni bottone
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        this.height = content.getHeight() / 10;
+        width = content.getWidth();
 
         attach = false;
+
+        super.add(sc, BorderLayout.CENTER);
+        super.add(standard, BorderLayout.NORTH);
 
         JButton indietro = initColor();
         indietro.setText("INDIETRO");
@@ -195,8 +192,9 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
         columnMax = 2;
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        gridx = 0;
+        gridy = 0;
+        width = content.getWidth() / columnMax;
 
         Specifiche enemy = new Specifiche("NEMICI");
         enemy.getButton().addActionListener((ActionEvent e) -> {
@@ -251,21 +249,19 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     }
 
     private void choseTerrain() {   //Ottiene in input l'elenco dei terreni e aggiunge un bottone per ogni terreno
-        gbc.gridx = 0;
+        columnMax = 2;
+        gridx = 0;
+        width = content.getWidth() / columnMax;
         pulisci();
         String[] temp = null;
-        temp = Memoria.getDirectory("Animazioni/tile/terrain");
-
+        temp = Memoria.getDirectory("/Luigi/Animation/tile/terrain");
         for (int i = 0; i < temp.length; i++) {
             String a = null;
-            if (MainComponent.isRunningFromJar) {
-                StringBuilder s = new StringBuilder(temp[i]);
-                s.deleteCharAt(s.length() - 1);
-                a = s.substring(s.lastIndexOf("/") + 1, s.length());
-            } else {
-                a = temp[i].substring(temp[i].lastIndexOf("\\") + 1, temp[i].length());
-            }
+            a = temp[i].substring(temp[i].lastIndexOf("\\") + 1, temp[i].length());
             String t1 = a;  //il listener sotto vuole solo valori final e questo e' l'unico modo
+            if (a.toLowerCase().equals("terrain")) {
+                continue;
+            }
             Specifiche spec = new Specifiche(a.toUpperCase());
 
             spec.getButton().addActionListener((ActionEvent e) -> {
@@ -290,12 +286,13 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
         } else {
             columnMax = 3;
         }
-        //columnMax = 3;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        gridx = 0;
+        gridy = 0;
+        width = content.getWidth() / columnMax;
         ArrayList temp = new ArrayList<>();
-        temp = memoria.getAnim("Animazioni" + path, temp);
+        temp = memoria.getAnim("Animation" + path, temp);
         //System.out.println("" + path);
+        System.out.println(""+temp.size());
         addButton(temp);
         if (terr) {
             elenco.stream().filter((spec) -> (spec.getButton().getText().equals(""))).forEach((spec) -> {
@@ -310,9 +307,10 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void item() {
         pulisci();
-        columnMax = 3;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        columnMax = 2;
+        gridx = 0;
+        gridy = 0;
+        width = content.getWidth() / columnMax;
         ArrayList temp = memoria.getUnlockable();
         //System.out.println(""+temp.size());
         addButton(temp);
@@ -323,9 +321,10 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void nemici() {
         pulisci();
-        columnMax = 3;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        columnMax = 2;
+        gridx = 0;
+        gridy = 0;
+        width = content.getWidth() / columnMax;
         ArrayList temp = memoria.getEnemy();
         addButton(temp);
         System.out.println("" + 1 + elenco.size() / 2 + " " + 1 + (elenco.size() / 2));
@@ -334,9 +333,10 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     private void player() {
         pulisci();
-        columnMax = 3;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        columnMax = 2;
+        gridx = 0;
+        gridy = 0;
+        width = content.getWidth() / columnMax;
         ArrayList temp = memoria.getPlayer();
         addButton(temp);
         System.out.println("" + 1 + elenco.size() / 2 + " " + 1 + (elenco.size() / 2));
@@ -387,20 +387,24 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
     }
 
     private void resize(int numBottoni) {
-        final int height = numBottoni * adaptHeight(170);
+        final int height = numBottoni * this.height;
 
-        Dimension d = new Dimension(Editor.adaptedWidth, height);
+        int resizeHeight = content.getHeight() < height
+                ? height
+                : ed.getHeight();
+        Dimension d = new Dimension(Editor.adaptedWidth, resizeHeight);
 
         setPreferredSize(d);
-        System.out.println("heightRefact: " + height);
-        ed.getPanelScroll().setPreferredSize(new Dimension(d.width, d.height + adaptHeight(50)));
-        //revalidate();
+        System.out.println("heightRefact: " + resizeHeight);
+        content.setSize(d.width, d.height);
+        sc.setPreferredSize(new Dimension(d.width, d.height + adaptHeight(50)));
+        revalidate();
         //repaint();
     }
 
     public void pulisci() {
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        gridx = 0;
+        gridy = 0;
         row = 1;
         for (int i = 0; i < elenco.size(); i++) {
             content.remove(elenco.get(i).getButton());
@@ -439,10 +443,11 @@ public class Pannelli extends JPanel implements ActionListener, Checkable {
 
     @Override
     public Component add(Component c) {
+        c.setBounds(gridx * width + gridx, gridy * height + gridy, width, height);
         content.add(c, gbc);
-        gbc.gridx = row % columnMax;
-        gbc.gridy += (row / columnMax);
-        //System.out.println("X: " + gbc.gridx + " Y: " + gbc.gridy);
+        gridx = row % columnMax;
+        gridy += (row / columnMax);
+        System.out.println("X: " + gridx * width + " Y: " + gridy * height + " width: " + width + " height: " + height);
         row %= (columnMax);
         row++;
         return null;

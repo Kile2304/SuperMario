@@ -177,7 +177,6 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
         timeShow = 346;
 
         Log.append("3)ISTANZIO PLAYER, BACKGROUND E LIVELLO", DefaultFont.INFORMATION);
-
         if (!handler.newLevel(current)) {
             stopGame();
             return;
@@ -284,8 +283,10 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
             } else if (!isLoad || wait) {
                 g.translate(0, 0);
                 g.clearRect(0, 0, WIDTH, HEIGHT);
+                g.setColor(Color.BLACK);
+                g.fillRect(0, 0, WIDTH, HEIGHT);
                 //g.fillRect(0, 0, WIDTH, HEIGHT);
-                int index = 0;
+                int index = Query.score.getValue().length;
                 for (String[] s : Query.score.getValue()) {
                     String toWrite = "";
                     for (String temp : s) {
@@ -293,9 +294,9 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                     }
 
                     BufferedImage[] toHud = toHud(s[0]);
-                    inverseDrawHud(g,
+                    drawHud(g,
                             toHud,
-                            WIDTH / 2 - toHud.length / 2 * adaptWidth(25),
+                            WIDTH / 2 - (toHud.length + 1) * adaptWidth(25),
                             HEIGHT / 2 - (s.length + index) * adaptHeight(25),
                             adaptWidth(25),
                             adaptHeight(25),
@@ -303,14 +304,15 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
                             false);
                     inverseDrawHud(g,
                             toHud(Integer.parseInt(s[1])),
-                            WIDTH / 2 + toHud.length / 2 * adaptWidth(25),
+                            WIDTH / 2 + adaptWidth(25),
                             HEIGHT / 2 - (s.length + index) * adaptHeight(25),
                             adaptWidth(25),
                             adaptHeight(25),
                             true,
                             false);
-                    index++;
-                    g.drawString(toWrite, WIDTH / 2 - 100, HEIGHT / 2 - (s.length / 2 - index) * 50);
+                    index--;
+                    //g.drawString(toWrite, WIDTH / 2 - 100, HEIGHT / 2 - (s.length / 2 - index) * 50);
+                    
                 }
                 wait = true;
                 delay = delay == 0 ? timeShow : delay;
@@ -449,11 +451,11 @@ public final class SuperMario extends Canvas implements Runnable {  //1200 900, 
     }
 
     public static double adaptWidth(double val) {   //UGUALE AD INT
-        return (double) (val * WIDTH / 1200.0);
+        return (double) ((double) val / 1200.0 * WIDTH);
     }
 
     public static double adaptHeight(double val) {  //UGUALE AD INT
-        return (double) (val * HEIGHT / 900.0);
+        return (double) ((double) val / 900.0 * HEIGHT);
     }
 
     public void stopGame() {

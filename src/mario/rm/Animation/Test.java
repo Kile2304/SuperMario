@@ -103,7 +103,7 @@ public class Test extends Canvas implements Runnable, ActionListener {
     public boolean load() throws FileNotFoundException, IOException, ClassNotFoundException {
         Cut cut = null;
         //JFileChooser c = new JFileChooser(new File("src/mario/res/Animazioni").getAbsolutePath());
-        JFileChooser c = new JFileChooser(MainComponent.class.getClassLoader().getResource("Animazioni/").getPath());
+        JFileChooser c = new JFileChooser(MainComponent.filePath + "/Luigi/Animation");
 
         int valid = c.showOpenDialog(null);
 

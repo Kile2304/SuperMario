@@ -17,7 +17,7 @@ public class SelectLevel {
 
     private static int index;
 
-    private static final String[] history = {"try.level", "try.level"};    //livelli da cambiare con .level
+    private static final String[] history = {"tramatt2.level", "try.level", "tramatt.level"};    //livelli da cambiare con .level
 
     private static final String path = "Immagini/livelli/";
 
@@ -97,9 +97,9 @@ public class SelectLevel {
         String[] temp = Memoria.getFile(MainComponent.filePath+"/Luigi/Level");
         ArrayList<String> file = new ArrayList<>();
         for (String string : temp) {
-            //System.out.println(""+string);
+            System.out.println("livello trovato; "+string);
             try {
-                string.substring(0, string.lastIndexOf("Compl.level"));
+                string.substring(0, string.lastIndexOf(".level"));
                 file.add(string);
             } catch (StringIndexOutOfBoundsException e) {
 

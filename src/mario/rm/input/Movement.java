@@ -114,7 +114,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                         handler.getPlayer().get(id).setTeleport();
                     }
                     break;
-                case KeyEvent.VK_TAB:
+                /*case KeyEvent.VK_TAB:
                     if (mario.getFrame().isFocused()) {
                         MainComponent.log.toFront();
                         if (mario.getGameLoop()) {
@@ -126,7 +126,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                             mario.removeOption();
                         }
                     }
-                    break;
+                    break;*/
                 default:
                     break;
             }
@@ -170,7 +170,7 @@ public class Movement implements KeyListener { //RESPONSABILE DEL MOVIMENTO
                     }
                     break;
                 case KeyEvent.VK_ESCAPE:
-                    if (mario.getFrame().isFocused()) {
+                    if (mario.getFrame().isFocused() && mario.getGameLoop()) {
                         mario.addOption();
                     }
                     break;

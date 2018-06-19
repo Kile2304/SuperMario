@@ -27,6 +27,7 @@ import static mario.MainComponent.memoryUsed;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.sprite_estractor.output.Design;
 import mario.rm.Menu.sprite_estractor.output.union.Union;
+import mario.rm.input.Loader;
 
 /**
  *
@@ -67,6 +68,7 @@ public class SpriteEstractor extends JFrame {
         setSize(new Dimension(WIDTH, HEIGHT));
 
         setLayout(new BorderLayout());
+        setIconImage(new Loader().LoadImage("Immagini/Luma-Yellow-icon.png"));
 
         adaptedWidth = adaptWidth(250);
 
@@ -205,7 +207,7 @@ public class SpriteEstractor extends JFrame {
             Logger.getLogger(SpriteEstractor.class.getName()).log(Level.SEVERE, null, ex);
         }
         f = new File(MainComponent.filePath + "/Luigi/Animation");
-        System.out.println(""+f.list().length);
+        System.out.println("" + f.list().length);
         if (f.list().length == 2) {
             new Design(null);
         }

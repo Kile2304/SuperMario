@@ -13,6 +13,7 @@ import mario.rm.handler.Handler;
 import mario.rm.Animation.Anim;
 import mario.rm.Animation.MultiAnim;
 import mario.rm.Animation.Tile;
+import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
 import mario.rm.identifier.TilePart;
@@ -66,7 +67,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
 
     public Sprite(int x, int y, int width, int height, Handler handler, String type, ArrayList<Anim> elenco) {  //NORMALE INIZIALIZZAZIONE CON IL COSTRUTTORE
         System.gc();
-        System.out.println("after: "+MainComponent.memoryUsed());
+        //System.out.println("after: " + MainComponent.memoryUsed());
         this.x = x; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE X
         this.y = y; //INIZIALIZZA LA POSIZIONE NELLE COORDINATE Y
         this.width = width; //LARGHEZZA
@@ -162,7 +163,7 @@ public abstract class Sprite implements Size {  //DA FARE ASSOLUTAMENTE COLLIDER
             if (temp != null) {
                 g.drawImage(temp, x, y, width, height, null);   //DISEGNO L'IMMAGINE
             }
-            
+
             t = null;
         }
         /*g.setColor(Color.WHITE);

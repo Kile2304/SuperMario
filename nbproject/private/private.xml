@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/mario/rm/SuperMario.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>314</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/MainComponent.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/Menu/sprite_estractor/output/Design.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/SuperMario.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/Menu/sprite_estractor/input/Selezione.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/sprite/Player.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/handler/Handler.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/Menu/sprite_estractor/output/Estratta.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/Animation/Cut.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/input/Loader.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/Menu/home/Home.java</file>
-            <file>file:/C:/Users/LENOVO/Desktop/SuperMario_1/src/mario/rm/Menu/sprite_estractor/input/Collegamenti.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/sprite/tiles/Tiles.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/Menu/level_editor/Script.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/sprite/tiles/Solid.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/sprite/tiles/CoinBlock.java</file>
+            <file>file:/C:/Users/LENOVO/Christian/Scuola/supermario/SuperMario_1/src/mario/rm/handler/Handler.java</file>
         </group>
     </open-files>
 </project-private>

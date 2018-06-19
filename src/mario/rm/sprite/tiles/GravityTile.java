@@ -60,7 +60,7 @@ public class GravityTile extends Solid {
             if (tile.get(i) != this && getBounds().intersects(tile.get(i).getBounds())) {
                 if (tile.get(i).getType().equals("VOID")) {
                     die();
-                } else if (tile.get(i).getType().equals("COIN")) {
+                } else if (!tile.get(i).getType().equals("COIN")) {
                     if (getBoundsBottom().intersects(tile.get(i).getBounds())) { //INTERSEZIONE PARTE BASSA
                         y = tile.get(i).getY() - height + 1;//LA SUA POSIZIONE DIVIENE POSIZIONE TILE (Y) MENO L'ALTEZZA
 

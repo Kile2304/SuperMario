@@ -1,13 +1,8 @@
 package mario.rm.sprite.enemy;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mario.rm.Animation.Anim;
 import mario.rm.SuperMario;
-import static mario.rm.SuperMario.adaptHeight;
 import mario.rm.handler.Handler;
 import mario.rm.identifier.Direction;
 import mario.rm.identifier.Move;
@@ -27,26 +22,28 @@ public class Enemy extends Sprite {
     //protected Animazione up;    //ANIMAZIONE
     protected int direzioneY;   //DIREZIONEY
 
-    protected static final double STACCO = adaptHeight(0.17);
-
     protected boolean isDie;
-    
+
     protected boolean hurt;
+
+    protected final double STACCO = adaptHeight(0.17); //COSTANTE VARIABILE IN BASE ALLA RISOLUZIONE DELLO SCHERMO, PER IL SALTO 
 
     /**
      *
      * @param x coordinata x
      * @param y coordinata y
      * @param width larghezza
-     * @param height altezza 
+     * @param height altezza
      * @param handler handler che deve gestire lo sprite
      * @param type tipologia di personaggio
-     * @param canDie se puo morire 
+     * @param canDie se puo morire
      */
     public Enemy(int x, int y, int width, int height, Handler handler, String type, boolean canDie) {
         super(x, y, width, height, handler, type, handler.getMemoria().getEnemy());
         velX = Tipologia.getValue(type, "velX");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
-        velY = Tipologia.getValue(type, "velY");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        if (velX == 0) {
+            velX = 2;
+        }
 
         isDie = false;  //IMPOSTO A NON MORTO
 
@@ -57,7 +54,7 @@ public class Enemy extends Sprite {
         actualDirection = Direction.LEFT;
 
         direzione = -1;
-        
+
         hurt = true;
 
     }
@@ -70,7 +67,9 @@ public class Enemy extends Sprite {
         }
 
         velX = Tipologia.getValue(type, "velX");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
-        velY = Tipologia.getValue(type, "velY");  //VEDO A CHE VELOCITA' E' CONSENTITO ANDARE A QUEL TIPO DI NEMICO
+        if (velX == 0) {
+            velX = 2;
+        }
 
         isDie = false;  //IMPOSTO A NON MORTO
 
@@ -81,7 +80,7 @@ public class Enemy extends Sprite {
         actualDirection = Direction.LEFT;
 
         direzione = -1;
-        
+
         hurt = true;
     }
 
@@ -103,8 +102,8 @@ public class Enemy extends Sprite {
 
     /**
      *
-     * AGGIORNA LA POSIZIONE DEL NEMICO SEMPLICEMENTE CHE QUANDO VA A
-     * SBATTERE CAMBIA DIREZIONE, E SE SOTTO DI LUI NON C'E' PAVIMENTO CADE
+     * AGGIORNA LA POSIZIONE DEL NEMICO SEMPLICEMENTE CHE QUANDO VA A SBATTERE
+     * CAMBIA DIREZIONE, E SE SOTTO DI LUI NON C'E' PAVIMENTO CADE
      */
     @Override
     public void tick() {
@@ -122,7 +121,7 @@ public class Enemy extends Sprite {
                         canDie = true;
                         isDie = true;
                         die();
-                    } else if (!tile.get(i).getType().equals("MUSHROOM") || !tile.get(i).getType().equals("COIN")) {
+                    } else if (!tile.get(i).getType().equals("MUSHROOM") && !tile.get(i).getType().equals("COIN")) {
                         if (getBoundsBottom().intersects(tile.get(i).getBounds())) { //INTERSEZIONE PARTE BASSA
                             y = tile.get(i).getY() - height + 1;//LA SUA POSIZIONE DIVIENE POSIZIONE TILE (Y) MENO L'ALTEZZA
 
@@ -217,8 +216,8 @@ public class Enemy extends Sprite {
         return null;
     }
 
-    public boolean canHurt(){
+    public boolean canHurt() {
         return hurt;
     }
-    
+
 }

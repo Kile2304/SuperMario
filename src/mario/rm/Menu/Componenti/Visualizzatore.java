@@ -1,11 +1,12 @@
 package mario.rm.Menu.Componenti;
 
-import java.awt.Component;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
 import mario.rm.Menu.Griglia;
 import mario.rm.Menu.home.Home;
@@ -39,17 +40,17 @@ public class Visualizzatore extends JFrame implements Scrollable, ActionListener
         livelli = new SelectLevel(true);
 
         g = new Griglia(this, livelli.getNext(), 15);
-        g.setBounds(0, 0, width - 420, height - 80);
+        g.setBounds(0, 0, width - adaptWidth(420), height - adaptHeight(80));
 
         Selezione s = new Selezione(g, this);
 
-        orizontal = new ScrollButton(ScrollButton.ORIZZONTALE, width, height, s, 0);
-        vertical = new ScrollButton(ScrollButton.VERTICALE, width, height, s, 550);
+        //rizontal = new ScrollButton(ScrollButton.ORIZZONTALE, width, height, s, 0);
+        //vertical = new ScrollButton(ScrollButton.VERTICALE, width, height, s, adaptWidth(550));
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        add(orizontal);
-        add(vertical);
+        //add(orizontal);
+        //add(vertical);
         add(g);
         add(controlli(width, height));
 
@@ -59,10 +60,11 @@ public class Visualizzatore extends JFrame implements Scrollable, ActionListener
 
     public JPanel controlli(int width, int height) {
         JPanel panel = new JPanel();
-
-        panel.setBounds(1561, 0, width - 1561, height);
-
+        System.out.println("sadasd");
+        panel.setBounds(adaptWidth(1561), 0, width - adaptHeight(1561), height);
+        
         panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         JButton next = new JButton("NEXT");
         JButton before = new JButton("BEFORE");
@@ -77,13 +79,32 @@ public class Visualizzatore extends JFrame implements Scrollable, ActionListener
         inizia.addActionListener(this);
         ingrandisci.addActionListener(this);
         diminuisci.addActionListener(this);
-
-        panel.add(next);
-        panel.add(before);
-        panel.add(home);
-        panel.add(inizia);
-        panel.add(ingrandisci);
-        panel.add(diminuisci);
+        
+        gbc.fill = GridBagConstraints.BOTH;
+        
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        panel.add(next, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(before, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(home, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(inizia, gbc);
+        
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        panel.add(ingrandisci, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(diminuisci, gbc);
 
         return panel;
     }
@@ -107,7 +128,7 @@ public class Visualizzatore extends JFrame implements Scrollable, ActionListener
         switch (e.getActionCommand()) {
             case "INIZIA":
                 dispose();
-                String current = livelli.getCurrent().substring(0, livelli.getCurrent().lastIndexOf("."))+ ".png";
+                String current = livelli.getCurrent().substring(livelli.getCurrent().indexOf("Luigi\\Level\\"), livelli.getCurrent().lastIndexOf("."))+ ".level";
                 System.out.println("asdas: "+current);
                 //current = current.substring(current.lastIndexOf("\\Immagini"), current.length());
                 home.inizia(current);
@@ -137,6 +158,13 @@ public class Visualizzatore extends JFrame implements Scrollable, ActionListener
                 revalidate();
                 break;
         }
+    }
+    
+    private int adaptWidth(int val){
+        return (int) ((double) val / 1920 * getWidth());
+    }
+    private int adaptHeight(int val){
+        return (int) ((double) val / 1080 * getHeight());
     }
 
 

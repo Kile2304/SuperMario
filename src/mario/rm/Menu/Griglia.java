@@ -281,7 +281,7 @@ public class Griglia extends JPanel {
     }
 
     private void loadCollider(String path) {
-        String finalPath = path.substring(0, path.lastIndexOf("Compl.level"));
+        String finalPath = path.substring(0, path.lastIndexOf(".level"));
         finalPath += ".level";
         //System.out.println("finalPath: " + finalPath);
         livello.carica(finalPath, true);
@@ -455,13 +455,13 @@ public class Griglia extends JPanel {
 
             }
 
-            savePart(path);
+            //savePart(path);
 
             try {
                 path = path.substring(0, path.length() - 6);
             } catch (StringIndexOutOfBoundsException e) {
             }
-            path += "Compl.level";
+            path += ".level";
 
             saveAll(path);
 
@@ -618,6 +618,8 @@ public class Griglia extends JPanel {
             System.arraycopy(temp[i], 0, temp2[i], 0, temp[0].length);
         }
         livello.setMappa(temp2);
+        setPreferredSize(new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel));
+        repaint();
     }
 
     public void addColumn(int val) {
@@ -629,6 +631,8 @@ public class Griglia extends JPanel {
             System.arraycopy(temp[i], 0, temp2[i], 0, temp[0].length);
         }
         livello.setMappa(temp2);
+        setPreferredSize(new Dimension(livello.getMappa().length * pixel, livello.getMappa()[0].length * pixel));
+        repaint();
     }
 
     public void changeErase() {

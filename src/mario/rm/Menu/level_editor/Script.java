@@ -32,24 +32,23 @@ public class Script extends JFrame implements ItemListener {
 
     private String prew;
 
+    private JPanel tile;
+
     public Script(Griglia g) {
         super("Script");
         this.g = g;
 
         typeU = new JComboBox(new String[]{"COIN", "MUSHROOM", "LIFE"});
-        typeT = new JComboBox(new String[]{"normal", "collision", "DISAPPEAR"});
+        typeT = new JComboBox(new String[]{"normal", "collision", "DISAPPEAR", "GravityTile"});
 
         list = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            list.add(new JTextField());
-        }
         JPanel unlockable = setUnlockable();
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Unlockable", null, unlockable,
                 "Unlockable");
-
-        JPanel tile = setTileMoveNormal();
+        tile = new JPanel();
+        setTileMoveNormal();
 
         tabbedPane.addTab("Tile", null, tile,
                 "Tile Movement");
@@ -149,18 +148,18 @@ public class Script extends JFrame implements ItemListener {
         return split;
     }
 
-    public JPanel setTileMoveNormal() {
-        JPanel p = new JPanel();
-        p.setLayout(new GridLayout(8, 2));
+    public void setTileMoveNormal() {
+        tile.setLayout(new GridLayout(8, 2));
 
-        p.add(new JLabel("Indica il tipo di movimento:"));
-        p.add(typeT);
+        tile.add(new JLabel("Indica il tipo di movimento:"));
+        tile.add(typeT);
         typeT.addItemListener(this);
         prew = (String) typeT.getSelectedItem();
         final String[] elenco = new String[]{"maxX", "maxY", "velX", "velY", "incrX", "incrY"};
         for (int i = 0; i < elenco.length; i++) {
-            p.add(new JLabel(elenco[i]));
-            p.add(list.get(i));
+            tile.add(new JLabel(elenco[i]));
+            list.add(new JTextField());
+            tile.add(list.get(i));
         }
         JButton b = new JButton("conferma");
         b.addActionListener((ActionEvent e) -> {
@@ -174,27 +173,46 @@ public class Script extends JFrame implements ItemListener {
             }
             addScript(ordina(setNewer(nuova)));
         });
-        p.add(b);
-
-        return p;
+        tile.add(b);
     }
 
-    public JPanel setTileMoveCollision() {
-        JPanel p = new JPanel();
-        p.setLayout(new GridLayout(2, 2));
+    public void setTileMoveConfirm() {
+        tile.setLayout(new GridLayout(2, 2));
 
-        p.add(new JLabel("Indica il tipo di movimento:"));
-        typeT.addItemListener(this);
+        tile.add(new JLabel("Indica il tipo di movimento:"));
         prew = (String) typeT.getSelectedItem();
-        p.add(typeT);
+        tile.add(typeT);
         JButton b = new JButton("conferma");
         b.addActionListener((ActionEvent e) -> {
             String nuova = "M " + typeT.getSelectedItem();
             addScript(ordina(setNewer(nuova)));
         });
-        p.add(b);
+        tile.add(b);
+    }
 
-        return p;
+    public void setDisappear() {
+        tile.setLayout(new GridLayout(4, 2));
+
+        tile.add(new JLabel("Indica il tipo di movimento:"));
+        prew = (String) typeT.getSelectedItem();
+        tile.add(typeT);
+        final String[] elenco = new String[]{"time 1", "time 2"};
+        for (int i = 0; i < elenco.length; i++) {
+            tile.add(new JLabel(elenco[i]));
+            list.add(new JTextField());
+            tile.add(list.get(i));
+        }
+        JButton b = new JButton("conferma");
+        b.addActionListener((ActionEvent e) -> {
+            String nuova = "M " + typeT.getSelectedItem().toString().toLowerCase() + " ";
+            for (int i = 0; i < list.size(); i++) {
+                nuova += list.get(i).getText() + (i < list.size() - 1
+                        ? " "
+                        : "");
+            }
+            addScript(ordina(setNewer(nuova)));
+        });
+        tile.add(b);
     }
 
     @Override
@@ -205,17 +223,22 @@ public class Script extends JFrame implements ItemListener {
             if (prew.equals((String) item)) {
                 return;
             }
+            list.clear();
+            tile.removeAll();
             switch ((String) item) {
                 case "normal":
                     setTileMoveNormal();
                     break;
                 case "collision":
-                    setTileMoveCollision();
+                    setTileMoveConfirm();
                     break;
                 case "DISAPPEAR":
-                    removeAll();
+                    setDisappear();
                     break;
+                case "Gravity Tile":
+                    setTileMoveConfirm();
             }
+            repaint();
             prew = (String) item;
         }
     }

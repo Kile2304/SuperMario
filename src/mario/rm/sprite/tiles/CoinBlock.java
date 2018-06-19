@@ -48,7 +48,11 @@ public class CoinBlock extends Tiles {
                     public void run() {
                         int i = 0;
                         while (i < SuperMario.playerNumber) {
-                            handler.addTiles(new GravityTile(x, y - SuperMario.standardHeight, SuperMario.standardWidth, SuperMario.standardHeight, handler, unlock, handler.getMemoria().getUnlockable(), true, TilePart.UPLEFT.name(), false)); //AGGIUNGE UNA MONETA
+                            //handler.addTiles(new GravityTile(x, y - SuperMario.standardHeight, SuperMario.standardWidth, SuperMario.standardHeight, handler, unlock, handler.getMemoria().getUnlockable(), true, TilePart.UPLEFT.name(), false)); //AGGIUNGE UNA MONETA
+                            //handler.addTiles(new Solid(x, y - SuperMario.standardHeight, SuperMario.standardWidth, SuperMario.standardHeight, handler, unlock, handler.getMemoria().getUnlockable(), true, TilePart.UPLEFT.name(), false)); //AGGIUNGE UNA MONETA
+                            handler.addTiles(new Solid(x, y - SuperMario.standardHeight, SuperMario.standardWidth, SuperMario.standardHeight, handler,
+                                unlock, handler.getMemoria().getUnlockable(), false, TilePart.UPLEFT.name(), false, "M GravityTile")); //SE E GIALLO E' UNA MONETA
+                            handler.addPosition();
                             i++;
                             try {
                                 sleep(500);

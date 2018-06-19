@@ -96,7 +96,8 @@ public class Preview {
         EditLoad ed = new EditLoad();
 
         try {
-            path = path.substring(path.lastIndexOf("Immagini\\"));
+            path = path.substring(path.lastIndexOf("Luigi\\Level\\"));
+            //System.out.println("path; "+path);
         } catch (StringIndexOutOfBoundsException e) {
 
         }

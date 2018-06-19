@@ -1,16 +1,14 @@
 package mario;
 
+import Connessione.Connessione;
 import Connessione.Profilo;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import mario.rm.Animation.Memoria;
 import mario.rm.Menu.home.Home;
 import mario.rm.Menu.sprite_estractor.input.SpriteEstractor;
 
@@ -115,12 +113,13 @@ public class MainComponent {
         System.out.println("" + filePath);
         isRunningFromJar = MainComponent.class.getResource("MainComponent.class").toString().startsWith("jar:");
         loading = true;
+        initFile();
+        //settings = new Ini(System.getProperty("user.home") + "/Luigi/settings.ini");
+        settings = new Ini(filePath + "/Luigi/settings.ini");
         new Thread() {
             @Override
             public void run() {
-                initFile();
-                //settings = new Ini(System.getProperty("user.home") + "/Luigi/settings.ini");
-                settings = new Ini(filePath + "/Luigi/settings.ini");
+                Connessione.getConnection();
                 Sound.setSound();
                 Tipologia.initTipologia();
                 SpriteEstractor.initAnimation();
@@ -134,7 +133,7 @@ public class MainComponent {
             }
         }.start();
 
-        loadVLC();
+        //loadVLC();
 
     }
 

@@ -115,8 +115,9 @@ public class Selezione implements MouseListener, MouseMotionListener, Runnable {
                     } catch (NumberFormatException e) {
                         Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
                     }
-                } catch (StringIndexOutOfBoundsException e) {
+                } catch (Exception e) {
                     Log.append(Log.stackTraceToString(e), DefaultFont.ERROR);
+                    break;
                 }
             case "Clean":
                 g.clean();
@@ -157,6 +158,7 @@ public class Selezione implements MouseListener, MouseMotionListener, Runnable {
                     int val = 0;
                     try {
                         val = Integer.parseInt(valueColumn);
+                    System.out.println(""+val);
                         g.addColumn(val);
                     } catch (NumberFormatException e) {
                         System.out.println("Valore inserito non valio");
